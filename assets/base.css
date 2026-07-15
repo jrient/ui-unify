@@ -294,3 +294,88 @@ body.ui {
 .ui-toast.warn { border-left-color: var(--warn); }
 .ui-toast.danger { border-left-color: var(--danger); }
 .ui-toast.info { border-left-color: var(--accent); }
+
+/* ---------- dropdown menu ---------- */
+.ui-menu {
+  min-width: 180px; padding: 4px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-overlay);
+}
+.ui-menu .item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: var(--radius);
+  color: var(--text); font-size: 13px; cursor: pointer;
+}
+.ui-menu .item .icon { width: 16px; text-align: center; color: var(--text-2); }
+.ui-menu .item .hint { margin-left: auto; color: var(--text-3); }
+.ui-menu .item:hover { background: var(--surface-2); }
+.ui-menu .item.danger { color: var(--danger); }
+.ui-menu .item.danger .icon { color: var(--danger); }
+.ui-menu .sep { height: 1px; margin: 4px 0; background: var(--border); }
+.ui-menu .label {
+  padding: 6px 10px 2px; font-size: 11px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
+}
+
+/* ---------- switch ---------- */
+.ui-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.ui-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ui-switch .track {
+  width: 36px; height: 20px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  position: relative; transition: background .15s, border-color .15s;
+}
+.ui-switch .track::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-2); transition: transform .15s, background .15s;
+}
+.ui-switch input:checked + .track { background: var(--accent); border-color: var(--accent); }
+.ui-switch input:checked + .track::after { transform: translateX(16px); background: var(--accent-contrast); }
+.ui-switch input:focus-visible + .track { box-shadow: 0 0 0 3px var(--accent-ring); }
+.ui-switch input:disabled + .track { opacity: .5; cursor: not-allowed; }
+
+/* ---------- checkbox & radio ---------- */
+.ui-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; }
+.ui-check input {
+  appearance: none; -webkit-appearance: none; margin: 0;
+  width: 16px; height: 16px; border: 1px solid var(--border);
+  background: var(--bg); cursor: pointer; display: grid; place-content: center;
+}
+.ui-check input[type="checkbox"] { border-radius: 4px; }
+.ui-check input[type="radio"] { border-radius: 50%; }
+.ui-check input:checked { background: var(--accent); border-color: var(--accent); }
+.ui-check input[type="checkbox"]:checked::after {
+  content: ""; width: 9px; height: 5px; margin-top: -2px;
+  border: 2px solid var(--accent-contrast); border-top: 0; border-right: 0;
+  transform: rotate(-45deg);
+}
+.ui-check input[type="radio"]:checked::after {
+  content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-contrast);
+}
+.ui-check input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-ring); }
+.ui-check input:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ---------- drawer / sheet ---------- */
+.ui-drawer {
+  position: fixed; top: 0; bottom: 0; right: 0; z-index: 55;
+  width: min(420px, 92vw); display: flex; flex-direction: column;
+  background: var(--surface); border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-overlay);
+}
+.ui-drawer.left { right: auto; left: 0; border-left: 0; border-right: 1px solid var(--border); }
+.ui-drawer .head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.ui-drawer .head .title { font-weight: 600; }
+.ui-drawer .head .x {
+  margin-left: auto; border: 0; background: transparent; color: var(--text-3);
+  font-size: 18px; line-height: 1; cursor: pointer;
+}
+.ui-drawer .head .x:hover { color: var(--text); }
+.ui-drawer .body { flex: 1; overflow-y: auto; padding: 18px; display: grid; gap: 16px; align-content: start; }
+.ui-drawer .foot {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding: 14px 18px; border-top: 1px solid var(--border);
+}

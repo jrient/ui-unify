@@ -141,6 +141,41 @@
         </div>
       </div>
 
+      <!-- 选择控件 + 下拉菜单 -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">选择控件</p>
+          <div class="row" style="gap:20px">
+            <label class="ui-switch"><input type="checkbox" checked><span class="track"></span>自动重试</label>
+            <label class="ui-switch"><input type="checkbox"><span class="track"></span>失败通知</label>
+            <label class="ui-switch"><input type="checkbox" disabled><span class="track"></span>已禁用</label>
+          </div>
+          <div class="row" style="gap:20px;margin-top:14px">
+            <label class="ui-check"><input type="checkbox" checked>切分</label>
+            <label class="ui-check"><input type="checkbox">翻译</label>
+            <label class="ui-check"><input type="checkbox" checked>导出</label>
+          </div>
+          <div class="row" style="gap:20px;margin-top:14px">
+            <label class="ui-check"><input type="radio" name="fmt" checked>MP4</label>
+            <label class="ui-check"><input type="radio" name="fmt">MOV</label>
+            <label class="ui-check"><input type="radio" name="fmt">WebM</label>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">下拉菜单 & 抽屉</p>
+          <div class="row" style="margin-bottom:14px">
+            <button class="ui-btn" onclick="document.getElementById('drawer').style.display='flex'">打开详情抽屉</button>
+          </div>
+          <div class="ui-menu" style="max-width:200px">
+            <div class="label">任务操作</div>
+            <div class="item"><span class="icon">↻</span>重跑<span class="hint">R</span></div>
+            <div class="item"><span class="icon">⇧</span>导出</div>
+            <div class="sep"></div>
+            <div class="item danger"><span class="icon">✕</span>删除</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 空状态 -->
       <div class="ui-card">
         <p class="sec-label" style="margin-bottom:0">空状态</p>
@@ -170,6 +205,24 @@
     </div>
   </div>
 </div>
+
+<!-- 详情抽屉 -->
+<aside class="ui-drawer" id="drawer" style="display:none">
+  <div class="head">
+    <span class="title">任务详情 #1024</span>
+    <button class="x" onclick="document.getElementById('drawer').style.display='none'">×</button>
+  </div>
+  <div class="body">
+    <div class="field"><label class="ui-muted" style="font-size:12px">名称</label><div>视频切分 batch-07</div></div>
+    <div class="field"><label class="ui-muted" style="font-size:12px">状态</label><div><span class="ui-badge running"><span class="ui-dot"></span>进行中</span></div></div>
+    <div class="field"><label class="ui-muted" style="font-size:12px">耗时</label><div class="ui-mono">02:14</div></div>
+    <label class="ui-switch"><input type="checkbox" checked><span class="track"></span>完成后通知我</label>
+  </div>
+  <div class="foot">
+    <button class="ui-btn" onclick="document.getElementById('drawer').style.display='none'">关闭</button>
+    <button class="ui-btn primary">保存</button>
+  </div>
+</aside>
 
 <!-- toast 通知 -->
 <div class="ui-toast-stack">
