@@ -56,6 +56,11 @@
     </header>
 
     <div class="body">
+      <nav class="ui-crumb">
+        <a href="#">工作区</a><span class="sep">/</span>
+        <a href="#">任务</a><span class="sep">/</span>
+        <span class="current">batch-07</span>
+      </nav>
       <div class="row" style="justify-content:space-between">
         <h1 class="page-title">任务</h1>
         <div class="row">
@@ -138,6 +143,40 @@
           <div class="field" style="grid-column:1/-1"><label>备注</label><textarea class="ui-textarea" rows="2" placeholder="补充说明（可选）…"></textarea></div>
           <div class="field"><label>禁用输入</label><input class="ui-input" value="不可编辑" disabled></div>
           <div class="field"><label>搜索</label><input class="ui-input" placeholder="搜索…"></div>
+        </div>
+      </div>
+
+      <!-- 告警条 -->
+      <div class="ui-alert warn">
+        <span class="ico">⚠</span>
+        <div><div class="title">磁盘空间不足</div><div class="desc">导出目录剩余 2.1 GB，建议清理历史素材后再新建批量任务。</div></div>
+      </div>
+
+      <!-- 进度 + tooltip -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">进度条</p>
+          <div class="field" style="margin-bottom:12px">
+            <div class="row" style="justify-content:space-between"><span>视频切分</span><span class="ui-mono ui-muted">68%</span></div>
+            <div class="ui-progress"><div class="bar" style="width:68%"></div></div>
+          </div>
+          <div class="field" style="margin-bottom:12px">
+            <div class="row" style="justify-content:space-between"><span>台词翻译</span><span class="ui-mono ui-muted">32%</span></div>
+            <div class="ui-progress warn"><div class="bar" style="width:32%"></div></div>
+          </div>
+          <div class="field">
+            <div class="row" style="justify-content:space-between"><span>合并导出</span><span class="ui-mono ui-muted">处理中…</span></div>
+            <div class="ui-progress indeterminate"><div class="bar"></div></div>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">工具提示（悬停）</p>
+          <div class="row" style="gap:14px">
+            <span class="ui-tip" data-tip="重新执行该任务"><button class="ui-btn">重跑</button></span>
+            <span class="ui-tip" data-tip="导出为 MP4 / MOV / WebM"><button class="ui-btn">导出 ▾</button></span>
+            <span class="ui-tip" data-tip="此操作不可撤销"><button class="ui-btn danger">删除</button></span>
+          </div>
+          <p class="ui-muted" style="margin:16px 0 0;font-size:12px">纯 CSS tooltip，悬停显示，无需 JS。</p>
         </div>
       </div>
 
