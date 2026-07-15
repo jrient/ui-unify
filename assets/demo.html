@@ -215,6 +215,50 @@
         </div>
       </div>
 
+      <!-- 标签 / 头像 / 时间线 / 骨架屏 -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">标签 & 头像</p>
+          <div class="row" style="margin-bottom:16px">
+            <span class="ui-tag">4K</span>
+            <span class="ui-tag accent">优先</span>
+            <span class="ui-tag">字幕<button class="x">×</button></span>
+            <span class="ui-tag">配音<button class="x">×</button></span>
+          </div>
+          <div class="row" style="align-items:center;gap:12px">
+            <div class="ui-avatar-group">
+              <span class="ui-avatar accent">你</span>
+              <span class="ui-avatar">李</span>
+              <span class="ui-avatar">王</span>
+              <span class="ui-avatar">+3</span>
+            </div>
+            <span class="ui-avatar lg">工</span>
+            <span class="ui-avatar sm">A</span>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">时间线</p>
+          <div class="ui-timeline">
+            <div class="node ok"><div class="t-title">任务创建</div><div class="t-time">14:02:01</div></div>
+            <div class="node ok"><div class="t-title">视频切分完成</div><div class="t-time">14:04:15</div></div>
+            <div class="node active"><div class="t-title">台词翻译中…</div><div class="t-time">14:04:16</div></div>
+            <div class="node"><div class="t-title">等待合并导出</div><div class="t-time">--</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 骨架屏 -->
+      <div class="ui-card">
+        <p class="sec-label" style="margin-bottom:14px">骨架屏（加载态）</p>
+        <div class="row" style="align-items:center;gap:12px">
+          <span class="ui-skeleton circle"></span>
+          <div style="flex:1;display:grid;gap:8px">
+            <span class="ui-skeleton" style="width:40%"></span>
+            <span class="ui-skeleton line"></span>
+          </div>
+        </div>
+      </div>
+
       <!-- 空状态 -->
       <div class="ui-card">
         <p class="sec-label" style="margin-bottom:0">空状态</p>

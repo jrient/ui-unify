@@ -428,3 +428,60 @@ body.ui {
 .ui-alert.warn .ico { color: var(--warn); }
 .ui-alert.danger { border-left-color: var(--danger); }
 .ui-alert.danger .ico { color: var(--danger); }
+
+/* ---------- tag / chip ---------- */
+.ui-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 22px; padding: 0 8px; border-radius: var(--radius);
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-2); font-size: 12px;
+}
+.ui-tag.accent { color: var(--accent-text); border-color: var(--accent); background: transparent; }
+.ui-tag .x {
+  border: 0; background: transparent; color: var(--text-3);
+  cursor: pointer; font-size: 13px; line-height: 1; padding: 0;
+}
+.ui-tag .x:hover { color: var(--text); }
+
+/* ---------- avatar ---------- */
+.ui-avatar {
+  display: inline-grid; place-items: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-2); font-size: 12px; font-weight: 600;
+  overflow: hidden; flex: none;
+}
+.ui-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ui-avatar.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.ui-avatar.lg { width: 40px; height: 40px; font-size: 15px; }
+.ui-avatar.sm { width: 22px; height: 22px; font-size: 10px; }
+.ui-avatar-group { display: inline-flex; }
+.ui-avatar-group .ui-avatar:not(:first-child) { margin-left: -8px; }
+
+/* ---------- timeline ---------- */
+.ui-timeline { display: grid; gap: 0; }
+.ui-timeline .node {
+  position: relative; padding: 0 0 18px 24px;
+  border-left: 1px solid var(--border); margin-left: 5px;
+}
+.ui-timeline .node:last-child { border-left-color: transparent; padding-bottom: 0; }
+.ui-timeline .node::before {
+  content: ""; position: absolute; left: -5px; top: 2px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--border);
+}
+.ui-timeline .node.ok::before { border-color: var(--ok); background: var(--ok); }
+.ui-timeline .node.danger::before { border-color: var(--danger); background: var(--danger); }
+.ui-timeline .node.active::before { border-color: var(--accent); background: var(--accent); }
+.ui-timeline .node .t-title { font-size: 13px; color: var(--text); }
+.ui-timeline .node .t-time { font-size: 12px; color: var(--text-3); font-family: var(--font-mono); }
+
+/* ---------- skeleton ---------- */
+.ui-skeleton {
+  display: block; height: 12px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%; animation: ui-shimmer 1.4s ease infinite;
+}
+.ui-skeleton.circle { width: 28px; height: 28px; border-radius: 50%; }
+.ui-skeleton.line { width: 100%; }
+@keyframes ui-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }

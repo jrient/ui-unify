@@ -49,6 +49,7 @@
 - 选择控件：`.ui-switch`（开关）`.ui-check`（checkbox / radio 通用，绿选中）
 - 数据展示：`.ui-table`（`.num`）`.ui-badge`（`.ok`/`.warn`/`.danger`/`.running`+`.ui-dot`）`.ui-pagination`/`.ui-page-btn`
 - 浮层与反馈：`.ui-overlay`+`.ui-command`（命令面板）· `.ui-menu`（下拉菜单，`.item`/`.sep`/`.label`/`.item.danger`）· `.ui-drawer`（抽屉，`.left` 变体 + head/body/foot）· `.ui-empty`（空状态）· `.ui-toast-stack`/`.ui-toast`（`.ok`/`.warn`/`.danger`/`.info`）
+- 展示与状态：`.ui-tag`（`.accent`，可含 `.x` 删除）· `.ui-avatar`（`.sm`/`.lg`/`.accent` + `.ui-avatar-group` 叠加）· `.ui-timeline`（节点 `.ok`/`.danger`/`.active`）· `.ui-skeleton`（`.line`/`.circle` 加载态）
 - 文本：`.ui-link` `.ui-muted` `.ui-mono`
 - 借鉴来源：sidebar / ⌘K / tabs / pagination / 命令面板 参考 shadcn-admin，落地时坚持绿强调 + Linear 克制圆角，未照搬其中性 primary 与 10px 圆角
 
