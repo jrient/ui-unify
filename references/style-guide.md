@@ -4,13 +4,16 @@
 
 ## 1. 色板
 
-### 表面（深色默认 / 浅色）
+### 表面（深色默认 / 浅色）—— 分层提亮做纵深：canvas < surface < elevated
 | token | 深色 | 浅色 | 用途 |
 |---|---|---|---|
-| --bg | #0e0e10 | #fafafa | 页面画布 |
-| --surface | #151518 | #ffffff | 卡片、顶栏 |
-| --surface-2 | #1c1c1f | #f4f4f5 | 弹层、hover 背景 |
+| --bg | #0b0b0d | #f6f6f7 | 页面画布（最深，压深以衬托卡片） |
+| --surface | #161619 | #ffffff | 卡片、侧栏、顶栏 |
+| --surface-2 | #1f1f23 | #f0f0f2 | hover 背景、inset、分段轨道 |
+| --elevated | #242429 | #ffffff | 浮层：命令面板/菜单/抽屉/toast（比卡片更亮） |
 | --border | #26262a | #e5e5e8 | 全部边框与分割线 |
+
+纵深原则（依据现代暗色 UI 实践）：**暗色靠"逐层提亮 3–6%"而非阴影**——阴影在暗底上是最差的深度信号。三级层：画布 → 卡片 → 浮层。卡片用 `--card-shadow`（暗色=1px 顶部内高光 bevel `inset 0 1px 0 rgba(255,255,255,.035)`；浅色=柔和投影）与画布拉开；浮层再叠 `--elevated` 更亮背景 + `--shadow-overlay`。
 
 ### 文字
 | token | 深色 | 浅色 | 用途 |
@@ -37,8 +40,9 @@
 
 ## 3. 形态与密度
 - 圆角：控件 6px（--radius）、卡片 8px（--radius-lg）、徽章 999px
-- 层次：1px 边框 + surface 色阶；平面元素禁止 box-shadow（focus ring 除外）
-- **浮层例外**：命令面板 / 弹层 / toast 可用 `--shadow-overlay` 柔和投影表达悬浮层级；仅限脱离文档流的浮层，卡片/表格等平面元素仍禁用
+- 层次：1px 边框 + surface 色阶 + 分层提亮（canvas/surface/elevated）
+- **卡片纵深**：`.ui-card` 用 `--card-shadow`（暗色=极轻顶部内高光 bevel，浅色=柔和投影）与画布拉开；这是唯一允许的平面阴影，其余平面元素（表格/输入等）仍禁 box-shadow（focus ring 除外）
+- **浮层例外**：命令面板 / 菜单 / 抽屉 / toast 用 `--elevated` 更亮背景 + `--shadow-overlay` 表达悬浮层级
 - 密度：表格行高 36px（--row-h）、控件高 32px、顶栏高 48px
 
 ## 3.5 组件清单（base.css 提供的 class）
@@ -63,5 +67,5 @@
 
 ## 5. 反例（迁移时要消灭的东西）
 - 硬编码色值（#4361ee、#0071e3 等旧主色）
-- box-shadow 卡片投影 → 换 1px 边框
+- 重实心投影卡片（如 `0 4px 12px rgba(0,0,0,.3)`）→ 换 1px 边框 + `--card-shadow` 的极轻 bevel/投影
 - 用强调绿表达「成功」语义 → 用 --ok

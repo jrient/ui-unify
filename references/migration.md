@@ -43,5 +43,6 @@
 - [ ] 深色默认正确；浅色跟随系统正确；data-theme 手动覆盖生效
 - [ ] grep 无残留硬编码色值（布局用的透明/黑白遮罩除外）
 - [ ] 强调绿与 --ok 成功色肉眼可区分
-- [ ] 平面元素无 box-shadow 投影残留，卡片用 1px 边框；仅命令面板/弹层/toast 等浮层可用 --shadow-overlay
+- [ ] 无重实心投影残留；卡片=1px 边框 + --card-shadow 极轻 bevel，浮层=--elevated + --shadow-overlay，其余平面元素禁阴影
+- [ ] 纵深分层正确：画布(--bg) < 卡片(--surface) < 浮层(--elevated) 肉眼可辨
 - [ ] 功能无回归：原有按钮/表单/表格交互全部正常

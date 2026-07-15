@@ -2,10 +2,11 @@
  * 深色为默认；浅色经 prefers-color-scheme 自动跟随；
  * :root[data-theme="dark"|"light"] 手动覆盖优先于系统偏好。 */
 :root {
-  /* surfaces */
-  --bg: #0e0e10;
-  --surface: #151518;
-  --surface-2: #1c1c1f;
+  /* surfaces — 分层提亮做纵深：canvas < surface(卡片) < elevated(浮层) */
+  --bg: #0b0b0d;
+  --surface: #161619;
+  --surface-2: #1f1f23;
+  --elevated: #242429;      /* 浮层：菜单/命令面板/抽屉/toast，比卡片更亮 */
   --border: #26262a;
   /* text */
   --text: #f7f8f8;
@@ -23,22 +24,25 @@
   --danger: #fb7185;
   --idle: #8a8f98;
   /* typography */
-  --font-sans: Inter, -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: Inter, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, "Noto Sans Mono CJK SC", monospace;
   /* shape & density */
   --radius: 6px;       /* controls */
   --radius-lg: 8px;    /* cards */
   --row-h: 36px;       /* table row height */
   /* 仅浮层可用的柔和投影（弹层/命令面板/toast）；平面元素仍禁用阴影 */
   --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
+  /* 卡片纵深：暗色用顶部内高光 bevel，浅色用柔和投影 */
+  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #fafafa;
+    --bg: #f6f6f7;
     --surface: #ffffff;
-    --surface-2: #f4f4f5;
+    --surface-2: #f0f0f2;
+    --elevated: #ffffff;
     --border: #e5e5e8;
     --text: #18181b;
     --text-2: #71717a;
@@ -49,15 +53,17 @@
     --danger: #e11d48; /* 浅底上加深以保对比度 */
     --idle: #71717a;
     --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 1px 2px rgba(16, 17, 20, 0.04), 0 2px 6px rgba(16, 17, 20, 0.03);
     color-scheme: light;
   }
 }
 
 /* 手动覆盖：data-theme 优先于系统偏好 */
 :root[data-theme="dark"] {
-  --bg: #0e0e10;
-  --surface: #151518;
-  --surface-2: #1c1c1f;
+  --bg: #0b0b0d;
+  --surface: #161619;
+  --surface-2: #1f1f23;
+  --elevated: #242429;
   --border: #26262a;
   --text: #f7f8f8;
   --text-2: #8a8f98;
@@ -67,13 +73,16 @@
   --warn: #f5a623;
   --danger: #fb7185;
   --idle: #8a8f98;
+  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bg: #fafafa;
+  --bg: #f6f6f7;
   --surface: #ffffff;
-  --surface-2: #f4f4f5;
+  --surface-2: #f0f0f2;
+  --elevated: #ffffff;
   --border: #e5e5e8;
   --text: #18181b;
   --text-2: #71717a;
@@ -84,5 +93,6 @@
   --danger: #e11d48;
   --idle: #71717a;
   --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --card-shadow: 0 1px 2px rgba(16, 17, 20, 0.04), 0 2px 6px rgba(16, 17, 20, 0.03);
   color-scheme: light;
 }

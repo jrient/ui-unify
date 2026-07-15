@@ -47,6 +47,7 @@ body.ui {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 16px;
+  box-shadow: var(--card-shadow);
 }
 .ui-card h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; }
 
@@ -226,7 +227,7 @@ body.ui {
 }
 .ui-command {
   width: min(560px, 92vw);
-  background: var(--surface);
+  background: var(--elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
@@ -278,7 +279,7 @@ body.ui {
 .ui-toast {
   display: flex; align-items: flex-start; gap: 10px;
   width: min(360px, 90vw); padding: 12px 14px;
-  background: var(--surface); color: var(--text);
+  background: var(--elevated); color: var(--text);
   border: 1px solid var(--border); border-left: 3px solid var(--border);
   border-radius: var(--radius); box-shadow: var(--shadow-overlay);
 }
@@ -298,7 +299,7 @@ body.ui {
 /* ---------- dropdown menu ---------- */
 .ui-menu {
   min-width: 180px; padding: 4px;
-  background: var(--surface); border: 1px solid var(--border);
+  background: var(--elevated); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-overlay);
 }
 .ui-menu .item {
@@ -360,7 +361,7 @@ body.ui {
 .ui-drawer {
   position: fixed; top: 0; bottom: 0; right: 0; z-index: 55;
   width: min(420px, 92vw); display: flex; flex-direction: column;
-  background: var(--surface); border-left: 1px solid var(--border);
+  background: var(--elevated); border-left: 1px solid var(--border);
   box-shadow: var(--shadow-overlay);
 }
 .ui-drawer.left { right: auto; left: 0; border-left: 0; border-right: 1px solid var(--border); }
