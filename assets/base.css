@@ -485,3 +485,53 @@ body.ui {
 .ui-skeleton.circle { width: 28px; height: 28px; border-radius: 50%; }
 .ui-skeleton.line { width: 100%; }
 @keyframes ui-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+/* ---------- segmented control ---------- */
+.ui-seg {
+  display: inline-flex; padding: 2px; gap: 2px;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.ui-seg button {
+  height: 26px; padding: 0 12px; border: 0; background: transparent;
+  color: var(--text-2); font: inherit; font-size: 12px; border-radius: 4px; cursor: pointer;
+}
+.ui-seg button:hover { color: var(--text); }
+.ui-seg button.active {
+  background: var(--surface); color: var(--text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+/* ---------- number stepper ---------- */
+.ui-stepper { display: inline-flex; align-items: stretch; height: 32px; }
+.ui-stepper button {
+  width: 30px; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font: inherit; font-size: 15px; cursor: pointer;
+}
+.ui-stepper button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.ui-stepper button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.ui-stepper button:hover { background: var(--surface-2); }
+.ui-stepper input {
+  width: 52px; text-align: center; border: 1px solid var(--border);
+  border-left: 0; border-right: 0; background: var(--bg); color: var(--text);
+  font: inherit; font-family: var(--font-mono); font-size: 13px; outline: none;
+}
+.ui-stepper input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); position: relative; }
+
+/* ---------- dropzone ---------- */
+.ui-dropzone {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 28px 20px; text-align: center; cursor: pointer;
+  border: 1px dashed var(--border); border-radius: var(--radius-lg);
+  background: var(--bg); color: var(--text-2);
+}
+.ui-dropzone:hover, .ui-dropzone.dragover {
+  border-color: var(--accent); color: var(--text); background: var(--surface);
+}
+.ui-dropzone .glyph { font-size: 22px; color: var(--text-3); }
+.ui-dropzone.dragover .glyph { color: var(--accent-text); }
+.ui-dropzone .hint { font-size: 12px; color: var(--text-3); }
+
+/* ---------- descriptions (key/value 列表) ---------- */
+.ui-desc { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 13px; }
+.ui-desc dt { color: var(--text-2); }
+.ui-desc dd { margin: 0; color: var(--text); }

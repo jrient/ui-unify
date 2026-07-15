@@ -17,10 +17,6 @@
   .stat-num { font-family: var(--font-mono); font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .page-title { margin: 0; font-size: 20px; font-weight: 600; }
   .sec-label { margin: 0 0 -6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
-  .ui-seg { display: inline-flex; padding: 2px; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); }
-  .ui-seg button { height: 26px; padding: 0 10px; border: 0; background: transparent; color: var(--text-2); font: inherit; font-size: 12px; border-radius: 4px; cursor: pointer; }
-  .ui-seg button:hover { color: var(--text); }
-  .ui-seg button.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
   /* content header bar */
   .topbar2 { display: flex; align-items: center; gap: 16px; height: 52px; padding: 0 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 5; }
 </style>
@@ -259,6 +255,47 @@
         </div>
       </div>
 
+      <!-- 分段控件 / 步进器 / 描述列表 -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">分段控件 & 步进器</p>
+          <div class="row" style="margin-bottom:16px">
+            <div class="ui-seg">
+              <button class="active">列表</button>
+              <button>看板</button>
+              <button>日历</button>
+            </div>
+          </div>
+          <div class="row" style="gap:12px;align-items:center">
+            <span class="ui-muted">并发数</span>
+            <div class="ui-stepper">
+              <button onclick="var i=this.nextElementSibling;i.value=Math.max(1,+i.value-1)">−</button>
+              <input value="4" inputmode="numeric">
+              <button onclick="var i=this.previousElementSibling;i.value=+i.value+1">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">描述列表</p>
+          <dl class="ui-desc">
+            <dt>任务 ID</dt><dd class="ui-mono">#1024</dd>
+            <dt>创建者</dt><dd>you@工具台</dd>
+            <dt>输出格式</dt><dd>MP4 · 1080p</dd>
+            <dt>状态</dt><dd><span class="ui-badge running"><span class="ui-dot"></span>进行中</span></dd>
+          </dl>
+        </div>
+      </div>
+
+      <!-- 文件上传 -->
+      <div class="ui-card">
+        <p class="sec-label" style="margin-bottom:14px">文件上传</p>
+        <div class="ui-dropzone" id="dz">
+          <span class="glyph">⤒</span>
+          <div>拖拽文件到此处，或<span class="ui-link">点击选择</span></div>
+          <div class="hint">支持 mp4 / mov / srt，单个不超过 2 GB</div>
+        </div>
+      </div>
+
       <!-- 空状态 -->
       <div class="ui-card">
         <p class="sec-label" style="margin-bottom:0">空状态</p>
@@ -329,6 +366,11 @@ document.addEventListener('keydown', function(e) {
 document.querySelectorAll('.ui-toast .t-close').forEach(function(b){
   b.onclick = function(){ b.closest('.ui-toast').remove(); };
 });
+(function(){
+  var dz = document.getElementById('dz'); if (!dz) return;
+  ['dragenter','dragover'].forEach(function(e){ dz.addEventListener(e, function(ev){ ev.preventDefault(); dz.classList.add('dragover'); }); });
+  ['dragleave','drop'].forEach(function(e){ dz.addEventListener(e, function(ev){ ev.preventDefault(); dz.classList.remove('dragover'); }); });
+})();
 function setTheme(t) {
   if (t) document.documentElement.dataset.theme = t;
   else delete document.documentElement.dataset.theme;
