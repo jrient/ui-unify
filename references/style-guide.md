@@ -37,8 +37,18 @@
 
 ## 3. 形态与密度
 - 圆角：控件 6px（--radius）、卡片 8px（--radius-lg）、徽章 999px
-- 层次：1px 边框 + surface 色阶；禁止 box-shadow（focus ring 除外）
+- 层次：1px 边框 + surface 色阶；平面元素禁止 box-shadow（focus ring 除外）
+- **浮层例外**：命令面板 / 弹层 / toast 可用 `--shadow-overlay` 柔和投影表达悬浮层级；仅限脱离文档流的浮层，卡片/表格等平面元素仍禁用
 - 密度：表格行高 36px（--row-h）、控件高 32px、顶栏高 48px
+
+## 3.5 组件清单（base.css 提供的 class）
+- 布局外壳：`.ui-shell` `.ui-sidebar`（`.brand`/`.mark`）`.ui-nav-label` `.ui-nav-item`（`.icon`/`.count`/`.active`）`.ui-content`
+- 顶栏与导航：`.ui-topbar` · `.ui-search`+`.ui-kbd`（⌘K 触发器）· `.ui-tabs`/`.ui-tab`
+- 基础控件：`.ui-btn`（`.primary`/`.danger`/`:disabled`）`.ui-input`/`.ui-select`/`.ui-textarea` `.ui-card`
+- 数据展示：`.ui-table`（`.num`）`.ui-badge`（`.ok`/`.warn`/`.danger`/`.running`+`.ui-dot`）`.ui-pagination`/`.ui-page-btn`
+- 浮层与反馈：`.ui-overlay`+`.ui-command`（命令面板）· `.ui-empty`（空状态）· `.ui-toast-stack`/`.ui-toast`（`.ok`/`.warn`/`.danger`/`.info`）
+- 文本：`.ui-link` `.ui-muted` `.ui-mono`
+- 借鉴来源：sidebar / ⌘K / tabs / pagination / 命令面板 参考 shadcn-admin，落地时坚持绿强调 + Linear 克制圆角，未照搬其中性 primary 与 10px 圆角
 
 ## 4. 主题机制
 - 默认深色；`@media (prefers-color-scheme: light)` 自动浅色

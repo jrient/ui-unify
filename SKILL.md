@@ -18,7 +18,7 @@ description: Use when the user asks to 统一UI/升级UI/迁移UI风格 for a ba
 ## 资源
 - `assets/tokens.css` — design token（双主题 CSS 变量），复制进项目
 - `assets/base.css` — 基础组件 class（ui-btn/ui-card/ui-table/ui-badge…），复制进项目
-- `assets/demo.html` — 组件全览示例，可对照最终效果
+- `assets/demo.html` — 完整应用外壳示例（侧栏导航 + 顶栏 ⌘K 搜索 + 标签页 + 统计卡片 + 数据表格分页 + 表单 + 空状态 + 命令面板 + toast），双主题分段切换，可对照最终效果
 - `references/style-guide.md` — 完整视觉规范（色板/排版/形态/反例）
 - `references/migration.md` — 分技术栈迁移手册 + 验收清单
 

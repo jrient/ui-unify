@@ -6,52 +6,199 @@
 <title>ui-unify demo</title>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="base.css">
+<style>
+  /* demo 页面自身的排版，不属于设计体系 */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .field { display: grid; gap: 6px; }
+  .field > label { font-size: 12px; color: var(--text-2); }
+  .stat-num { font-family: var(--font-mono); font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .page-title { margin: 0; font-size: 20px; font-weight: 600; }
+  .sec-label { margin: 0 0 -6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+  .ui-seg { display: inline-flex; padding: 2px; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); }
+  .ui-seg button { height: 26px; padding: 0 10px; border: 0; background: transparent; color: var(--text-2); font: inherit; font-size: 12px; border-radius: 4px; cursor: pointer; }
+  .ui-seg button:hover { color: var(--text); }
+  .ui-seg button.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  /* content header bar */
+  .topbar2 { display: flex; align-items: center; gap: 16px; height: 52px; padding: 0 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 5; }
+</style>
 </head>
 <body class="ui">
-<header class="ui-topbar">
-  <span class="brand">工具台</span>
-  <nav>
-    <a class="active" href="#">任务</a>
-    <a href="#">账号</a>
-    <a href="#">设置</a>
-  </nav>
-  <div style="margin-left:auto;display:flex;gap:8px">
-    <button class="ui-btn" onclick="setTheme('light')">浅色</button>
-    <button class="ui-btn" onclick="setTheme('dark')">深色</button>
-    <button class="ui-btn" onclick="setTheme(null)">跟随系统</button>
-  </div>
-</header>
-<main style="max-width:960px;margin:24px auto;padding:0 16px;display:grid;gap:16px">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-    <div class="ui-card"><h3 class="ui-muted">今日任务</h3><div class="ui-mono" style="font-size:24px;font-weight:700">128</div></div>
-    <div class="ui-card"><h3 class="ui-muted">进行中</h3><div class="ui-mono" style="font-size:24px;font-weight:700;color:var(--accent-text)">12</div></div>
-    <div class="ui-card"><h3 class="ui-muted">失败</h3><div class="ui-mono" style="font-size:24px;font-weight:700;color:var(--danger)">3</div></div>
-  </div>
-  <div class="ui-card">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <button class="ui-btn primary">新建任务</button>
-      <button class="ui-btn">导出</button>
-      <button class="ui-btn danger">删除</button>
-      <button class="ui-btn" disabled>禁用态</button>
-      <input class="ui-input" placeholder="搜索任务…" style="margin-left:auto">
+<div class="ui-shell">
+
+  <!-- 侧边栏 -->
+  <aside class="ui-sidebar">
+    <div class="brand"><span class="mark">工</span>工具台</div>
+
+    <div class="ui-nav-label">工作区</div>
+    <a class="ui-nav-item active" href="#"><span class="icon">▸</span>任务<span class="count">128</span></a>
+    <a class="ui-nav-item" href="#"><span class="icon">◇</span>队列<span class="count">12</span></a>
+    <a class="ui-nav-item" href="#"><span class="icon">▤</span>素材库</a>
+    <a class="ui-nav-item" href="#"><span class="icon">⧉</span>导出记录</a>
+
+    <div class="ui-nav-label">系统</div>
+    <a class="ui-nav-item" href="#"><span class="icon">◐</span>账号</a>
+    <a class="ui-nav-item" href="#"><span class="icon">⚙</span>设置</a>
+    <a class="ui-nav-item" href="#"><span class="icon">◔</span>日志</a>
+  </aside>
+
+  <!-- 内容 -->
+  <div class="ui-content">
+    <header class="topbar2">
+      <div class="ui-search" onclick="openCmd()" style="cursor:pointer"><span>搜索任务…</span><span class="grow"></span><span class="ui-kbd">⌘K</span></div>
+      <div class="ui-seg" style="margin-left:auto" id="theme-seg">
+        <button data-theme="light" onclick="setTheme('light')">浅色</button>
+        <button data-theme="dark" onclick="setTheme('dark')">深色</button>
+        <button data-theme="" onclick="setTheme(null)" class="active">跟随系统</button>
+      </div>
+    </header>
+
+    <div class="body">
+      <div class="row" style="justify-content:space-between">
+        <h1 class="page-title">任务</h1>
+        <div class="row">
+          <button class="ui-btn">导出</button>
+          <button class="ui-btn primary">新建任务</button>
+        </div>
+      </div>
+
+      <!-- 标签页 -->
+      <div class="ui-tabs">
+        <button class="ui-tab active">全部</button>
+        <button class="ui-tab">进行中</button>
+        <button class="ui-tab">已完成</button>
+        <button class="ui-tab">失败</button>
+      </div>
+
+      <!-- 统计 -->
+      <div class="grid-3">
+        <div class="ui-card"><h3 class="ui-muted">今日任务</h3><div class="stat-num">128</div></div>
+        <div class="ui-card"><h3 class="ui-muted">进行中</h3><div class="stat-num" style="color:var(--accent-text)">12</div></div>
+        <div class="ui-card"><h3 class="ui-muted">失败</h3><div class="stat-num" style="color:var(--danger)">3</div></div>
+      </div>
+
+      <!-- 数据表格 + 分页 -->
+      <div class="ui-card">
+        <div class="row" style="margin-bottom:12px">
+          <input class="ui-input" placeholder="按名称筛选…" style="max-width:240px">
+          <span style="margin-left:auto"></span>
+          <button class="ui-btn">列 ▾</button>
+        </div>
+        <table class="ui-table">
+          <thead><tr><th>ID</th><th>名称</th><th>状态</th><th>耗时</th></tr></thead>
+          <tbody>
+            <tr><td class="num">#1024</td><td>视频切分 batch-07</td><td><span class="ui-badge running"><span class="ui-dot"></span>进行中</span></td><td class="num">02:14</td></tr>
+            <tr><td class="num">#1023</td><td>台词翻译 ep12</td><td><span class="ui-badge ok"><span class="ui-dot"></span>成功</span></td><td class="num">00:41</td></tr>
+            <tr><td class="num">#1022</td><td>合并导出 final</td><td><span class="ui-badge danger"><span class="ui-dot"></span>失败</span></td><td class="num">01:03</td></tr>
+            <tr><td class="num">#1021</td><td>素材抓取</td><td><span class="ui-badge warn"><span class="ui-dot"></span>重试中</span></td><td class="num">00:12</td></tr>
+            <tr><td class="num">#1020</td><td>排队任务</td><td><span class="ui-badge"><span class="ui-dot"></span>排队</span></td><td class="num">--</td></tr>
+          </tbody>
+        </table>
+        <div class="ui-pagination" style="margin-top:12px">
+          <span class="info">共 128 条 · 第 1 / 26 页</span>
+          <button class="ui-page-btn" disabled>‹</button>
+          <button class="ui-page-btn active">1</button>
+          <button class="ui-page-btn">2</button>
+          <button class="ui-page-btn">3</button>
+          <button class="ui-page-btn">›</button>
+        </div>
+      </div>
+
+      <!-- 按钮 + 状态标签 -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:12px">按钮</p>
+          <div class="row">
+            <button class="ui-btn primary">主操作</button>
+            <button class="ui-btn">次操作</button>
+            <button class="ui-btn danger">删除</button>
+            <button class="ui-btn" disabled>禁用</button>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:12px">状态标签</p>
+          <div class="row">
+            <span class="ui-badge running"><span class="ui-dot"></span>进行中</span>
+            <span class="ui-badge ok"><span class="ui-dot"></span>成功</span>
+            <span class="ui-badge warn"><span class="ui-dot"></span>重试中</span>
+            <span class="ui-badge danger"><span class="ui-dot"></span>失败</span>
+            <span class="ui-badge"><span class="ui-dot"></span>排队</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 表单控件 -->
+      <div class="ui-card">
+        <p class="sec-label" style="margin-bottom:12px">表单控件</p>
+        <div class="grid-2">
+          <div class="field"><label>任务名称</label><input class="ui-input" placeholder="输入任务名称…"></div>
+          <div class="field"><label>优先级</label><select class="ui-select"><option>低</option><option>中</option><option>高</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label>备注</label><textarea class="ui-textarea" rows="2" placeholder="补充说明（可选）…"></textarea></div>
+          <div class="field"><label>禁用输入</label><input class="ui-input" value="不可编辑" disabled></div>
+          <div class="field"><label>搜索</label><input class="ui-input" placeholder="搜索…"></div>
+        </div>
+      </div>
+
+      <!-- 空状态 -->
+      <div class="ui-card">
+        <p class="sec-label" style="margin-bottom:0">空状态</p>
+        <div class="ui-empty">
+          <div class="glyph">◇</div>
+          <div class="title">还没有导出记录</div>
+          <div class="desc">完成的任务导出后会显示在这里。你可以从任务列表选择条目并导出。</div>
+          <div class="actions"><button class="ui-btn primary">新建导出</button></div>
+        </div>
+      </div>
     </div>
-    <table class="ui-table">
-      <thead><tr><th>ID</th><th>名称</th><th>状态</th><th>耗时</th></tr></thead>
-      <tbody>
-        <tr><td class="num">#1024</td><td>视频切分 batch-07</td><td><span class="ui-badge running"><span class="ui-dot"></span>进行中</span></td><td class="num">02:14</td></tr>
-        <tr><td class="num">#1023</td><td>台词翻译 ep12</td><td><span class="ui-badge ok"><span class="ui-dot"></span>成功</span></td><td class="num">00:41</td></tr>
-        <tr><td class="num">#1022</td><td>合并导出 final</td><td><span class="ui-badge danger"><span class="ui-dot"></span>失败</span></td><td class="num">01:03</td></tr>
-        <tr><td class="num">#1021</td><td>素材抓取</td><td><span class="ui-badge warn"><span class="ui-dot"></span>重试中</span></td><td class="num">00:12</td></tr>
-        <tr><td class="num">#1020</td><td>排队任务</td><td><span class="ui-badge"><span class="ui-dot"></span>排队</span></td><td class="num">--</td></tr>
-      </tbody>
-    </table>
-    <p style="margin:12px 0 0"><a class="ui-link" href="#">查看全部 →</a></p>
   </div>
-</main>
+</div>
+
+<!-- 命令面板（点顶栏搜索或 ⌘K 打开） -->
+<div class="ui-overlay" id="cmd" style="display:none" onclick="if(event.target===this)closeCmd()">
+  <div class="ui-command">
+    <div class="search"><span class="ui-muted">⌕</span><input placeholder="搜索任务、命令、页面…" autofocus><span class="ui-kbd">ESC</span></div>
+    <div class="list">
+      <div class="group-label">快捷操作</div>
+      <div class="item active"><span class="icon">＋</span>新建任务<span class="hint"><span class="ui-kbd">N</span></span></div>
+      <div class="item"><span class="icon">⇧</span>导出当前列表<span class="hint"><span class="ui-kbd">E</span></span></div>
+      <div class="group-label">跳转</div>
+      <div class="item"><span class="icon">▸</span>任务</div>
+      <div class="item"><span class="icon">◇</span>队列</div>
+      <div class="item"><span class="icon">⚙</span>设置</div>
+    </div>
+  </div>
+</div>
+
+<!-- toast 通知 -->
+<div class="ui-toast-stack">
+  <div class="ui-toast ok">
+    <div class="t-body"><div class="t-title">导出完成</div><div class="t-desc">final.mp4 已保存到导出目录</div></div>
+    <button class="t-close">×</button>
+  </div>
+  <div class="ui-toast danger">
+    <div class="t-body"><div class="t-title">任务失败</div><div class="t-desc">#1022 合并导出 · 编码器返回非零退出码</div></div>
+    <button class="t-close">×</button>
+  </div>
+</div>
+
 <script>
+function openCmd() { document.getElementById('cmd').style.display = 'flex'; }
+function closeCmd() { document.getElementById('cmd').style.display = 'none'; }
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmd(); }
+  if (e.key === 'Escape') closeCmd();
+});
+document.querySelectorAll('.ui-toast .t-close').forEach(function(b){
+  b.onclick = function(){ b.closest('.ui-toast').remove(); };
+});
 function setTheme(t) {
   if (t) document.documentElement.dataset.theme = t;
   else delete document.documentElement.dataset.theme;
+  document.querySelectorAll('#theme-seg button').forEach(function(b){
+    b.classList.toggle('active', (b.dataset.theme || '') === (t || ''));
+  });
 }
 </script>
 </body>

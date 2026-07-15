@@ -29,6 +29,8 @@
   --radius: 6px;       /* controls */
   --radius-lg: 8px;    /* cards */
   --row-h: 36px;       /* table row height */
+  /* 仅浮层可用的柔和投影（弹层/命令面板/toast）；平面元素仍禁用阴影 */
+  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
   color-scheme: dark;
 }
 
@@ -46,6 +48,7 @@
     --warn: #b45309;
     --danger: #e11d48; /* 浅底上加深以保对比度 */
     --idle: #71717a;
+    --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
     color-scheme: light;
   }
 }
@@ -80,5 +83,6 @@
   --warn: #b45309;
   --danger: #e11d48;
   --idle: #71717a;
+  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
   color-scheme: light;
 }
