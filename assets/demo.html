@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ui-unify demo</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+</head>
+<body class="ui">
+<header class="ui-topbar">
+  <span class="brand">工具台</span>
+  <nav>
+    <a class="active" href="#">任务</a>
+    <a href="#">账号</a>
+    <a href="#">设置</a>
+  </nav>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="ui-btn" onclick="setTheme('light')">浅色</button>
+    <button class="ui-btn" onclick="setTheme('dark')">深色</button>
+    <button class="ui-btn" onclick="setTheme(null)">跟随系统</button>
+  </div>
+</header>
+<main style="max-width:960px;margin:24px auto;padding:0 16px;display:grid;gap:16px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div class="ui-card"><h3 class="ui-muted">今日任务</h3><div class="ui-mono" style="font-size:24px;font-weight:700">128</div></div>
+    <div class="ui-card"><h3 class="ui-muted">进行中</h3><div class="ui-mono" style="font-size:24px;font-weight:700;color:var(--accent-text)">12</div></div>
+    <div class="ui-card"><h3 class="ui-muted">失败</h3><div class="ui-mono" style="font-size:24px;font-weight:700;color:var(--danger)">3</div></div>
+  </div>
+  <div class="ui-card">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="ui-btn primary">新建任务</button>
+      <button class="ui-btn">导出</button>
+      <button class="ui-btn danger">删除</button>
+      <button class="ui-btn" disabled>禁用态</button>
+      <input class="ui-input" placeholder="搜索任务…" style="margin-left:auto">
+    </div>
+    <table class="ui-table">
+      <thead><tr><th>ID</th><th>名称</th><th>状态</th><th>耗时</th></tr></thead>
+      <tbody>
+        <tr><td class="num">#1024</td><td>视频切分 batch-07</td><td><span class="ui-badge running"><span class="ui-dot"></span>进行中</span></td><td class="num">02:14</td></tr>
+        <tr><td class="num">#1023</td><td>台词翻译 ep12</td><td><span class="ui-badge ok"><span class="ui-dot"></span>成功</span></td><td class="num">00:41</td></tr>
+        <tr><td class="num">#1022</td><td>合并导出 final</td><td><span class="ui-badge danger"><span class="ui-dot"></span>失败</span></td><td class="num">01:03</td></tr>
+        <tr><td class="num">#1021</td><td>素材抓取</td><td><span class="ui-badge warn"><span class="ui-dot"></span>重试中</span></td><td class="num">00:12</td></tr>
+        <tr><td class="num">#1020</td><td>排队任务</td><td><span class="ui-badge"><span class="ui-dot"></span>排队</span></td><td class="num">--</td></tr>
+      </tbody>
+    </table>
+    <p style="margin:12px 0 0"><a class="ui-link" href="#">查看全部 →</a></p>
+  </div>
+</main>
+<script>
+function setTheme(t) {
+  if (t) document.documentElement.dataset.theme = t;
+  else delete document.documentElement.dataset.theme;
+}
+</script>
+</body>
+</html>

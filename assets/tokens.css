@@ -1,0 +1,84 @@
+/* ui-unify design tokens — Linear dark + Supabase green, dual theme.
+ * 深色为默认；浅色经 prefers-color-scheme 自动跟随；
+ * :root[data-theme="dark"|"light"] 手动覆盖优先于系统偏好。 */
+:root {
+  /* surfaces */
+  --bg: #0e0e10;
+  --surface: #151518;
+  --surface-2: #1c1c1f;
+  --border: #26262a;
+  /* text */
+  --text: #f7f8f8;
+  --text-2: #8a8f98;
+  --text-3: #62666d;
+  /* accent (shared across themes) */
+  --accent: #3ecf8e;
+  --accent-hover: #34b27b;
+  --accent-ring: rgba(62, 207, 142, 0.22);
+  --accent-contrast: #0e0e10; /* text on solid accent */
+  --accent-text: #3ecf8e; /* accent used as text/icon color */
+  /* semantic status — 与强调绿刻意错开 */
+  --ok: #2f9e6e;
+  --warn: #f5a623;
+  --danger: #fb7185;
+  --idle: #8a8f98;
+  /* typography */
+  --font-sans: Inter, -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* shape & density */
+  --radius: 6px;       /* controls */
+  --radius-lg: 8px;    /* cards */
+  --row-h: 36px;       /* table row height */
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-2: #f4f4f5;
+    --border: #e5e5e8;
+    --text: #18181b;
+    --text-2: #71717a;
+    --text-3: #a1a1aa;
+    --accent-text: #158f5e;
+    --ok: #1e7f56;
+    --warn: #b45309;
+    --danger: #e11d48; /* 浅底上加深以保对比度 */
+    --idle: #71717a;
+    color-scheme: light;
+  }
+}
+
+/* 手动覆盖：data-theme 优先于系统偏好 */
+:root[data-theme="dark"] {
+  --bg: #0e0e10;
+  --surface: #151518;
+  --surface-2: #1c1c1f;
+  --border: #26262a;
+  --text: #f7f8f8;
+  --text-2: #8a8f98;
+  --text-3: #62666d;
+  --accent-text: #3ecf8e;
+  --ok: #2f9e6e;
+  --warn: #f5a623;
+  --danger: #fb7185;
+  --idle: #8a8f98;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --border: #e5e5e8;
+  --text: #18181b;
+  --text-2: #71717a;
+  --text-3: #a1a1aa;
+  --accent-text: #158f5e;
+  --ok: #1e7f56;
+  --warn: #b45309;
+  --danger: #e11d48;
+  --idle: #71717a;
+  color-scheme: light;
+}

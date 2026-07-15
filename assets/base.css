@@ -1,0 +1,134 @@
+/* ui-unify base components — depends on tokens.css being loaded first. */
+.ui, .ui * { box-sizing: border-box; }
+
+body.ui {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- top bar ---------- */
+.ui-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.ui-topbar .brand { font-weight: 600; color: var(--text); }
+.ui-topbar nav a {
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+.ui-topbar nav a:hover { color: var(--text); background: var(--surface-2); }
+.ui-topbar nav a.active { color: var(--text); background: var(--surface-2); }
+
+/* ---------- card ---------- */
+.ui-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.ui-card h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; }
+
+/* ---------- buttons ---------- */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.ui-btn:hover { background: var(--surface-2); }
+.ui-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-ring); border-color: var(--accent); }
+.ui-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+.ui-btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.ui-btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+.ui-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- inputs ---------- */
+.ui-input, .ui-select, .ui-textarea {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+.ui-textarea { height: auto; padding: 8px 10px; }
+.ui-input:focus, .ui-select:focus, .ui-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+.ui-input::placeholder { color: var(--text-3); }
+
+/* ---------- table ---------- */
+.ui-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ui-table th {
+  text-align: left;
+  color: var(--text-2);
+  font-weight: 500;
+  padding: 0 12px;
+  height: var(--row-h);
+  border-bottom: 1px solid var(--border);
+}
+.ui-table td {
+  padding: 0 12px;
+  height: var(--row-h);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.ui-table tbody tr:hover td { background: var(--surface-2); }
+.ui-table .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- badges & status ---------- */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+}
+.ui-badge.ok { color: var(--ok); border-color: var(--ok); }
+.ui-badge.warn { color: var(--warn); border-color: var(--warn); }
+.ui-badge.danger { color: var(--danger); border-color: var(--danger); }
+.ui-badge.running { color: var(--accent-text); border-color: var(--accent); }
+.ui-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.ui-badge.running .ui-dot { animation: ui-pulse 1.6s ease-in-out infinite; }
+@keyframes ui-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ---------- misc ---------- */
+.ui-link { color: var(--accent-text); text-decoration: none; }
+.ui-link:hover { text-decoration: underline; }
+.ui-muted { color: var(--text-2); }
+.ui-mono { font-family: var(--font-mono); }
