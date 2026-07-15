@@ -124,7 +124,7 @@ body.ui {
   border-radius: 999px;
   font-size: 12px;
   border: 1px solid var(--border);
-  color: var(--text-2);
+  color: var(--idle); /* 无修饰=排队/闲置语义 */
 }
 .ui-badge.ok { color: var(--ok); border-color: var(--ok); }
 .ui-badge.warn { color: var(--warn); border-color: var(--warn); }

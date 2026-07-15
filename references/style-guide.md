@@ -54,6 +54,7 @@
 - 数据/代码：`.ui-tree`（树形，`.node.active`）· `.ui-code`（日志/代码块，`.c-accent`/`.c-warn`/`.c-danger` 语义高亮）+ `code.ui-inline`（行内代码）· `.ui-trend`（`.up`/`.down`/`.flat` 涨跌）· `.ui-spark`（纯 CSS 迷你柱图）
 - 文本：`.ui-link` `.ui-muted` `.ui-mono`
 - 借鉴来源：sidebar / ⌘K / tabs / pagination / 命令面板 参考 shadcn-admin，落地时坚持绿强调 + Linear 克制圆角，未照搬其中性 primary 与 10px 圆角
+- 可访问性：`.ui-btn`/`.ui-tab`/`.ui-page-btn`/`.ui-switch`/`.ui-check` 用原生表单/按钮元素，键盘可达；`.ui-menu .item`、`.ui-command .item`、`.ui-tree .node` 是纯样式 `div`，集成时需自行补 `role`/`tabindex`/键盘事件
 
 ## 4. 主题机制
 - 默认深色；`@media (prefers-color-scheme: light)` 自动浅色
