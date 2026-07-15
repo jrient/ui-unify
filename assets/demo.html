@@ -75,9 +75,21 @@
 
       <!-- 统计 -->
       <div class="grid-3">
-        <div class="ui-card"><h3 class="ui-muted">今日任务</h3><div class="stat-num">128</div></div>
-        <div class="ui-card"><h3 class="ui-muted">进行中</h3><div class="stat-num" style="color:var(--accent-text)">12</div></div>
-        <div class="ui-card"><h3 class="ui-muted">失败</h3><div class="stat-num" style="color:var(--danger)">3</div></div>
+        <div class="ui-card">
+          <div class="row" style="justify-content:space-between"><h3 class="ui-muted">今日任务</h3><span class="ui-trend up">12%</span></div>
+          <div class="row" style="justify-content:space-between;align-items:flex-end">
+            <div class="stat-num">128</div>
+            <span class="ui-spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:100%"></i></span>
+          </div>
+        </div>
+        <div class="ui-card">
+          <div class="row" style="justify-content:space-between"><h3 class="ui-muted">进行中</h3><span class="ui-trend flat">0%</span></div>
+          <div class="stat-num" style="color:var(--accent-text)">12</div>
+        </div>
+        <div class="ui-card">
+          <div class="row" style="justify-content:space-between"><h3 class="ui-muted">失败</h3><span class="ui-trend down">8%</span></div>
+          <div class="stat-num" style="color:var(--danger)">3</div>
+        </div>
       </div>
 
       <!-- 数据表格 + 分页 -->
@@ -293,6 +305,32 @@
           <span class="glyph">⤒</span>
           <div>拖拽文件到此处，或<span class="ui-link">点击选择</span></div>
           <div class="hint">支持 mp4 / mov / srt，单个不超过 2 GB</div>
+        </div>
+      </div>
+
+      <!-- 树形控件 + 日志/代码块 -->
+      <div class="grid-2">
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">树形控件</p>
+          <div class="ui-tree">
+            <div class="node"><span class="twist">▾</span><span class="icon">▸</span>素材库<span class="count">42</span></div>
+            <div class="children">
+              <div class="node active"><span class="twist">▾</span><span class="icon">▸</span>ep12<span class="count">18</span></div>
+              <div class="children">
+                <div class="node"><span class="twist" style="visibility:hidden">▸</span><span class="icon">◇</span>raw.mp4</div>
+                <div class="node"><span class="twist" style="visibility:hidden">▸</span><span class="icon">◇</span>subtitle.srt</div>
+              </div>
+              <div class="node"><span class="twist">▸</span><span class="icon">▸</span>ep13<span class="count">24</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ui-card">
+          <p class="sec-label" style="margin-bottom:14px">日志 / 代码块</p>
+          <pre class="ui-code"><span class="c-muted">$</span> tool run --batch 07 --format mp4
+<span class="c-muted">14:04:15</span> <span class="c-accent">INFO</span>  切分完成 24 段
+<span class="c-muted">14:04:16</span> <span class="c-warn">WARN</span>  第 12 段码率偏低
+<span class="c-muted">14:05:02</span> <span class="c-danger">ERROR</span> 合并失败：exit 1</pre>
+          <p class="ui-muted" style="margin:10px 0 0;font-size:12px">行内代码：<code class="ui-inline">--concurrency 4</code></p>
         </div>
       </div>
 
