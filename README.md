@@ -11,7 +11,7 @@ Claude Code skill：后台工具统一 UI 升级——Linear 暗色 + Supabase �
 - **配色校准**：黑白灰对照 DeepSeek 开放平台——暗色画布 `#151517` + 卡片逐层提亮；浅色为白画布 + 浅灰卡片；边框半透明黑/白分三档（subtle / 默认 / strong）；强调绿亮暗双值（暗底 `#3ecf8e`、浅底 `#16825d`）
 - 具体数值以 [`assets/tokens.css`](assets/tokens.css) 为准
 
-想直观看效果：浏览器直接打开 [`assets/demo.standalone.html`](assets/demo.standalone.html)（零依赖单文件），或部署 `assets/demo.html`（配套 `deploy/nginx.conf`）。
+想直观看效果：**在线 demo → <https://jrient.github.io/ui-unify/>**（push 到 main 后由 GitHub Actions 自动部署）；也可以浏览器直接打开 [`assets/demo.standalone.html`](assets/demo.standalone.html)（零依赖单文件），或用 `deploy/nginx.conf` 自行部署。
 
 ## 安装
 
