@@ -3,7 +3,8 @@
 <style>
 /* ===== tokens.css（原样内联）===== */
 :root {
-  --bg: #0b0b0d; --surface: #161619; --surface-2: #1f1f23; --elevated: #242429; --border: #26262a;
+  --bg: #151517; --surface: #232324; --surface-2: #2c2c2e; --elevated: #353638;
+  --border-subtle: rgba(255,255,255,.06); --border: rgba(255,255,255,.09); --border-strong: rgba(255,255,255,.16);
   --text: #f7f8f8; --text-2: #8a8f98; --text-3: #62666d;
   --accent: #3ecf8e; --accent-hover: #34b27b; --accent-ring: rgba(62, 207, 142, 0.22);
   --accent-contrast: #0e0e10; --accent-text: #3ecf8e;
@@ -17,21 +18,27 @@
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f0f0f2; --elevated: #ffffff; --border: #e5e5e8;
+    --bg: #ffffff; --surface: #f5f6f7; --surface-2: #ebeef2; --elevated: #ffffff;
+    --border-subtle: rgba(0,0,0,.05); --border: rgba(0,0,0,.10); --border-strong: rgba(0,0,0,.16);
     --text: #18181b; --text-2: #71717a; --text-3: #a1a1aa;
+    --accent: #16825d; --accent-hover: #136e4e; --accent-ring: rgba(22, 130, 93, 0.2); --accent-contrast: #ffffff;
     --accent-text: #158f5e; --ok: #1e7f56; --warn: #b45309; --danger: #e11d48; --idle: #71717a;
     --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12); --card-shadow: 0 1px 2px rgba(16,17,20,.04), 0 2px 6px rgba(16,17,20,.03); color-scheme: light;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0b0b0d; --surface: #161619; --surface-2: #1f1f23; --elevated: #242429; --border: #26262a;
+  --bg: #151517; --surface: #232324; --surface-2: #2c2c2e; --elevated: #353638;
+  --border-subtle: rgba(255,255,255,.06); --border: rgba(255,255,255,.09); --border-strong: rgba(255,255,255,.16);
   --text: #f7f8f8; --text-2: #8a8f98; --text-3: #62666d;
+  --accent: #3ecf8e; --accent-hover: #34b27b; --accent-ring: rgba(62, 207, 142, 0.22); --accent-contrast: #0e0e10;
   --accent-text: #3ecf8e; --ok: #2f9e6e; --warn: #f5a623; --danger: #fb7185; --idle: #8a8f98;
-  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5); color-scheme: dark;
+  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5); --card-shadow: inset 0 1px 0 rgba(255,255,255,.035); color-scheme: dark;
 }
 :root[data-theme="light"] {
-  --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f0f0f2; --elevated: #ffffff; --border: #e5e5e8;
+  --bg: #ffffff; --surface: #f5f6f7; --surface-2: #ebeef2; --elevated: #ffffff;
+  --border-subtle: rgba(0,0,0,.05); --border: rgba(0,0,0,.10); --border-strong: rgba(0,0,0,.16);
   --text: #18181b; --text-2: #71717a; --text-3: #a1a1aa;
+  --accent: #16825d; --accent-hover: #136e4e; --accent-ring: rgba(22, 130, 93, 0.2); --accent-contrast: #ffffff;
   --accent-text: #158f5e; --ok: #1e7f56; --warn: #b45309; --danger: #e11d48; --idle: #71717a;
   --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12); --card-shadow: 0 1px 2px rgba(16,17,20,.04), 0 2px 6px rgba(16,17,20,.03); color-scheme: light;
 }
@@ -60,14 +67,14 @@
 .ui-btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
 .ui-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.ui-input, .ui-select, .ui-textarea { height: 32px; padding: 0 10px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 13px; font-family: inherit; }
+.ui-input, .ui-select, .ui-textarea { height: 32px; padding: 0 10px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--bg); color: var(--text); font-size: 13px; font-family: inherit; }
 .ui-textarea { height: auto; padding: 8px 10px; }
 .ui-input:focus, .ui-select:focus, .ui-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
 .ui-input::placeholder { color: var(--text-3); }
 
 .ui-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .ui-table th { text-align: left; color: var(--text-2); font-weight: 500; padding: 0 12px; height: var(--row-h); border-bottom: 1px solid var(--border); }
-.ui-table td { padding: 0 12px; height: var(--row-h); border-bottom: 1px solid var(--border); color: var(--text); }
+.ui-table td { padding: 0 12px; height: var(--row-h); border-bottom: 1px solid var(--border-subtle); color: var(--text); }
 .ui-table tbody tr:hover td { background: var(--surface-2); }
 .ui-table .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
@@ -152,12 +159,12 @@
 .ui-menu .item:hover { background: var(--surface-2); }
 .ui-menu .item.danger { color: var(--danger); }
 .ui-menu .item.danger .icon { color: var(--danger); }
-.ui-menu .sep { height: 1px; margin: 4px 0; background: var(--border); }
+.ui-menu .sep { height: 1px; margin: 4px 0; background: var(--border-subtle); }
 .ui-menu .label { padding: 6px 10px 2px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
 
 .ui-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .ui-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.ui-switch .track { width: 36px; height: 20px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); position: relative; transition: background .15s, border-color .15s; }
+.ui-switch .track { width: 36px; height: 20px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border-strong); position: relative; transition: background .15s, border-color .15s; }
 .ui-switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--text-2); transition: transform .15s, background .15s; }
 .ui-switch input:checked + .track { background: var(--accent); border-color: var(--accent); }
 .ui-switch input:checked + .track::after { transform: translateX(16px); background: var(--accent-contrast); }
@@ -165,7 +172,7 @@
 .ui-switch input:disabled + .track { opacity: .5; cursor: not-allowed; }
 
 .ui-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; }
-.ui-check input { appearance: none; -webkit-appearance: none; margin: 0; width: 16px; height: 16px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; display: grid; place-content: center; }
+.ui-check input { appearance: none; -webkit-appearance: none; margin: 0; width: 16px; height: 16px; border: 1px solid var(--border-strong); background: var(--bg); cursor: pointer; display: grid; place-content: center; }
 .ui-check input[type="checkbox"] { border-radius: 4px; }
 .ui-check input[type="radio"] { border-radius: 50%; }
 .ui-check input:checked { background: var(--accent); border-color: var(--accent); }

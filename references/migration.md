@@ -21,7 +21,7 @@
 适用：drama-auto、seedance2.0、jimeng-sd-sec-dev（Tailwind 3）、script-dialogue-translate（Tailwind 4）
 1. tokens.css 复制到 src/styles/ 并在入口（main.tsx / index.css）最先导入
 2. Tailwind 3：tailwind.config 的 theme.extend.colors 映射为变量，例如
-   `colors: { bg: 'var(--bg)', surface: 'var(--surface)', 'surface-2': 'var(--surface-2)', border: 'var(--border)', text: 'var(--text)', 'text-2': 'var(--text-2)', accent: 'var(--accent)', 'accent-text': 'var(--accent-text)', ok: 'var(--ok)', warn: 'var(--warn)', danger: 'var(--danger)' }`
+   `colors: { bg: 'var(--bg)', surface: 'var(--surface)', 'surface-2': 'var(--surface-2)', border: 'var(--border)', 'border-subtle': 'var(--border-subtle)', 'border-strong': 'var(--border-strong)', text: 'var(--text)', 'text-2': 'var(--text-2)', accent: 'var(--accent)', 'accent-text': 'var(--accent-text)', ok: 'var(--ok)', warn: 'var(--warn)', danger: 'var(--danger)' }`
    Tailwind 4：在 index.css 用 `@theme { --color-bg: var(--bg); --color-surface: var(--surface); ... }` 同名映射
 3. 逐组件把 bg-[#...]、text-[#...]、bg-gray-50 等硬编码/默认灰替换为语义类（bg-bg、bg-surface、text-text-2、bg-accent…）
 4. drama-auto 已有 theme.css 变量体系：将其变量值改指向 tokens（--accent: var(--accent) 式桥接或直接替换值），保留其组件结构

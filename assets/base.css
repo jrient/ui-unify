@@ -83,7 +83,7 @@ body.ui {
   height: 32px;
   padding: 0 10px;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong); /* 可输入控件用最重一档，提示可交互 */
   background: var(--bg);
   color: var(--text);
   font-size: 13px;
@@ -110,7 +110,7 @@ body.ui {
 .ui-table td {
   padding: 0 12px;
   height: var(--row-h);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle); /* 行分隔线用最淡一档 */
   color: var(--text);
 }
 .ui-table tbody tr:hover td { background: var(--surface-2); }
@@ -312,7 +312,7 @@ body.ui {
 .ui-menu .item:hover { background: var(--surface-2); }
 .ui-menu .item.danger { color: var(--danger); }
 .ui-menu .item.danger .icon { color: var(--danger); }
-.ui-menu .sep { height: 1px; margin: 4px 0; background: var(--border); }
+.ui-menu .sep { height: 1px; margin: 4px 0; background: var(--border-subtle); }
 .ui-menu .label {
   padding: 6px 10px 2px; font-size: 11px; font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
@@ -323,7 +323,7 @@ body.ui {
 .ui-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
 .ui-switch .track {
   width: 36px; height: 20px; border-radius: 999px;
-  background: var(--surface-2); border: 1px solid var(--border);
+  background: var(--surface-2); border: 1px solid var(--border-strong);
   position: relative; transition: background .15s, border-color .15s;
 }
 .ui-switch .track::after {
@@ -340,7 +340,7 @@ body.ui {
 .ui-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; }
 .ui-check input {
   appearance: none; -webkit-appearance: none; margin: 0;
-  width: 16px; height: 16px; border: 1px solid var(--border);
+  width: 16px; height: 16px; border: 1px solid var(--border-strong);
   background: var(--bg); cursor: pointer; display: grid; place-content: center;
 }
 .ui-check input[type="checkbox"] { border-radius: 4px; }

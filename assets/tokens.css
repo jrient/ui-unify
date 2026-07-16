@@ -1,18 +1,23 @@
 /* ui-unify design tokens — Linear dark + Supabase green, dual theme.
  * 深色为默认；浅色经 prefers-color-scheme 自动跟随；
- * :root[data-theme="dark"|"light"] 手动覆盖优先于系统偏好。 */
+ * :root[data-theme="dark"|"light"] 手动覆盖优先于系统偏好。
+ * 借鉴 platform.deepseek.com：中性色带微蓝调；边框用半透明黑/白分档，
+ * 叠在任意背景层上都自然；品牌色亮暗双值（暗底提亮、浅底加深）。 */
 :root {
   /* surfaces — 分层提亮做纵深：canvas < surface(卡片) < elevated(浮层) */
-  --bg: #0b0b0d;
-  --surface: #161619;
-  --surface-2: #1f1f23;
-  --elevated: #242429;      /* 浮层：菜单/命令面板/抽屉/toast，比卡片更亮 */
-  --border: #26262a;
+  --bg: #151517;
+  --surface: #232324;
+  --surface-2: #2c2c2e;
+  --elevated: #353638;      /* 浮层：菜单/命令面板/抽屉/toast，比卡片更亮 */
+  /* borders — 半透明分档：subtle(分隔线) < border(默认) < strong(输入控件) */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
   /* text */
   --text: #f7f8f8;
   --text-2: #8a8f98;
   --text-3: #62666d;
-  /* accent (shared across themes) */
+  /* accent — 暗底用亮绿保对比 */
   --accent: #3ecf8e;
   --accent-hover: #34b27b;
   --accent-ring: rgba(62, 207, 142, 0.22);
@@ -39,14 +44,20 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f6f6f7;
-    --surface: #ffffff;
-    --surface-2: #f0f0f2;
+    --bg: #ffffff;
+    --surface: #f5f6f7;
+    --surface-2: #ebeef2;
     --elevated: #ffffff;
-    --border: #e5e5e8;
+    --border-subtle: rgba(0, 0, 0, 0.05);
+    --border: rgba(0, 0, 0, 0.1);
+    --border-strong: rgba(0, 0, 0, 0.16);
     --text: #18181b;
     --text-2: #71717a;
     --text-3: #a1a1aa;
+    --accent: #16825d;          /* 浅底加深保对比 */
+    --accent-hover: #136e4e;
+    --accent-ring: rgba(22, 130, 93, 0.2);
+    --accent-contrast: #ffffff;
     --accent-text: #158f5e;
     --ok: #1e7f56;
     --warn: #b45309;
@@ -60,14 +71,20 @@
 
 /* 手动覆盖：data-theme 优先于系统偏好 */
 :root[data-theme="dark"] {
-  --bg: #0b0b0d;
-  --surface: #161619;
-  --surface-2: #1f1f23;
-  --elevated: #242429;
-  --border: #26262a;
+  --bg: #151517;
+  --surface: #232324;
+  --surface-2: #2c2c2e;
+  --elevated: #353638;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
   --text: #f7f8f8;
   --text-2: #8a8f98;
   --text-3: #62666d;
+  --accent: #3ecf8e;
+  --accent-hover: #34b27b;
+  --accent-ring: rgba(62, 207, 142, 0.22);
+  --accent-contrast: #0e0e10;
   --accent-text: #3ecf8e;
   --ok: #2f9e6e;
   --warn: #f5a623;
@@ -79,14 +96,20 @@
 }
 
 :root[data-theme="light"] {
-  --bg: #f6f6f7;
-  --surface: #ffffff;
-  --surface-2: #f0f0f2;
+  --bg: #ffffff;
+  --surface: #f5f6f7;
+  --surface-2: #ebeef2;
   --elevated: #ffffff;
-  --border: #e5e5e8;
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.16);
   --text: #18181b;
   --text-2: #71717a;
   --text-3: #a1a1aa;
+  --accent: #16825d;
+  --accent-hover: #136e4e;
+  --accent-ring: rgba(22, 130, 93, 0.2);
+  --accent-contrast: #ffffff;
   --accent-text: #158f5e;
   --ok: #1e7f56;
   --warn: #b45309;

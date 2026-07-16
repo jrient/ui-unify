@@ -7,6 +7,8 @@ description: Use when the user asks to 统一UI/升级UI/迁移UI风格 for a ba
 
 把当前项目的 UI 迁移到统一设计体系：Linear 暗色精致风、强调色 Supabase 绿 #3ecf8e、深色为主 + 浅色自动跟随（双主题）。
 
+黑白配色对照 DeepSeek 开放平台校准：暗色画布 #151517 + 卡片逐层提亮；浅色是**白画布 + 浅灰卡片**（不是灰画布配白卡片）；边框一律半透明黑/白分三档（subtle/默认/strong）；强调绿亮暗双值（暗底亮绿 #3ecf8e、浅底深绿 #16825d）。具体值以 `assets/tokens.css` 为准。
+
 ## 工作流
 
 1. **盘点**：识别本项目 UI 技术栈（原生 HTML/Flask、React+Tailwind、Vue+Element Plus）与 UI 入口文件；grep 列出全部硬编码颜色/box-shadow/字体/圆角。
