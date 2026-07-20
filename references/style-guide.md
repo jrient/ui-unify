@@ -45,10 +45,12 @@
 - 字号：正文 14px、表格与控件 13px、辅助 12px；标题靠字重（600）不靠字号跳跃
 
 ## 3. 形态与密度
-- 圆角：控件 6px（--radius）、卡片 8px（--radius-lg）、徽章 999px
+- 圆角：**嵌套子元素 4px（--radius-sm）**、控件 6px（--radius）、卡片 8px（--radius-lg）、徽章 999px
+- **嵌套圆角规则**：紧贴容器内壁的子元素用 `inner = outer − 内边距`——控件 6−2、卡片 8−4 均得 4px，故菜单/命令项、kbd、分段按钮、行内代码等一律 `--radius-sm`，避免内外弧线在角上打架（对照 killaislop #21）
 - 层次：1px 边框 + surface 色阶 + 分层提亮（canvas/surface/elevated）
 - **卡片纵深**：`.ui-card` 用 `--card-shadow`（暗色=极轻顶部内高光 bevel，浅色=柔和投影）与画布拉开；这是唯一允许的平面阴影，其余平面元素（表格/输入等）仍禁 box-shadow（focus ring 除外）
 - **浮层例外**：命令面板 / 菜单 / 抽屉 / toast 用 `--elevated` 更亮背景 + `--shadow-overlay` 表达悬浮层级
+- **阴影准则**（对照 killaislop #20）：`--shadow-overlay` 为两层——`0 1px 2px` 接触影落地 + `0 16px 32px -12px` 收敛环境影（负 spread 收紧扩散），拒绝「小元素投巨大柔影、无高度逻辑」的浮影
 - 密度：表格行高 36px（--row-h）、控件高 32px、顶栏高 48px
 
 ## 3.5 组件清单（base.css 提供的 class）
@@ -70,7 +72,7 @@
 - 可访问性：`.ui-btn`/`.ui-tab`/`.ui-page-btn`/`.ui-switch`/`.ui-check` 用原生表单/按钮元素，键盘可达；模态用原生 `<dialog>`（`showModal()` 自动焦点陷阱与 Esc），折叠用原生 `<details>`；`.ui-menu .item`、`.ui-command .item`、`.ui-tree .node` 是纯样式 `div`，集成时需自行补 `role`/`tabindex`/键盘事件
 - 全局 a11y 兜底（base.css 末尾）：`prefers-reduced-motion` 关无限动画（保留 spinner/状态可辨识）；`prefers-contrast: more` 加深边框与弱化文字；`forced-colors`（Windows 高对比）给半透明边框补系统色；所有焦点态用「透明实线 outline + 强调色」双保险，高对比模式不丢焦点框
 
-## 4. 主题机制（tokens.css v1.1.0：light-dark() 单份定义）
+## 4. 主题机制（tokens.css v1.2.0：light-dark() 单份定义）
 - 颜色用 `light-dark(浅色值, 深色值)` **只写一次**，主题由 `color-scheme` 驱动：`:root { color-scheme: light dark }` 跟随系统；`:root[data-theme="light"|"dark"]` 手动覆盖只需切 `color-scheme`（不再重列整套变量）
 - **阴影不是颜色**，`light-dark()` 不接受 → `--shadow-overlay`/`--card-shadow` 仍保留极小的 `@media`+`data-theme` 覆盖块（这是唯一的重复，诚实对待边界）
 - 浏览器要求：`light-dark()` 需 Chrome/Edge 123、Safari 17.5、Firefox 120（Baseline 2024）；若目标项目须兼容更老浏览器，退回旧的四块 `@media`+`data-theme` 写法
@@ -80,3 +82,15 @@
 - 硬编码色值（#4361ee、#0071e3 等旧主色）
 - 重实心投影卡片（如 `0 4px 12px rgba(0,0,0,.3)`）→ 换 1px 边框 + `--card-shadow` 的极轻 bevel/投影
 - 用强调绿表达「成功」语义 → 用 --ok
+
+## 6. 反 AI-slop 自检（对照 killaislop.com 33 tells，迁移完成后过一遍）
+本体系天然规避多数「机器味」，落地时守住这些，别把它们又请回来：
+- **先减后加**：一个元素若解释不出存在理由，删掉——slop 是堆出来的
+- **单一强调色**：只有 Supabase 绿一个强调色；渐变文字 / 氛围光晕 / 玻璃态一律不用
+- **层次靠尺度与留白**，不靠「换字体」或「加灰度」；标题用字号+字重+间距，不用彩色/描边
+- **间距按 4/8/16/24 小阶跳变，按语义不均匀施加**：相关元素间距紧、无关区块间距松；避免整页 `gap:16px` 一个值到底
+- **过渡只给会变的属性**（bg/border/opacity），120–200ms 标准缓动；禁止 `hover:scale` 弹跳、`transition:all`
+- **圆角一处 token、嵌套用 inner=outer−gap**（见 §3）；边框与圆角放同一元素，让描边自动包住圆角
+- **装饰须承载信息**：badge/pill/图标底片不滥用；状态用「扁平小圆点+文字」，脉冲只留给「进行中」这类真活动态
+- **callout 稀用**（每屏 1–2 个真旁注）：`.ui-alert` 的左色条别变成「每行都重要」的通用装饰
+- **具体优于热情**：文案用真实数字与专有名词，别堆 emoji 和「一键告别 X」式空话
