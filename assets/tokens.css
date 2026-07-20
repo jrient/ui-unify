@@ -1,121 +1,84 @@
-/* ui-unify design tokens — Linear dark + Supabase green, dual theme.
- * 深色为默认；浅色经 prefers-color-scheme 自动跟随；
- * :root[data-theme="dark"|"light"] 手动覆盖优先于系统偏好。
- * 借鉴 platform.deepseek.com：中性色带微蓝调；边框用半透明黑/白分档，
- * 叠在任意背景层上都自然；品牌色亮暗双值（暗底提亮、浅底加深）。 */
+/* ui-unify design tokens v1.1.0 — Linear dark + Supabase green, dual theme.
+ * 单份定义：颜色用 light-dark(浅色值, 深色值) 写一次，主题由 color-scheme 驱动。
+ *   :root 默认 `light dark` → 跟随系统；data-theme 手动覆盖只切 color-scheme（不重列变量）。
+ *   需 light-dark() 支持：Chrome/Edge 123、Safari 17.5、Firefox 120（Baseline 2024，内部后台工具足够）。
+ * 借鉴 platform.deepseek.com：中性色带微蓝调；边框半透明黑/白分档；品牌色亮暗双值（暗底提亮、浅底加深）。
+ * 对比度：主/次文字、强调、链接、状态色均实测 ≥ WCAG AA 4.5:1（见 references/contrast-audit.md）。
+ *   例外 --text-3 是最faint的「弱化/占位档」，实测约 2.4–3.2:1（低于 AA），仅用于占位符、分隔、
+ *   与主信息重复的辅助计数——不要用它承载必要正文。如需承载，改用 --text-2。 */
 :root {
-  /* surfaces — 分层提亮做纵深：canvas < surface(卡片) < elevated(浮层) */
-  --bg: #151517;
-  --surface: #232324;
-  --surface-2: #2c2c2e;
-  --elevated: #353638;      /* 浮层：菜单/命令面板/抽屉/toast，比卡片更亮 */
-  /* borders — 半透明分档：subtle(分隔线) < border(默认) < strong(输入控件) */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  /* text */
-  --text: #f7f8f8;
-  --text-2: #8a8f98;
-  --text-3: #62666d;
-  /* accent — 暗底用亮绿保对比 */
-  --accent: #3ecf8e;
-  --accent-hover: #34b27b;
-  --accent-ring: rgba(62, 207, 142, 0.22);
-  --accent-contrast: #0e0e10; /* text on solid accent */
-  --accent-text: #3ecf8e; /* accent used as text/icon color */
-  /* semantic status — 与强调绿刻意错开 */
-  --ok: #2f9e6e;
-  --warn: #f5a623;
-  --danger: #fb7185;
-  --idle: #8a8f98;
-  /* typography */
+  color-scheme: light dark;               /* 关键：激活 light-dark() 并让表单控件跟随主题 */
+
+  /* surfaces —— 分层提亮做纵深：canvas < surface(卡片) < elevated(浮层)。light-dark(浅, 深) */
+  --bg:        light-dark(#ffffff, #151517);
+  --surface:   light-dark(#f5f6f7, #232324);
+  --surface-2: light-dark(#ebeef2, #2c2c2e);
+  --elevated:  light-dark(#ffffff, #353638);
+
+  /* borders —— 半透明分档：subtle(分隔线) < border(默认) < strong(输入控件) */
+  --border-subtle: light-dark(rgba(0,0,0,.05), rgba(255,255,255,.06));
+  --border:        light-dark(rgba(0,0,0,.10), rgba(255,255,255,.09));
+  --border-strong: light-dark(rgba(0,0,0,.16), rgba(255,255,255,.16));
+
+  /* text —— 浅色 text-2 加深至 #67676f 以过 AA(叠在浅灰卡片上) */
+  --text:   light-dark(#18181b, #f7f8f8);
+  --text-2: light-dark(#67676f, #8a8f98);
+  --text-3: light-dark(#a1a1aa, #62666d);   /* 弱化档(占位/分隔/计数)，目标 ≥3:1 */
+
+  /* accent —— 暗底亮绿、浅底深绿 */
+  --accent:          light-dark(#16825d, #3ecf8e);
+  --accent-hover:    light-dark(#136e4e, #34b27b);
+  --accent-ring:     light-dark(rgba(22,130,93,.2), rgba(62,207,142,.22));
+  --accent-contrast: light-dark(#ffffff, #0e0e10);      /* 实心绿按钮上的文字 */
+  --accent-text:     light-dark(#157a54, #3ecf8e);      /* 绿作文字/图标；浅色加深至 #157a54 过 AA */
+
+  /* semantic status —— 与强调绿刻意错开 */
+  --ok:     light-dark(#1e7f56, #2f9e6e);
+  --warn:   light-dark(#b45309, #f5a623);
+  --danger: light-dark(#e11d48, #fb7185);
+  --idle:   light-dark(#71717a, #8a8f98);
+
+  /* typography —— 不引外网字体 */
   --font-sans: Inter, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, "Noto Sans Mono CJK SC", monospace;
-  /* shape & density */
-  --radius: 6px;       /* controls */
-  --radius-lg: 8px;    /* cards */
-  --row-h: 36px;       /* table row height */
-  /* 仅浮层可用的柔和投影（弹层/命令面板/toast）；平面元素仍禁用阴影 */
-  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
-  /* 卡片纵深：暗色用顶部内高光 bevel，浅色用柔和投影 */
-  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
-  color-scheme: dark;
+
+  /* shape & density —— radius-lg 由 radius 派生，改一处联动 */
+  --radius: 6px;                          /* controls */
+  --radius-lg: calc(var(--radius) + 2px); /* cards = 8px */
+  --row-h: 36px;                          /* table row height */
 }
 
+/* 阴影不是颜色，light-dark() 不接受 → 保留极小的主题覆盖块。
+ * 卡片纵深：暗色=顶部内高光 bevel；浅色=柔和投影。浮层柔和投影随主题深浅。 */
+:root {
+  --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #ffffff;
-    --surface: #f5f6f7;
-    --surface-2: #ebeef2;
-    --elevated: #ffffff;
-    --border-subtle: rgba(0, 0, 0, 0.05);
-    --border: rgba(0, 0, 0, 0.1);
-    --border-strong: rgba(0, 0, 0, 0.16);
-    --text: #18181b;
-    --text-2: #71717a;
-    --text-3: #a1a1aa;
-    --accent: #16825d;          /* 浅底加深保对比 */
-    --accent-hover: #136e4e;
-    --accent-ring: rgba(22, 130, 93, 0.2);
-    --accent-contrast: #ffffff;
-    --accent-text: #158f5e;
-    --ok: #1e7f56;
-    --warn: #b45309;
-    --danger: #e11d48; /* 浅底上加深以保对比度 */
-    --idle: #71717a;
     --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
     --card-shadow: 0 1px 2px rgba(16, 17, 20, 0.04), 0 2px 6px rgba(16, 17, 20, 0.03);
-    color-scheme: light;
   }
 }
-
-/* 手动覆盖：data-theme 优先于系统偏好 */
 :root[data-theme="dark"] {
-  --bg: #151517;
-  --surface: #232324;
-  --surface-2: #2c2c2e;
-  --elevated: #353638;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text: #f7f8f8;
-  --text-2: #8a8f98;
-  --text-3: #62666d;
-  --accent: #3ecf8e;
-  --accent-hover: #34b27b;
-  --accent-ring: rgba(62, 207, 142, 0.22);
-  --accent-contrast: #0e0e10;
-  --accent-text: #3ecf8e;
-  --ok: #2f9e6e;
-  --warn: #f5a623;
-  --danger: #fb7185;
-  --idle: #8a8f98;
   --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.5);
   --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
-  color-scheme: dark;
 }
-
 :root[data-theme="light"] {
-  --bg: #ffffff;
-  --surface: #f5f6f7;
-  --surface-2: #ebeef2;
-  --elevated: #ffffff;
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  --border: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.16);
-  --text: #18181b;
-  --text-2: #71717a;
-  --text-3: #a1a1aa;
-  --accent: #16825d;
-  --accent-hover: #136e4e;
-  --accent-ring: rgba(22, 130, 93, 0.2);
-  --accent-contrast: #ffffff;
-  --accent-text: #158f5e;
-  --ok: #1e7f56;
-  --warn: #b45309;
-  --danger: #e11d48;
-  --idle: #71717a;
   --shadow-overlay: 0 8px 30px rgba(0, 0, 0, 0.12);
   --card-shadow: 0 1px 2px rgba(16, 17, 20, 0.04), 0 2px 6px rgba(16, 17, 20, 0.03);
-  color-scheme: light;
+}
+
+/* 手动覆盖：只切 color-scheme，light-dark() 自动选值（无需重列所有变量） */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+/* prefers-contrast: more —— 高对比偏好下加深边框与弱化文字 */
+@media (prefers-contrast: more) {
+  :root {
+    --border-subtle: light-dark(rgba(0,0,0,.12), rgba(255,255,255,.14));
+    --border:        light-dark(rgba(0,0,0,.22), rgba(255,255,255,.24));
+    --border-strong: light-dark(rgba(0,0,0,.34), rgba(255,255,255,.38));
+    --text-3:        light-dark(#6b6b73, #8a8f98);
+  }
 }

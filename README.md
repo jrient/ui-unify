@@ -50,7 +50,8 @@ assets/
   demo.standalone.html          单文件版 demo，浏览器直接打开预览
 references/
   style-guide.md                完整视觉规范（色板 / 排版 / 形态 / 反例）
-  migration.md                  分技术栈迁移手册 + 验收清单
+  migration.md                  分技术栈迁移手册 + 升级已接入项目 + 验收清单
+  contrast-audit.md             WCAG AA 对比度实测表 + 可复现回归脚本
 deploy/nginx.conf               demo 页面的 nginx 部署配置
 docs/                           skill 设计过程文档
 ```

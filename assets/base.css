@@ -67,7 +67,7 @@ body.ui {
   cursor: pointer;
 }
 .ui-btn:hover { background: var(--surface-2); }
-.ui-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-ring); border-color: var(--accent); }
+.ui-btn:focus-visible { outline: 2px solid transparent; outline-offset: 2px; box-shadow: 0 0 0 3px var(--accent-ring); border-color: var(--accent); }
 .ui-btn.primary {
   background: var(--accent);
   border-color: var(--accent);
@@ -91,7 +91,8 @@ body.ui {
 }
 .ui-textarea { height: auto; padding: 8px 10px; }
 .ui-input:focus, .ui-select:focus, .ui-textarea:focus {
-  outline: none;
+  outline: 2px solid transparent; /* forced-colors 下系统自动着色，避免焦点框消失 */
+  outline-offset: -1px;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-ring);
 }
@@ -333,7 +334,7 @@ body.ui {
 }
 .ui-switch input:checked + .track { background: var(--accent); border-color: var(--accent); }
 .ui-switch input:checked + .track::after { transform: translateX(16px); background: var(--accent-contrast); }
-.ui-switch input:focus-visible + .track { box-shadow: 0 0 0 3px var(--accent-ring); }
+.ui-switch input:focus-visible + .track { outline: 2px solid transparent; outline-offset: 2px; box-shadow: 0 0 0 3px var(--accent-ring); }
 .ui-switch input:disabled + .track { opacity: .5; cursor: not-allowed; }
 
 /* ---------- checkbox & radio ---------- */
@@ -354,7 +355,7 @@ body.ui {
 .ui-check input[type="radio"]:checked::after {
   content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-contrast);
 }
-.ui-check input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-ring); }
+.ui-check input:focus-visible { outline: 2px solid transparent; outline-offset: 2px; box-shadow: 0 0 0 3px var(--accent-ring); }
 .ui-check input:disabled { opacity: .5; cursor: not-allowed; }
 
 /* ---------- drawer / sheet ---------- */
@@ -516,7 +517,7 @@ body.ui {
   border-left: 0; border-right: 0; background: var(--bg); color: var(--text);
   font: inherit; font-family: var(--font-mono); font-size: 13px; outline: none;
 }
-.ui-stepper input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); position: relative; }
+.ui-stepper input:focus { outline: 2px solid transparent; outline-offset: -1px; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); position: relative; }
 
 /* ---------- dropzone ---------- */
 .ui-dropzone {
@@ -586,4 +587,121 @@ code.ui-inline {
 .ui-spark > i {
   width: 4px; border-radius: 1px; background: var(--accent); opacity: .85;
   display: inline-block;
+}
+
+/* ---------- modal / dialog（原生 <dialog>，自带焦点陷阱 / Esc 关闭 / 背景 inert） ---------- */
+dialog.ui-dialog {
+  width: min(480px, 92vw); padding: 0; color: var(--text);
+  background: var(--elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-overlay);
+}
+dialog.ui-dialog::backdrop { background: rgba(0, 0, 0, .55); }
+dialog.ui-dialog .head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+dialog.ui-dialog .head .title { font-weight: 600; font-size: 14px; }
+dialog.ui-dialog .head .x {
+  margin-left: auto; border: 0; background: transparent; color: var(--text-3);
+  font-size: 18px; line-height: 1; cursor: pointer;
+}
+dialog.ui-dialog .head .x:hover { color: var(--text); }
+dialog.ui-dialog .body { padding: 18px; font-size: 13px; color: var(--text-2); }
+dialog.ui-dialog .foot {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding: 14px 18px; border-top: 1px solid var(--border);
+}
+
+/* ---------- spinner（加载态，必要动效——reduced-motion 下仍旋转但更慢） ---------- */
+.ui-spinner {
+  display: inline-block; width: 16px; height: 16px; vertical-align: -3px;
+  border: 2px solid var(--border-strong); border-top-color: var(--accent);
+  border-radius: 50%; animation: ui-spin .7s linear infinite;
+}
+.ui-spinner.lg { width: 28px; height: 28px; border-width: 3px; }
+@keyframes ui-spin { to { transform: rotate(360deg); } }
+
+/* ---------- accordion / collapse（原生 <details>/<summary>） ---------- */
+.ui-accordion {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--surface); overflow: hidden;
+}
+.ui-accordion + .ui-accordion { margin-top: -1px; border-radius: 0; }
+.ui-accordion > summary {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; cursor: pointer; font-size: 13px; font-weight: 500;
+  color: var(--text); list-style: none; user-select: none;
+}
+.ui-accordion > summary::-webkit-details-marker { display: none; }
+.ui-accordion > summary:hover { background: var(--surface-2); }
+.ui-accordion > summary::before {
+  content: "▸"; color: var(--text-3); font-size: 10px; transition: transform .12s;
+}
+.ui-accordion[open] > summary::before { transform: rotate(90deg); }
+.ui-accordion > summary .count { margin-left: auto; color: var(--text-3); font-size: 12px; }
+.ui-accordion > .body { padding: 0 14px 14px 34px; font-size: 13px; color: var(--text-2); }
+
+/* ---------- stat / KPI 卡片 ---------- */
+.ui-stat {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--card-shadow);
+}
+.ui-stat .label { font-size: 12px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.ui-stat .value {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.1;
+}
+.ui-stat .foot { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-3); }
+
+/* ---------- button group / segmented buttons（相邻按钮拼接为工具条） ---------- */
+.ui-btn-group { display: inline-flex; }
+.ui-btn-group > .ui-btn { border-radius: 0; margin-left: -1px; }
+.ui-btn-group > .ui-btn:first-child { border-radius: var(--radius) 0 0 var(--radius); margin-left: 0; }
+.ui-btn-group > .ui-btn:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.ui-btn-group > .ui-btn:hover, .ui-btn-group > .ui-btn:focus-visible { z-index: 1; }
+
+/* ---------- divider（分隔线，水平/垂直） ---------- */
+.ui-divider { height: 1px; margin: 12px 0; background: var(--border-subtle); border: 0; }
+.ui-divider.v { width: 1px; height: auto; align-self: stretch; margin: 0 12px; }
+.ui-divider.label {
+  display: flex; align-items: center; gap: 10px; height: auto; background: none;
+  color: var(--text-3); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+}
+.ui-divider.label::before, .ui-divider.label::after { content: ""; flex: 1; height: 1px; background: var(--border-subtle); }
+
+/* ---------- reduced motion ----------
+ * 尊重 prefers-reduced-motion：关掉 shimmer/pulse/indeterminate 等无限动画与过渡，
+ * 但保留状态可辨识性——running 点保持满不透明、骨架屏停在可见态，信息不因关动画丢失。 */
+@media (prefers-reduced-motion: reduce) {
+  .ui *, .ui *::before, .ui *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ui-badge.running .ui-dot { opacity: 1; }
+  .ui-skeleton { background-position: 0 50%; }
+  .ui-progress.indeterminate > .bar { margin-left: 0; }
+  /* spinner 是必要加载动效：保留旋转但放慢（类选择器压过上面的通配 !important） */
+  .ui-spinner { animation-duration: 1.4s !important; animation-iteration-count: infinite !important; }
+}
+
+/* ---------- focus 兜底：补齐缺焦点态的原生控件（tab/分页/分段/导航/链接） ---------- */
+.ui-tab:focus-visible, .ui-page-btn:focus-visible, .ui-seg button:focus-visible,
+.ui-stepper button:focus-visible, .ui-nav-item:focus-visible, .ui-link:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius);
+}
+
+/* ---------- forced-colors（Windows 高对比）：半透明边框会被系统抹掉，给关键结构补系统色边框 ---------- */
+@media (forced-colors: active) {
+  .ui-card, .ui-input, .ui-select, .ui-textarea, .ui-btn, .ui-page-btn,
+  .ui-menu, .ui-command, .ui-drawer, .ui-toast, .ui-badge, .ui-tag,
+  .ui-seg, .ui-stepper input, .ui-progress { border: 1px solid CanvasText; }
+  .ui-table th, .ui-table td { border-bottom: 1px solid CanvasText; }
+  .ui-btn.primary, .ui-page-btn.active { border: 1px solid ButtonText; }
+  .ui-switch .track, .ui-check input { border: 1px solid CanvasText; }
+  .ui-switch input:checked + .track, .ui-check input:checked,
+  .ui-progress > .bar { background: Highlight; }
+  .ui-tab.active { border-bottom-color: Highlight; }
 }

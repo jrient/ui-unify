@@ -35,6 +35,13 @@
    `:root, :root.dark { --el-color-primary: var(--accent); --el-color-success: var(--ok); --el-color-warning: var(--warn); --el-color-danger: var(--danger); --el-bg-color: var(--surface); --el-bg-color-page: var(--bg); --el-border-color: var(--border); --el-text-color-primary: var(--text); --el-text-color-regular: var(--text-2); --el-border-radius-base: var(--radius); --el-font-family: var(--font-sans); }`
 4. 页面级自有样式按 A 节方式替换
 
+## 升级已接入项目（防"复制即分叉"漂移）
+tokens.css 是**复制**进各项目的，skill 后续更新不会自动回流，须主动升级：
+1. 看目标项目里 `tokens.css` 顶部的版本号（如 `v1.1.0`）与本 skill 比对，判断是否过期
+2. 升级前先 `diff` 目标副本与 skill 版本；若下游有本地魔改，逐条确认保留/覆盖再替换
+3. base.css 同理；升级后按下方验收清单双主题回归
+4. **浏览器要求**：v1.1.0 起 tokens.css 用 `light-dark()`（Baseline 2024：Chrome/Edge 123、Safari 17.5、Firefox 120）。目标项目若须兼容更老浏览器，改用旧的四块 `@media`+`data-theme` 写法（git 历史里有）
+
 ## 例外
 - MediaCrawler webui：打包产物无源码，跳过（文档站可选对齐）
 - manju-bar：个性豁免候选——调用时先问用户「全量迁移」还是「仅对齐间距/圆角/字体、保留琥珀配色」
@@ -46,3 +53,5 @@
 - [ ] 无重实心投影残留；卡片=1px 边框 + --card-shadow 极轻 bevel，浮层=--elevated + --shadow-overlay，其余平面元素禁阴影
 - [ ] 纵深分层正确：画布(--bg) < 卡片(--surface) < 浮层(--elevated) 肉眼可辨
 - [ ] 功能无回归：原有按钮/表单/表格交互全部正常
+- [ ] a11y：键盘 Tab 走查每个可交互元素焦点框清晰可见；开系统「减少动态」后无限动画停止但加载/状态仍可辨
+- [ ] 对比度：主/次文字、链接绿、状态色实测 ≥ WCAG AA 4.5:1（实测表见 references/contrast-audit.md）；--text-3 是低于 AA 的弱化档，勿承载必要正文

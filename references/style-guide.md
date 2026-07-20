@@ -62,13 +62,18 @@
 - 浮层与反馈：`.ui-overlay`+`.ui-command`（命令面板）· `.ui-menu`（下拉菜单，`.item`/`.sep`/`.label`/`.item.danger`）· `.ui-drawer`（抽屉，`.left` 变体 + head/body/foot）· `.ui-empty`（空状态）· `.ui-toast-stack`/`.ui-toast`（`.ok`/`.warn`/`.danger`/`.info`）
 - 展示与状态：`.ui-tag`（`.accent`，可含 `.x` 删除）· `.ui-avatar`（`.sm`/`.lg`/`.accent` + `.ui-avatar-group` 叠加）· `.ui-timeline`（节点 `.ok`/`.danger`/`.active`）· `.ui-skeleton`（`.line`/`.circle` 加载态）
 - 数据/代码：`.ui-tree`（树形，`.node.active`）· `.ui-code`（日志/代码块，`.c-accent`/`.c-warn`/`.c-danger` 语义高亮）+ `code.ui-inline`（行内代码）· `.ui-trend`（`.up`/`.down`/`.flat` 涨跌）· `.ui-spark`（纯 CSS 迷你柱图）
+- 浮层进阶：`dialog.ui-dialog`（原生 `<dialog>` 居中模态，`.head`/`.body`/`.foot`，`::backdrop` 遮罩——自带焦点陷阱 / Esc 关闭 / 背景 inert）
+- 加载与折叠：`.ui-spinner`（`.lg`，必要动效，reduced-motion 下仍旋转）· `.ui-accordion`（原生 `<details>`/`<summary>` 折叠面板，`.body`/`.count`）
+- 数据与工具条：`.ui-stat`（KPI 卡片，`.label`/`.value`/`.foot`）· `.ui-btn-group`（相邻按钮拼接工具条）· `.ui-divider`（分隔线，`.v` 垂直 / `.label` 带文字）
 - 文本：`.ui-link` `.ui-muted` `.ui-mono`
 - 借鉴来源：sidebar / ⌘K / tabs / pagination / 命令面板 参考 shadcn-admin，落地时坚持绿强调 + Linear 克制圆角，未照搬其中性 primary 与 10px 圆角
-- 可访问性：`.ui-btn`/`.ui-tab`/`.ui-page-btn`/`.ui-switch`/`.ui-check` 用原生表单/按钮元素，键盘可达；`.ui-menu .item`、`.ui-command .item`、`.ui-tree .node` 是纯样式 `div`，集成时需自行补 `role`/`tabindex`/键盘事件
+- 可访问性：`.ui-btn`/`.ui-tab`/`.ui-page-btn`/`.ui-switch`/`.ui-check` 用原生表单/按钮元素，键盘可达；模态用原生 `<dialog>`（`showModal()` 自动焦点陷阱与 Esc），折叠用原生 `<details>`；`.ui-menu .item`、`.ui-command .item`、`.ui-tree .node` 是纯样式 `div`，集成时需自行补 `role`/`tabindex`/键盘事件
+- 全局 a11y 兜底（base.css 末尾）：`prefers-reduced-motion` 关无限动画（保留 spinner/状态可辨识）；`prefers-contrast: more` 加深边框与弱化文字；`forced-colors`（Windows 高对比）给半透明边框补系统色；所有焦点态用「透明实线 outline + 强调色」双保险，高对比模式不丢焦点框
 
-## 4. 主题机制
-- 默认深色；`@media (prefers-color-scheme: light)` 自动浅色
-- `:root[data-theme="dark"|"light"]` 手动覆盖，优先于系统偏好
+## 4. 主题机制（tokens.css v1.1.0：light-dark() 单份定义）
+- 颜色用 `light-dark(浅色值, 深色值)` **只写一次**，主题由 `color-scheme` 驱动：`:root { color-scheme: light dark }` 跟随系统；`:root[data-theme="light"|"dark"]` 手动覆盖只需切 `color-scheme`（不再重列整套变量）
+- **阴影不是颜色**，`light-dark()` 不接受 → `--shadow-overlay`/`--card-shadow` 仍保留极小的 `@media`+`data-theme` 覆盖块（这是唯一的重复，诚实对待边界）
+- 浏览器要求：`light-dark()` 需 Chrome/Edge 123、Safari 17.5、Firefox 120（Baseline 2024）；若目标项目须兼容更老浏览器，退回旧的四块 `@media`+`data-theme` 写法
 - 所有颜色必须来自 token 变量，组件内禁止硬编码色值
 
 ## 5. 反例（迁移时要消灭的东西）
