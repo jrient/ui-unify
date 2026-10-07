@@ -576,16 +576,20 @@ code.ui-inline {
 .ui-trend { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-family: var(--font-mono); }
 .ui-trend.up { color: var(--ok); }
 .ui-trend.down { color: var(--danger); }
-.ui-trend.flat { color: var(--text-3); }
+.ui-trend.flat { color: var(--text-2); }   /* 「持平」也是要读的信息，不落占位档 */
+/* 颜色跟好坏走、不跟方向走：失败数、耗时、错误率这类「降为好」的指标加 .inverse，箭头仍按方向 */
+.ui-trend.inverse.up { color: var(--danger); }
+.ui-trend.inverse.down { color: var(--ok); }
 .ui-trend::before { font-size: 10px; }
 .ui-trend.up::before { content: "▲"; }
 .ui-trend.down::before { content: "▼"; }
 .ui-trend.flat::before { content: "—"; }
 
-/* ---------- sparkline bars (纯 CSS 迷你柱图占位) ---------- */
+/* ---------- sparkline bars (纯 CSS 迷你柱图) ----------
+ * v1.8.0 起默认色由 --accent 改为 --chart-1：它是数据标记，必须和图表一样与 data-accent 正交。要别的系列色就加 .ui-s2…8。 */
 .ui-spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 28px; }
-.ui-spark > i {
-  width: 4px; border-radius: 1px; background: var(--accent); opacity: .85;
+.ui-spark > i {   /* 与图表柱同一规矩：只圆远离基线的一端 */
+  width: 4px; border-radius: 1px 1px 0 0; background: var(--s, var(--chart-1)); opacity: .85;   /* 数据标记：默认取图表色，不跟 data-accent 变 */
   display: inline-block;
 }
 
@@ -652,7 +656,7 @@ dialog.ui-dialog .foot {
   font-family: var(--font-mono); font-variant-numeric: tabular-nums;
   font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.1;
 }
-.ui-stat .foot { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-3); }
+.ui-stat .foot { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); }   /* 与 .ui-chart-foot 同档：承载信息，不用占位档 */
 
 /* ---------- button group / segmented buttons（相邻按钮拼接为工具条） ---------- */
 .ui-btn-group { display: inline-flex; }
@@ -681,16 +685,273 @@ dialog.ui-dialog .foot {
     scroll-behavior: auto !important;
   }
   .ui-badge.running .ui-dot { opacity: 1; }
-  .ui-skeleton { background-position: 0 50%; }
+  .ui-skeleton, .ui-chart-skeleton > i { background-position: 0 50%; }
   .ui-progress.indeterminate > .bar { margin-left: 0; }
   /* spinner 是必要加载动效：保留旋转但放慢（类选择器压过上面的通配 !important） */
   .ui-spinner { animation-duration: 1.4s !important; animation-iteration-count: infinite !important; }
+}
+
+/* ---------- charts / data viz ----------
+ * 纯 CSS + 内联 SVG，不引图表库。核心规矩（违反就是画错，不是风格问题）：
+ *  1. 单 Y 轴，永不双轴；量纲不同就拆成两张图或归一化。
+ *  2. 分类色按 --chart-1…8 固定顺序取用，不循环；第 9 个系列并入「其他」或改小倍数图。
+ *  3. 文字一律走 --text/--text-2/--text-3，绝不用系列色写字；系列色只填点/线/面。
+ *  4. ≥2 系列必有图例；≤4 系列同时做末端直接标注，绝不给每个点都标数字。
+ *  5. 只圆远离基线的一端；相邻色块之间留 2px 卡片底色的缝。
+ *  6. 网格线最弱（虚线 1px），基线次之，数据最强。
+ *  7. 图表画在卡片面 --surface 上，不要画在 --elevated 浮层上。
+ * 系列色通过 .ui-s1…8 / .ui-cok 等把颜色注入局部变量 --s，标记类只认 --s。 */
+.ui-chart { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.ui-chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.ui-chart .ui-chart-title { margin: 0; font-size: 14px; font-weight: 600; line-height: 20px; color: var(--text); } /* 带 .ui-chart 前缀：压过 .ui-card h3 的 8px 下边距 */
+.ui-chart-sub { margin: 2px 0 0; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.ui-chart-tools { display: inline-flex; align-items: center; gap: 8px; flex: none; }
+/* 宽度驱动：SVG 铺满卡片宽、高度随 viewBox 比例走，不再固定高度留出信箱空白。
+ * --vbw 填 viewBox 宽度：SVG 最多缩到 0.82 倍（11px 刻度 ≈ 9px 下限），再窄就在卡片内横向滚动，
+ * 和宽表格外包 overflow-x:auto 是同一种做法。 */
+.ui-chart-body {
+  position: relative; width: 100%; overflow-x: auto; overscroll-behavior-x: contain;
+  contain: inline-size;   /* 关键：SVG 的 min-width 不再经网格项 min-width:auto 往上撑宽整列 */
+}
+.ui-chart-body > svg {   /* 缩放夹在 0.92×–1.04×：汉字 13 单位实际 12–13.5px，卡在体系 12/13px 两档之间、永远小于 14px 卡片标题；mono 数字 11 单位 10–11.4px */
+  display: block; width: 100%; height: auto; overflow: visible; margin-inline: auto;
+  min-width: calc(var(--vbw, 0) * .92px);
+  max-width: calc(var(--vbw, 100000) * 1.04px);
+}
+.ui-chart-body.compact { height: 148px; }   /* 只给非 SVG 内容用：骨架、空态 */
+.ui-chart-body.square > svg { max-width: calc(var(--vbw, 160) * 1.04px); }   /* 环形等方图：同样受上限约束 */
+.ui-chart-foot {   /* 与 .ui-stat .label 同档：12px --text-2。脚注承载「峰值/均值」等信息，不能落到占位档 */
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+
+/* 系列槽：只负责把颜色灌进 --s，标记类统一读 --s */
+.ui-s1 { --s: var(--chart-1); } .ui-s2 { --s: var(--chart-2); }
+.ui-s3 { --s: var(--chart-3); } .ui-s4 { --s: var(--chart-4); }
+.ui-s5 { --s: var(--chart-5); } .ui-s6 { --s: var(--chart-6); }
+.ui-s7 { --s: var(--chart-7); } .ui-s8 { --s: var(--chart-8); }
+.ui-sother { --s: var(--chart-other); }   /* 长尾归并，中性灰，不是第 9 个色相 */
+/* 状态槽：语义色不占分类槽，且必须配图标/文字，不能只靠颜色 */
+.ui-cok { --s: var(--ok); } .ui-cwarn { --s: var(--warn); }
+.ui-cdanger { --s: var(--danger); } .ui-cidle { --s: var(--idle); }
+/* 序数槽（离散有序）与发散槽（有极性） */
+.ui-o1 { --s: var(--chart-ord-1); } .ui-o2 { --s: var(--chart-ord-2); }
+.ui-o3 { --s: var(--chart-ord-3); } .ui-o4 { --s: var(--chart-ord-4); }
+.ui-dn2 { --s: var(--chart-div-neg-2); } .ui-dn1 { --s: var(--chart-div-neg-1); }
+.ui-dmid { --s: var(--chart-div-mid); }
+.ui-dp1 { --s: var(--chart-div-pos-1); } .ui-dp2 { --s: var(--chart-div-pos-2); }
+/* 顺序槽（连续量级：热力/密度） */
+.ui-q1 { --s: var(--chart-seq-1); } .ui-q2 { --s: var(--chart-seq-2); }
+.ui-q3 { --s: var(--chart-seq-3); } .ui-q4 { --s: var(--chart-seq-4); }
+.ui-q5 { --s: var(--chart-seq-5); } .ui-q6 { --s: var(--chart-seq-6); }
+.ui-q7 { --s: var(--chart-seq-7); }
+
+/* 轴 / 网格 / 刻度 —— 永远比数据弱 */
+.ui-chart-grid line { stroke: var(--chart-grid); stroke-width: 1; stroke-dasharray: 3 3; }
+.ui-chart-axis { stroke: var(--chart-axis); stroke-width: 1; }
+.ui-chart-tick {
+  font-family: var(--font-mono); font-size: 11px; fill: var(--chart-ink-muted);
+  font-variant-numeric: tabular-nums; user-select: none;
+}
+.ui-chart-tick.name { font-family: var(--font-sans); font-size: 13px; fill: var(--chart-ink); }
+.ui-chart-tick.id { fill: var(--chart-ink); }   /* 技术 ID（node-01、#1024）：mono 11，但要读，用 ink 不用 muted */
+/* 汉字规矩（对照 diagram-design 的 Han 规则）：汉字不进 mono 小字号槽位，一律 sans 13 单位（缩放下限后仍 ≥12px）。
+ * mono 只给数字、时间、ID 这类等宽内容。 */
+/* 标签衬底：用卡片底色描一圈，压在网格线/标记上也读得清，不靠额外的遮罩矩形 */
+.ui-chart-label, .ui-chart-rule-label, .ui-chart-tick {
+  paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round;
+}
+/* 直接标注：用墨色，不用系列色 */
+.ui-chart-label {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600; fill: var(--chart-ink);
+  font-variant-numeric: tabular-nums; user-select: none;
+}
+
+/* 标记：线 / 面 / 点 / 柱 / 单元格 */
+.ui-chart-line { fill: none; stroke: var(--s); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ui-chart-area { fill: var(--s); fill-opacity: .12; stroke: none; }   /* 只用透明度衰减，不做黑色渐变 */
+.ui-chart-dot { fill: var(--surface); stroke: var(--s); stroke-width: 2; }
+.ui-chart-bar { fill: var(--s); }
+.ui-chart-bar + .ui-chart-bar { /* 堆叠/相邻色块之间的画布缝由几何留出，这里只兜底描边 */
+  stroke: var(--surface); stroke-width: 0;
+}
+.ui-chart-seg { fill: var(--s); stroke: var(--surface); stroke-width: var(--chart-gap); }
+.ui-chart-cell { fill: var(--s); rx: 2; }
+.ui-chart-ring { fill: none; stroke: var(--s); stroke-width: 14; stroke-linecap: butt; }
+.ui-chart-ring-track { fill: none; stroke: var(--surface-2); stroke-width: 14; }
+.ui-chart-center-num {
+  font-family: var(--font-mono); font-size: 22px; font-weight: 700; fill: var(--text);
+  text-anchor: middle; font-variant-numeric: tabular-nums;
+}
+.ui-chart-center-cap { font-size: 13px; fill: var(--text-2); text-anchor: middle; }
+
+/* 图例：≥2 系列必有；色标 8px 方块（折线用 10×2 短横） */
+.ui-chart-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; align-items: center; }
+.ui-chart-legend-item { display: inline-flex; align-items: center; gap: 6px; color: var(--text-2); }
+.ui-chart-legend-item > .sw { width: 8px; height: 8px; border-radius: 2px; background: var(--s); flex: none; }
+.ui-chart-legend-item > .sw.line { width: 10px; height: 2px; border-radius: 1px; }
+.ui-chart-legend-item > .sw.dot { border-radius: 50%; }
+.ui-chart-legend-item > .val {
+  color: var(--text); font-family: var(--font-mono); font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* 顺序渐变图例：一条 7 阶色条 + 两端文字 */
+.ui-chart-scale { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--chart-ink-muted); }
+.ui-chart-scale > .steps { display: inline-flex; gap: 2px; }
+.ui-chart-scale > .steps > i { width: 14px; height: 8px; border-radius: 2px; background: var(--s); }
+
+/* 阈值 / 目标参考线：比基线弱，永远不抢数据；标签走弱化墨色 */
+.ui-chart-rule { stroke: var(--chart-axis); stroke-width: 1; stroke-dasharray: 4 3; }
+.ui-chart-rule.strong { stroke: var(--text-3); }
+.ui-chart-rule-label {   /* 常带汉字（「阈值」「均值」），按汉字规矩走 sans 13 */
+  font-family: var(--font-sans); font-size: 13px; fill: var(--chart-ink);
+  font-variant-numeric: tabular-nums; user-select: none;
+}
+
+/* 图例联动（零 JS，靠 :has()）：hover 图例项 → 其余系列淡出。
+ * 要求图例项与对应标记（或标记编组）带同一个 data-s 值。 */
+.ui-chart:has(.ui-chart-legend-item[data-s]:hover) .ui-chart-body [data-s] { opacity: .25; transition: opacity .12s ease; }
+.ui-chart:has(.ui-chart-legend-item[data-s="1"]:hover) .ui-chart-body [data-s="1"],
+.ui-chart:has(.ui-chart-legend-item[data-s="2"]:hover) .ui-chart-body [data-s="2"],
+.ui-chart:has(.ui-chart-legend-item[data-s="3"]:hover) .ui-chart-body [data-s="3"],
+.ui-chart:has(.ui-chart-legend-item[data-s="4"]:hover) .ui-chart-body [data-s="4"],
+.ui-chart:has(.ui-chart-legend-item[data-s="5"]:hover) .ui-chart-body [data-s="5"],
+.ui-chart:has(.ui-chart-legend-item[data-s="6"]:hover) .ui-chart-body [data-s="6"],
+.ui-chart:has(.ui-chart-legend-item[data-s="7"]:hover) .ui-chart-body [data-s="7"],
+.ui-chart:has(.ui-chart-legend-item[data-s="8"]:hover) .ui-chart-body [data-s="8"],
+.ui-chart:has(.ui-chart-legend-item[data-s="other"]:hover) .ui-chart-body [data-s="other"] { opacity: 1; }
+
+/* 图表空状态与加载骨架：占位要和真图一样高，避免数据回来时页面跳动 */
+.ui-chart-empty {   /* .ui-empty 的紧凑版：同样的方形图标底片 + title/desc；不用虚线框（那是 .ui-dropzone 的「拖到这里」语义） */
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  height: 100%; text-align: center; font-size: 13px;
+}
+.ui-chart-empty .glyph {
+  width: 32px; height: 32px; border-radius: var(--radius-lg);
+  display: grid; place-items: center; margin-bottom: 2px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-3); font-size: 16px;
+}
+.ui-chart-empty .title { font-weight: 600; color: var(--text); }
+.ui-chart-empty .desc { color: var(--text-2); font-size: 12px; max-width: 300px; }
+.ui-chart-skeleton { display: flex; align-items: flex-end; gap: 8px; height: 100%; padding: 8px 0 22px; }
+.ui-chart-skeleton > i {
+  flex: 1; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%; animation: ui-shimmer 1.4s ease infinite;
+}
+
+/* 事件标记（.ui-chart-event）：时序图上的「时刻」——发版、告警、扩容。
+ * 和阈值线（.ui-chart-rule，水平虚线＝一个「值」）刻意区分：事件是竖直实线＋顶部标签。每张图最多 3 个。 */
+.ui-chart-event > line { stroke: var(--border-strong); stroke-width: 1; }
+.ui-chart-event > circle { fill: var(--surface); stroke: var(--s, var(--text-2)); stroke-width: 2; }
+.ui-chart-event > text {
+  font-family: var(--font-sans); font-size: 13px; fill: var(--chart-ink);
+  paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round;
+}
+
+/* 小倍数（.ui-multiples）：系列超过 4 个时拆成一格一个。
+ * 硬规矩：所有格子共用同一纵轴（脚注写明范围）；同一个颜色——身份由格子标题承担，不消耗分类色槽。 */
+.ui-multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px 16px; }
+.ui-multiples > .cell { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ui-multiples > .cell > .head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-2); }
+.ui-multiples > .cell > .head > .id { font-family: var(--font-mono); }   /* 技术 ID 走 mono，与热力图行标签一致 */
+.ui-multiples > .cell > .head > b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text); font-weight: 600; }
+.ui-multiples > .cell > svg { display: block; width: 100%; height: 44px; overflow: visible; }
+.ui-multiples .ui-chart-line { stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.ui-multiples .ui-chart-axis { vector-effect: non-scaling-stroke; }
+
+/* 100% 占比条（.ui-meter）：一行看清构成，纯 HTML，可直接放进 .ui-table 单元格。
+ * 与 .ui-progress 的分工：progress 是「界面状态」（走强调色、胶囊形）；meter 是「数据」（走图表色槽，只圆两端）。
+ * 段宽用 style="flex-grow: 原始数值"（不必加总到 100，缝宽会自动扣除，不会裁掉末段）；段间 2px 卡片底色的缝。 */
+.ui-meter { display: flex; gap: var(--chart-gap); height: 8px; min-width: 80px; border-radius: var(--radius-sm); overflow: hidden; }
+.ui-meter > i { flex: 1 1 0; background: var(--s); min-width: 2px; }   /* 非零值至少 2px 可见；0 值不要渲染这一段 */
+.ui-meter.lg { height: 12px; }
+
+/* 子弹图（.ui-bullet）：实际 vs 目标/配额。轨道=可用范围，实条=实际值，竖线=目标。
+ * 超出目标不改实条颜色去「暗示」，而是在行内配 .ui-badge 说清楚——状态永远配文字。 */
+.ui-bullet {   /* 四列：名称 | 轨道 | 数字 | 状态徽章——徽章独占一列，数字列才能上下对齐 */
+  display: grid; grid-template-columns: minmax(64px, max-content) 1fr auto minmax(0, max-content);
+  align-items: center; gap: 8px 12px; font-size: 13px;
+}
+.ui-bullet > .flag:empty { display: block; }
+.ui-bullet > .name { color: var(--text); }
+.ui-bullet > .nums { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--text-2); text-align: right; }
+.ui-bullet > .nums b { color: var(--text); font-weight: 600; }
+.ui-bullet > .track {
+  position: relative; height: 14px; border-radius: var(--radius-sm);
+  background: var(--surface-2); border: 1px solid var(--border-subtle);
+}
+.ui-bullet > .track > .bar {
+  position: absolute; left: 0; top: 3px; bottom: 3px; max-width: 100%;
+  background: var(--s, var(--chart-1)); border-radius: 0 2px 2px 0;   /* 只圆远离基线的一端 */
+}
+.ui-bullet > .track > .target {   /* 目标线比实条高出轨道上下各 2px，一眼可见；用墨色不用系列色 */
+  position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px;
+  background: var(--text); border-radius: 1px;
+}
+
+/* hover 层：透明 hitbox 接鼠标，准星 + tooltip 纯 CSS 显隐，零 JS */
+.ui-chart-hit > .box { fill: transparent; }
+.ui-chart-hit > .cross { stroke: var(--border-strong); stroke-width: 1; stroke-dasharray: 2 2; }
+.ui-chart-hit > .cross, .ui-chart-hit > .tip, .ui-chart-hit > .peak { opacity: 0; transition: opacity .12s ease; }
+.ui-chart-hit:hover > .cross, .ui-chart-hit:focus > .cross,
+.ui-chart-hit:hover > .tip, .ui-chart-hit:focus > .tip,
+.ui-chart-hit:hover > .peak, .ui-chart-hit:focus > .peak { opacity: 1; }   /* :focus 而非 :focus-visible：触屏点按也能出读数 */
+.ui-chart-hit > .tip, .ui-chart-hit > .peak { pointer-events: none; }
+.ui-chart-hit:focus-visible { outline: none; }
+.ui-chart-hit:focus-visible > .box { fill: var(--accent-ring); }
+.ui-chart-tip-bg {
+  fill: var(--elevated); stroke: var(--border); stroke-width: 1; rx: 6;
+  filter: var(--overlay-drop);
+}
+.ui-chart-tip-t { font-size: 11px; fill: var(--text-3); font-family: var(--font-mono); }
+.ui-chart-tip-v { font-size: 12px; fill: var(--text); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.ui-chart-tip-k { font-size: 13px; fill: var(--text-2); }
+
+/* 可访问性回退：每张图都能展开成 .ui-table，屏幕阅读器/打印/纯文本都能取到精确值 */
+.ui-chart-a11y { border-top: 1px solid var(--border-subtle); padding-top: 8px; }
+.ui-chart-a11y > summary {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px;
+  color: var(--text-2); cursor: pointer; user-select: none; list-style: none;
+}
+.ui-chart-a11y > summary::-webkit-details-marker { display: none; }
+.ui-chart-a11y > summary::before { content: "▸"; font-size: 9px; }
+.ui-chart-a11y[open] > summary::before { content: "▾"; }
+.ui-chart-a11y > summary:hover { color: var(--text); }
+.ui-chart-a11y > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+.ui-chart-a11y[open] > summary { margin-bottom: 8px; }
+.ui-chart-a11y .wrap { max-height: 220px; overflow: auto; }
+
+/* 纹理通道：CVD / 打印 / 强制配色下的第二编码，平时不开（不是装饰） */
+.ui-chart-tex { fill: url(#ui-tex-45); opacity: 0; pointer-events: none; }
+.ui-chart-tex.alt { fill: url(#ui-tex-135); }
+[data-chart-texture="on"] .ui-chart-tex { opacity: .5; }
+.ui-tex-line { stroke: var(--text); stroke-width: 1.2; opacity: .5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chart-hit > .cross, .ui-chart-hit > .tip, .ui-chart-hit > .peak { transition: none; }
 }
 
 /* ---------- focus 兜底：补齐缺焦点态的原生控件（tab/分页/分段/导航/链接） ---------- */
 .ui-tab:focus-visible, .ui-page-btn:focus-visible, .ui-seg button:focus-visible,
 .ui-stepper button:focus-visible, .ui-nav-item:focus-visible, .ui-link:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius);
+}
+
+/* ---------- 打印：图表要能印在纸上看 ---------- */
+@media print {
+  /* 交互层在纸上没有意义，且 tooltip 会盖住数据 */
+  .ui-chart-hit > .cross, .ui-chart-hit > .tip, .ui-chart-hit > .peak { opacity: 0 !important; }
+  /* 纸张多半是黑白/单色打印：纹理顶上颜色这一编码 */
+  .ui-chart-tex { opacity: .5; }
+  /* 数据表格摊开：未展开的 <details> 内容由 UA 用 ::details-content 隐藏，
+   * 所以要打开的是它，不是子元素的 display（Chrome/Edge 131+ 支持；
+   * 其余浏览器退回「只印出 summary 与图形」，不影响正确性）。 */
+  .ui-chart-a11y > summary { list-style: none; }
+  .ui-chart-a11y::details-content { content-visibility: visible; block-size: auto; }
+  .ui-chart-a11y > .wrap { max-height: none; overflow: visible; }
+  .ui-card, .ui-chart { break-inside: avoid; }
 }
 
 /* ---------- forced-colors（Windows 高对比）：半透明边框会被系统抹掉，给关键结构补系统色边框 ---------- */
@@ -704,4 +965,9 @@ dialog.ui-dialog .foot {
   .ui-switch input:checked + .track, .ui-check input:checked,
   .ui-progress > .bar { background: Highlight; }
   .ui-tab.active { border-bottom-color: Highlight; }
+  /* 图表：系统会抹掉填充色，改用系统色 + 纹理承担区分，图例色标补边框 */
+  .ui-chart-bar, .ui-chart-seg, .ui-chart-cell, .ui-chart-area { forced-color-adjust: none; fill: Canvas; stroke: CanvasText; }
+  .ui-chart-line, .ui-chart-ring { forced-color-adjust: none; stroke: CanvasText; }
+  .ui-chart-tex { opacity: 1; }
+  .ui-chart-legend-item > .sw { border: 1px solid CanvasText; }
 }

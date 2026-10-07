@@ -35,12 +35,44 @@
    `:root, :root.dark { --el-color-primary: var(--accent); --el-color-success: var(--ok); --el-color-warning: var(--warn); --el-color-danger: var(--danger); --el-bg-color: var(--surface); --el-bg-color-page: var(--bg); --el-border-color: var(--border); --el-text-color-primary: var(--text); --el-text-color-regular: var(--text-2); --el-border-radius-base: var(--radius); --el-font-family: var(--font-sans); }`
 4. 页面级自有样式按 A 节方式替换
 
+
+## 如何为目标项目选主题色系与强调色
+ui-unify 引入了**三轴正交的多色系机制**：
+1. `data-theme`：明暗主题（light/dark/跟随系统）。
+2. `data-palette`：主题色系，共 12 套。护眼低调向 solarized / everforest / nord / catppuccin / rose-pine；深色向 dracula / tokyo-night / one-dark；彩色向 monokai / gruvbox / ayu。**只改变中性底色**，提供不同冷暖基调。
+3. `data-accent`：强调色（blue 蓝、violet 紫、teal 青、amber 琥珀、graphite 灰、默认绿）。**只改变按钮和高亮部件**。
+
+**使用方法**：
+在引入 `tokens.css` 的页面 `<html data-palette="solarized" data-accent="blue">`（或动态设置 `document.documentElement.dataset.palette = 'solarized'`）即可生效。不设属性即为默认的暖灰/米白中性底色 + 绿色强调。
+
+**选色建议**：
+请根据目标项目的品牌调性或具体场景选择合适的色系与强调色。例如长文本阅读可选 `everforest` 或 `solarized`，数据密集后台可选 `nord` 配 `blue`。所有颜色仍必须走 token 变量（如 `var(--bg)`、`var(--accent)`），**绝对不要为了迎合色系硬编码新色**。语义色（如 --ok, --warn）永远独立，不随任何色系变化。
+
 ## 升级已接入项目（防"复制即分叉"漂移）
 tokens.css 是**复制**进各项目的，skill 后续更新不会自动回流，须主动升级：
 1. 看目标项目里 `tokens.css` 顶部的版本号（如 `v1.1.0`）与本 skill 比对，判断是否过期
 2. 升级前先 `diff` 目标副本与 skill 版本；若下游有本地魔改，逐条确认保留/覆盖再替换
 3. base.css 同理；升级后按下方验收清单双主题回归
 4. **浏览器要求**：v1.1.0 起 tokens.css 用 `light-dark()`（Baseline 2024：Chrome/Edge 123、Safari 17.5、Firefox 120）。目标项目若须兼容更老浏览器，改用旧的四块 `@media`+`data-theme` 写法（git 历史里有）
+
+## 图表库怎么接（ECharts / Chart.js / Recharts）
+
+图表色板是 CSS 变量，图表库要的是 JS 字符串——取值别硬抄 hex，运行时读，主题切换才跟得上：
+
+```js
+const css = getComputedStyle(document.documentElement);
+const v = n => css.getPropertyValue(n).trim();
+const series = [1,2,3,4,5,6,7,8].map(i => v(`--chart-${i}`));   // 按顺序取，用几个取几个
+const ink = { label: v('--chart-ink'), muted: v('--chart-ink-muted'),
+              grid: v('--chart-grid'), axis: v('--chart-axis') };
+```
+
+- `light-dark()` 由 `color-scheme` 决定，`getComputedStyle` 拿到的已经是当前主题下的实际色值。
+- 主题/色系切换后要**重新取值并 `setOption`/重绘**（监听 `data-theme` 的 MutationObserver，
+  或 `matchMedia('(prefers-color-scheme: dark)')` 的 change 事件）。
+- 库的默认色板一律关掉（ECharts 的 `color`、Chart.js 的 `backgroundColor` 循环），
+  否则第 9 个系列会被自动生成一个新色相——那正是本体系禁止的。
+- 库自带的双 Y 轴、饼图默认标签、彩虹渐变都关掉，理由见 style-guide §3.6。
 
 ## 例外
 - MediaCrawler webui：打包产物无源码，跳过（文档站可选对齐）
@@ -55,3 +87,5 @@ tokens.css 是**复制**进各项目的，skill 后续更新不会自动回流�
 - [ ] 功能无回归：原有按钮/表单/表格交互全部正常
 - [ ] a11y：键盘 Tab 走查每个可交互元素焦点框清晰可见；开系统「减少动态」后无限动画停止但加载/状态仍可辨
 - [ ] 对比度：主/次文字、链接绿、状态色实测 ≥ WCAG AA 4.5:1（实测表见 references/contrast-audit.md）；--text-3 是低于 AA 的弱化档，勿承载必要正文
+- [ ] 图表（若有）：颜色全部来自 --chart-* token，不跟随 accent 变化；单 Y 轴；分类色按 1→8 固定顺序不循环（第 9 个并入 --chart-other 灰）；≥2 系列有图例；每张图可展开成数据表格；有加载态与空态且与真图等高；脚注提到的阈值在图上画出来；图表画在 --surface 上（实测见 references/chart-audit.md）
+- [ ] 图表文字：汉字 ≥12px 且不用 mono；值轴从 0 起；图例/脚注里的统计数字由数据计算而非手填；「降为好」的趋势用 .ui-trend.inverse

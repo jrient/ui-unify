@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- verify-charts.py 的反例样本：每个图故意违反一条规则，检查器必须全部报出来。不要「修好」它。 -->
+<html lang="zh-CN"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../assets/tokens.css"><link rel="stylesheet" href="../../assets/base.css">
+</head><body class="ui" style="padding:16px;max-width:640px">
+<div class="ui-chart"><h3 class="ui-chart-title">汉字进mono</h3><div class="ui-chart-body" style="--vbw:300">
+  <svg viewBox="0 0 300 100"><text class="ui-chart-tick" x="20" y="50">周一</text></svg></div></div>
+<div class="ui-chart"><h3 class="ui-chart-title">文字重叠</h3><div class="ui-chart-body" style="--vbw:300">
+  <svg viewBox="0 0 300 100"><text class="ui-chart-label" x="40" y="50">123</text><text class="ui-chart-label" x="44" y="52">456</text></svg></div></div>
+<div class="ui-chart"><h3 class="ui-chart-title">文字越界</h3><div class="ui-chart-body" style="--vbw:300">
+  <svg viewBox="0 0 300 100"><text class="ui-chart-label" x="296" y="50">999</text></svg></div></div>
+<div class="ui-chart"><h3 class="ui-chart-title">压在标记上</h3><div class="ui-chart-body" style="--vbw:300">
+  <svg viewBox="0 0 300 100"><rect class="ui-chart-bar ui-s1" x="40" y="30" width="80" height="40"/><text class="ui-chart-label" x="60" y="54">77</text></svg></div></div>
+<div class="ui-chart"><h3 class="ui-chart-title">放大越限</h3><div class="ui-chart-body" style="--vbw:100">
+  <svg viewBox="0 0 100 40" style="max-width:none"><text class="ui-chart-label" x="10" y="20">1</text></svg></div></div>
+<!-- 正交反例：数据标记吃了强调色，切 data-accent 会变色 -->
+<span class="ui-spark" id="ortho-bad"><i style="height:60%;background:var(--accent)"></i></span>
+</body></html>
