@@ -11,7 +11,7 @@
   3. 含汉字的 <text> 实际渲染 ≥12px，且不是 mono 字体
   4. 可见文字不越出所在 SVG 的边界
   5. 同一 SVG 内可见文字两两不重叠（tooltip/准星等 hover 层除外）
-  6. 可见文字不压在其他系列的数据标记上（自己的标记、网格、轴线除外）
+  6. 可见文字不压在数据标记上（自己的柱可贴；点一律不许压；网格、轴线除外）
   7. 正交：切换全部 data-accent × data-palette，所有数据标记（含 sparkline）颜色不变
 
 为什么要这个：规则只写在文档里，示例一定会坏——diagram-design 的 ADR 0005 是同一个结论。
@@ -57,10 +57,11 @@ JS = r"""() => {
     });
     for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++)
       if (inter(rects[i], rects[j], 1)) fails.push(`[${title}] 文字重叠「${texts[i].textContent.trim().slice(0,8)}」×「${texts[j].textContent.trim().slice(0,8)}」`);
-    // 文字 vs 数据标记：只查实心标记（柱/段/单元格/环），线和面积允许贴近（直接标注本来就挨着线尾）
-    const marks = [...svg.querySelectorAll('.ui-chart-bar, .ui-chart-seg, .ui-chart-cell')].filter(visible);
+    // 文字 vs 数据标记：只查实心标记（柱/段/单元格/点），线和面积允许贴近（直接标注本来就挨着线尾）
+    const marks = [...svg.querySelectorAll('.ui-chart-bar, .ui-chart-seg, .ui-chart-cell, .ui-chart-dot')].filter(visible);
     texts.forEach((t, i) => marks.forEach(m => {
-      if (t.closest('.ui-chart-hit') && t.closest('.ui-chart-hit') === m.closest('.ui-chart-hit')) return; // 同组：自己的标注
+      // 同组：自己的标注可以贴着自己的柱，但不能压在自己的点上（点小，压上就看不见了）
+      if (!m.classList.contains('ui-chart-dot') && t.closest('.ui-chart-hit') && t.closest('.ui-chart-hit') === m.closest('.ui-chart-hit')) return;
       if (inter(rects[i], m.getBoundingClientRect(), 1.5))
         fails.push(`[${title}] 文字「${t.textContent.trim().slice(0,8)}」压在数据标记上`);
     }));
@@ -73,8 +74,8 @@ JS = r"""() => {
 # 柱间 2px 缝是 stroke: var(--surface)，它本来就该随色系变，不能算进来。
 MARKS_JS = r"""() => {
   const pick = [
-    ['.ui-chart-area, .ui-chart-bar, .ui-chart-seg, .ui-chart-cell', 'fill'],
-    ['.ui-chart-line, .ui-chart-ring', 'stroke'],
+    ['.ui-chart-area, .ui-chart-band, .ui-chart-bar, .ui-chart-seg, .ui-chart-cell, .ui-chart-dot.after', 'fill'],
+    ['.ui-chart-line, .ui-chart-ring, .ui-chart-dot.before', 'stroke'],
     ['.ui-spark > i, .ui-chart-legend-item > .sw, .ui-meter > i, .ui-bullet .bar', 'backgroundColor'],
   ];
   return pick.map(([sel, prop]) => [...document.querySelectorAll(sel)].map(e => getComputedStyle(e)[prop]).join(',')).join(';');

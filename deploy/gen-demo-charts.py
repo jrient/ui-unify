@@ -477,6 +477,142 @@ w(f"""        <div class="ui-card">
           </div>
         </div>""")
 
+
+# ============ 图 11：六个阶段优化前后耗时（哑铃图） ============
+db_data = [("视频切分", 58, 42), ("台词翻译", 51, 38), ("字幕对齐", 30, 24), ("音轨合成", 26, 18), ("质量校验", 15, 12), ("打包上传", 20, 21)]
+W11, H11 = 312, 200; L11, R11, T11, B11 = 62, 64, 6, 26
+pw11, ph11 = W11 - L11 - R11, H11 - T11 - B11
+_, mx11, YT11 = nice_domain([v for _, b, a in db_data for v in (b, a)])
+rowh11 = ph11 / len(db_data)
+
+db_rows = []
+for i, (name, before, after) in enumerate(db_data):
+    y = T11 + rowh11 * i + rowh11 / 2
+    xb = L11 + pw11 * before / mx11
+    xa = L11 + pw11 * after / mx11
+    delta = after - before
+    pct = delta / before * 100
+    cls = "good" if delta < 0 else "bad" if delta > 0 else "flat"
+    sign = "+" if pct > 0 else "−" if pct < 0 else ""   # 真减号，不用连字符
+    db_rows.append(
+      f'<g class="ui-chart-hit" tabindex="0" role="img" aria-label="{name} 优化前 {before}s，优化后 {after}s，变化 {sign}{abs(pct):.0f}%">'
+      f'<rect class="box" x="0" y="{f(T11+rowh11*i)}" width="{W11}" height="{f(rowh11)}"/>'
+      f'<line class="ui-chart-dumbbell-rail" x1="{f(min(xb, xa))}" y1="{f(y)}" x2="{f(max(xb, xa))}" y2="{f(y)}"/>'
+      f'<circle class="ui-chart-dot before" cx="{f(xb)}" cy="{f(y)}" r="4.5"/>'
+      f'<circle class="ui-chart-dot after ui-s1" cx="{f(xa)}" cy="{f(y)}" r="4.5"/>'
+      f'<text class="ui-chart-tick name" x="{L11-8}" y="{f(y+4)}" text-anchor="end">{name}</text>'
+      f'<text class="ui-chart-label" x="{W11-R11+8}" y="{f(y+4)}" text-anchor="start">{after}s <tspan class="ui-chart-delta {cls}">{sign}{abs(pct):.0f}%</tspan></text></g>')
+
+grid11 = "".join(f'<line x1="{f(L11 + pw11 * v / mx11)}" y1="{T11}" x2="{f(L11 + pw11 * v / mx11)}" y2="{f(T11+ph11)}"/>' for v in YT11[1:])
+xt11 = "".join(f'<text class="ui-chart-tick" x="{f(L11 + pw11 * v / mx11)}" y="{H11-6}" text-anchor="{"start" if v==YT11[0] else "end" if v==YT11[-1] else "middle"}">{v}</text>' for v in YT11)
+sum_b = sum(b for _, b, a in db_data)
+sum_a = sum(a for _, b, a in db_data)
+
+w(f'''        <div class="ui-card">
+          <div class="ui-chart">
+            <div class="ui-chart-head"><div>
+              <h3 class="ui-chart-title">流水线耗时优化对比</h3>
+              <p class="ui-chart-sub">各阶段中位耗时，单位：秒</p>
+            </div></div>
+            <div class="ui-chart-body" style="--vbw:{W11}">
+              <svg viewBox="0 0 {W11} {H11}" role="group" aria-label="耗时优化哑铃图">
+                <g class="ui-chart-grid">{grid11}</g>
+                <line class="ui-chart-axis" x1="{L11}" y1="{f(T11+ph11)}" x2="{f(L11+pw11)}" y2="{f(T11+ph11)}"/>
+                {xt11}
+                {''.join(db_rows)}
+              </svg>
+            </div>
+            <div class="ui-chart-legend">
+              <span class="ui-chart-legend-item"><i class="sw ring"></i>优化前</span>
+              <span class="ui-chart-legend-item ui-s1"><i class="sw dot"></i>优化后</span>
+            </div>
+            <div class="ui-chart-foot"><span>灰空心＝优化前，蓝实心＝优化后</span><span>总耗时 {sum_b}s → {sum_a}s</span></div>
+            <details class="ui-chart-a11y"><summary>数据表格</summary><div class="wrap"><table class="ui-table">
+              <thead><tr><th>阶段</th><th class="num">优化前</th><th class="num">优化后</th><th class="num">变化</th></tr></thead>
+              <tbody>{''.join(f"<tr><td>{n}</td><td class='num'>{b}</td><td class='num'>{a}</td><td class='num'>{'+' if a>b else '−' if a<b else ''}{abs(round((a-b)/b*100))}%</td></tr>" for n,b,a in db_data)}</tbody>
+            </table></div></details>
+          </div>
+        </div>''')
+
+# ============ 图 12：24 小时任务延迟 P50 与 P10–P90 带 ============
+import math as _m
+band_data = []
+for i in range(24):
+    p50 = round(190 + 70 * _m.sin(i / 3.0) + i * 2)
+    p10 = round(p50 * 0.6)
+    p90 = round(p50 * 1.8)
+    band_data.append((p10, p50, p90))
+
+W12, H12 = 680, 236
+L12, R12, T12, B12 = 38, 62, 30, 26
+pw12, ph12 = W12 - L12 - R12, H12 - T12 - B12
+_, mx12, YT12 = nice_domain([v for p10, p50, p90 in band_data for v in (p10, p90)])
+
+X12 = lambda i: L12 + pw12 * i / 23
+Y12 = lambda v: T12 + ph12 * (1 - v / mx12)
+
+path_p10 = [f"{f(X12(i))},{f(Y12(p10))}" for i, (p10, _, _) in enumerate(band_data)]
+path_p90 = [f"{f(X12(i))},{f(Y12(p90))}" for i, (_, _, p90) in enumerate(band_data)]
+band_d = f"M{path_p90[0]} L" + " L".join(path_p90[1:]) + " L" + " L".join(reversed(path_p10)) + " Z"
+
+line_p50 = " ".join(f"{f(X12(i))},{f(Y12(p50))}" for i, (_, p50, _) in enumerate(band_data))
+
+grid12 = "".join(f'<line x1="{L12}" y1="{f(Y12(v))}" x2="{f(L12+pw12)}" y2="{f(Y12(v))}"/>' for v in YT12[1:])
+yticks12 = "".join(f'<text class="ui-chart-tick" x="{L12-8}" y="{f(Y12(v)+4)}" text-anchor="end">{v}</text>' for v in YT12)
+XT12 = (0, 6, 12, 18, 23)
+xticks12 = "".join(f'<text class="ui-chart-tick" x="{f(X12(i))}" y="{H12-10}" text-anchor="{"start" if i==XT12[0] else "end" if i==XT12[-1] else "middle"}">{i:02d}:00</text>' for i in XT12)
+
+hits12 = []
+for i, (p10, p50, p90) in enumerate(band_data):
+    x = X12(i); half = pw12 / 23 / 2
+    bx = max(L12, x - half); bw = min(half * 2, L12 + pw12 - bx)
+    tw, th = 124, 56
+    tx = x + 10 if x < L12 + pw12 * 0.6 else x - tw - 10
+    ty = 8 if Y12(p50) > T12 + ph12 * 0.5 else T12 + ph12 - th - 4   # 让开中位线：带本来就铺满，盖带可以，盖 P50 不行
+    hits12.append(
+      f'<g class="ui-chart-hit" tabindex="0" role="img" aria-label="{i:02d}:00 P50 {p50}ms, P10-P90 {p10}-{p90}ms">'
+      f'<rect class="box" x="{f(bx)}" y="{f(T12)}" width="{f(bw)}" height="{f(ph12)}"/>'
+      f'<line class="cross" x1="{f(x)}" y1="{f(T12)}" x2="{f(x)}" y2="{f(T12+ph12)}"/>'
+      f'<g class="peak"><circle class="ui-chart-dot ui-s1" cx="{f(x)}" cy="{f(Y12(p50))}" r="3.5"/></g>'
+      f'<g class="tip"><rect class="ui-chart-tip-bg" x="{f(tx)}" y="{ty}" width="{tw}" height="{th}"/>'
+      f'<text class="ui-chart-tip-t" x="{f(tx+10)}" y="{ty+17}">{i:02d}:00</text>'
+      f'<text class="ui-chart-tip-k" x="{f(tx+10)}" y="{ty+34}">P50</text>'
+      f'<text class="ui-chart-tip-v" x="{f(tx+tw-10)}" y="{ty+34}" text-anchor="end">{p50}</text>'
+      f'<text class="ui-chart-tip-k" x="{f(tx+10)}" y="{ty+49}">P10–P90</text>'
+      f'<text class="ui-chart-tip-v" x="{f(tx+tw-10)}" y="{ty+49}" text-anchor="end">{p10}–{p90}</text></g></g>'
+    )
+
+max_p50 = max(p50 for _, p50, _ in band_data)
+max_p50_hour = next(i for i, (_, p50, _) in enumerate(band_data) if p50 == max_p50)
+max_band = max(p90 - p10 for p10, _, p90 in band_data)
+
+w(f'''        <div class="ui-card">
+          <div class="ui-chart">
+            <div class="ui-chart-head"><div>
+              <h3 class="ui-chart-title">24 小时任务延迟分布</h3>
+              <p class="ui-chart-sub">P50 与 P10–P90 区间，单位：ms</p>
+            </div></div>
+            <div class="ui-chart-body" style="--vbw:{W12}">
+              <svg viewBox="0 0 {W12} {H12}" role="group" aria-label="延迟分布带状图">
+                <g class="ui-chart-grid">{grid12}</g>
+                <path class="ui-chart-band ui-s1" d="{band_d}"/>
+                <polyline class="ui-chart-line ui-s1" points="{line_p50}"/>
+                <text class="ui-chart-label" x="{f(X12(23)+6)}" y="{f(Y12(band_data[-1][1])+4)}">P50</text>
+                <text class="ui-chart-label" x="{f(X12(23)+6)}" y="{f(Y12(band_data[-1][2])+4)}">P10–P90</text>
+                <line class="ui-chart-axis" x1="{L12}" y1="{f(T12+ph12)}" x2="{f(L12+pw12)}" y2="{f(T12+ph12)}"/>
+                {yticks12}{xticks12}
+                {''.join(hits12)}
+              </svg>
+            </div>
+            <div class="ui-chart-foot"><span>P50 峰值 {max_p50} ms @ {max_p50_hour:02d}:00</span><span>最宽带 {max_band} ms</span></div>
+            <details class="ui-chart-a11y"><summary>数据表格</summary><div class="wrap"><table class="ui-table">
+              <thead><tr><th>时刻</th><th class="num">P10</th><th class="num">P50</th><th class="num">P90</th></tr></thead>
+              <tbody>{''.join(f"<tr><td>{i:02d}:00</td><td class='num'>{p10}</td><td class='num'>{p50}</td><td class='num'>{p90}</td></tr>" for i, (p10, p50, p90) in enumerate(band_data))}</tbody>
+            </table></div></details>
+          </div>
+        </div>''')
+
+
 section = f'''      <!-- 图表 / data viz -->
       <p class="sec-label">图表</p>
       <div class="row" style="margin:-4px 0 -8px">
@@ -511,6 +647,10 @@ section = f'''      <!-- 图表 / data viz -->
 {out[8]}
       </div>
 {out[9]}
+      <div class="grid-chart-a">
+{out[11]}
+{out[10]}
+      </div>
       <div class="grid-2">
         <div class="ui-card">
           <div class="ui-chart">

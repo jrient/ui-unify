@@ -1,4 +1,4 @@
-/* ui-unify design tokens v1.8.0 — Linear dark + Supabase green, dual theme, multi-accent.
+/* ui-unify design tokens v1.9.0 — Linear dark + Supabase green, dual theme, multi-accent.
  * 单份定义：颜色用 light-dark(浅色值, 深色值) 写一次，主题由 color-scheme 驱动。
  *   :root 默认 `light dark` → 跟随系统；data-theme 手动覆盖只切 color-scheme（不重列变量）。
  *   需 light-dark() 支持：Chrome/Edge 123、Safari 17.5、Firefox 120（Baseline 2024，内部后台工具足够）。

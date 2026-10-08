@@ -105,7 +105,7 @@
 - 浮层进阶：`dialog.ui-dialog`（原生 `<dialog>` 居中模态，`.head`/`.body`/`.foot`，`::backdrop` 遮罩——自带焦点陷阱 / Esc 关闭 / 背景 inert）
 - 加载与折叠：`.ui-spinner`（`.lg`，必要动效，reduced-motion 下仍旋转）· `.ui-accordion`（原生 `<details>`/`<summary>` 折叠面板，`.body`/`.count`）
 - 数据与工具条：`.ui-stat`（KPI 卡片，`.label`/`.value`/`.foot`）· `.ui-btn-group`（相邻按钮拼接工具条）· `.ui-divider`（分隔线，`.v` 垂直 / `.label` 带文字）
-- 图表：`.ui-chart`（`-head`/`-title`/`-sub`/`-tools`/`-body`/`-foot`）· 事件 `.ui-chart-event` · 小倍数 `.ui-multiples` · 占比条 `.ui-meter` · 子弹图 `.ui-bullet`· 系列槽 `.ui-s1…8`（分类）/`.ui-cok`·`.ui-cwarn`·`.ui-cdanger`·`.ui-cidle`（状态）/`.ui-q1…7`（顺序）/`.ui-o1…4`（序数）/`.ui-dn2…dp2`（发散）· 标记 `.ui-chart-line`/`-area`/`-dot`/`-bar`/`-seg`/`-cell`/`-ring` · chrome `.ui-chart-grid`/`-axis`/`-tick`/`-label` · `.ui-chart-legend`/`-legend-item`/`.ui-chart-scale` · hover 层 `.ui-chart-hit`（`.box`/`.cross`/`.tip`/`.peak`，纯 CSS 零 JS）· `.ui-chart-rule`/`-rule-label`（阈值/目标参考线）· `.ui-chart-empty`（空态）/`.ui-chart-skeleton`（加载占位）· `.ui-chart-a11y`（`<details>` 展开成 `.ui-table`）· `.ui-chart-tex`（纹理第二编码）
+- 图表：`.ui-chart`（`-head`/`-title`/`-sub`/`-tools`/`-body`/`-foot`）· 事件 `.ui-chart-event` · 小倍数 `.ui-multiples` · 占比条 `.ui-meter` · 子弹图 `.ui-bullet`· 系列槽 `.ui-s1…8`（分类）/`.ui-cok`·`.ui-cwarn`·`.ui-cdanger`·`.ui-cidle`（状态）/`.ui-q1…7`（顺序）/`.ui-o1…4`（序数）/`.ui-dn2…dp2`（发散）· 标记 `.ui-chart-line`/`-area`/`-band`/`-dot`（`.before`/`.after`）/`-dumbbell-rail`/`-bar`/`-seg`/`-cell`/`-ring` · 变化标注 `.ui-chart-delta` · chrome `.ui-chart-grid`/`-axis`/`-tick`/`-label` · `.ui-chart-legend`/`-legend-item`/`.ui-chart-scale` · hover 层 `.ui-chart-hit`（`.box`/`.cross`/`.tip`/`.peak`，纯 CSS 零 JS）· `.ui-chart-rule`/`-rule-label`（阈值/目标参考线）· `.ui-chart-empty`（空态）/`.ui-chart-skeleton`（加载占位）· `.ui-chart-a11y`（`<details>` 展开成 `.ui-table`）· `.ui-chart-tex`（纹理第二编码）
 - 文本：`.ui-link` `.ui-muted` `.ui-mono`
 - 借鉴来源：sidebar / ⌘K / tabs / pagination / 命令面板 参考 shadcn-admin，落地时坚持绿强调 + Linear 克制圆角，未照搬其中性 primary 与 10px 圆角
 - 可访问性：`.ui-btn`/`.ui-tab`/`.ui-page-btn`/`.ui-switch`/`.ui-check` 用原生表单/按钮元素，键盘可达；模态用原生 `<dialog>`（`showModal()` 自动焦点陷阱与 Esc），折叠用原生 `<details>`；`.ui-menu .item`、`.ui-command .item`、`.ui-tree .node` 是纯样式 `div`，集成时需自行补 `role`/`tabindex`/键盘事件
@@ -179,6 +179,8 @@ chrome 一律走已有 token：网格 `--chart-grid`（= `--border-subtle`）、
 | `.ui-multiples` | 系列 >4 时拆成一格一个 | **共用同一纵轴**（脚注写明范围）；同一颜色，身份由格子标题承担 |
 | `.ui-meter` | 100% 占比条，可直接放进 `.ui-table` 单元格 | 段用 `flex-grow:原始数值`，0 值不渲染；与 `.ui-progress`（界面状态、强调色、胶囊形）分工 |
 | `.ui-bullet` | 实际 vs 目标/配额 | 四列：名称／轨道／数字／徽章；超出用 `.ui-badge` 说明，不靠变色 |
+| 哑铃图 `.ui-chart-dumbbell-rail` + `.ui-chart-dot.before/.after` | 同一批类目的前后对比（优化前后、两期） | 「前」空心 `--chart-other` 灰、「后」实心 `.ui-s1`；按业务顺序排，不按变化量重排；变慢的项如实画；变化写在右侧固定列（`.ui-chart-delta.good/.bad/.flat`，按好坏不按正负，减号用 `−`），不贴着点放 |
+| 分位区间带 `.ui-chart-band` | 延迟/耗时的分布（P10–P90 + P50） | 带只是背景，中位线 `.ui-chart-line` 才是主角；tooltip 让开中位线；值轴照样含 0 |
 | `.ui-stat` + `.ui-spark` | KPI 数字卡 | 大数字用 `--text`，状态用 `.ui-dot`+文字；sparkline 默认 `--chart-1`，不跟强调色 |
 
 ### 校验（规则写成检查器，不靠肉眼）
