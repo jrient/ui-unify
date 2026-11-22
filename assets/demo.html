@@ -3,145 +3,334 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ui-unify demo</title>
+<title>工具台 · ui-unify 界面预览</title>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="base.css">
 <style>
-  /* demo 页面自身的排版，不属于设计体系 */
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .ui-content > .body { width: 100%; max-width: 1480px; margin-inline: auto; }   /* 超宽屏限制阅读宽度；图表在固定字号下也不至于大片留白 */
-  .grid-chart-a { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-  .grid-chart-b { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 1200px) { .grid-chart-a, .grid-chart-b { grid-template-columns: 1fr; } }
-  @media (max-width: 1100px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 820px) { .grid-3, .grid-2, .grid-chart-a { grid-template-columns: 1fr; } }
+  /* 预览页布局。共享组件和配色由 tokens.css / base.css 提供。 */
+  .demo-shell {
+    --demo-gutter: clamp(20px, 3vw, 48px);
+    --demo-header-h: 60px;
+    grid-template-columns: 208px minmax(0, 1fr);
+    min-height: 100dvh;
+  }
+  .demo-sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    padding: 0 14px 20px;
+    background: color-mix(in srgb, var(--surface) 50%, var(--bg));
+  }
+  .demo-sidebar .brand { min-height: var(--demo-header-h); gap: 10px; padding: 8px 6px; }
+  .demo-sidebar .brand .mark { width: 32px; height: 32px; border-radius: var(--radius-lg); }
+  .demo-brand-name { display: grid; line-height: 1.3; }
+  .demo-brand-caption { font: 11px/1.4 var(--font-mono); color: var(--text-2); }
+  .demo-sidebar nav { display: grid; gap: 2px; }
+  .demo-sidebar .ui-nav-label { margin-top: 12px; color: var(--text-2); }
+  .demo-sidebar .ui-nav-item { position: relative; min-height: 36px; padding: 6px 10px; }
+  .demo-sidebar .ui-nav-item.active { background: var(--accent-ring); }
+  .demo-sidebar .ui-nav-item.active::before {
+    content: "";
+    position: absolute;
+    inset: 8px auto 8px 0;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .demo-sidebar .ui-nav-item.active .icon { color: var(--accent-text); }
+  .demo-sidebar .count { color: var(--text-2); }
+
+  .demo-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: calc(var(--demo-header-h) - 1px);
+  }
+  .demo-toolbar, .demo-shell .ui-content > .body {
+    width: 100%;
+    max-width: 1360px;
+    margin-inline: auto;
+    padding-inline: var(--demo-gutter);
+  }
+  .demo-shell .ui-content > .body { padding-block: 32px 56px; gap: 36px; }
+  .demo-toolbar .ui-crumb { margin: 0; white-space: nowrap; }
+  .demo-toolbar .ui-crumb a { color: var(--text-2); }
+  .demo-toolbar .ui-crumb .current { font-family: var(--font-mono); }
+  .demo-toolbar .ui-search { min-width: 0; width: 200px; font: inherit; font-size: 13px; color: var(--text-2); }
+  .demo-toolbar-icon { font-size: 16px; line-height: 1; }
+  .demo-mobile-brand, .demo-mobile-nav { display: none; }
+
+  .demo-appearance { position: relative; }
+  .demo-appearance > summary { list-style: none; cursor: pointer; }
+  .demo-appearance > summary::-webkit-details-marker { display: none; }
+  .demo-appearance[open] > summary { background: var(--surface-2); }
+  .demo-appearance-panel {
+    position: absolute;
+    inset: calc(100% + 10px) 0 auto auto;
+    display: grid;
+    gap: 16px;
+    width: min(304px, calc(100vw - 32px));
+    max-height: calc(100dvh - var(--demo-header-h) - 12px);
+    padding: 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-overlay);
+    overflow-y: auto;
+  }
+  .demo-appearance-panel .ui-seg { justify-self: start; }
+  .demo-appearance-panel [aria-pressed="true"] { font-weight: 600; }
+  .demo-toolbar :focus-visible, .demo-sidebar a:focus-visible, .demo-mobile-nav a:focus-visible,
+  .demo-actions button:focus-visible, .demo-charts :is(input, summary, .ui-chart-body):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .demo-section, .demo-anchor { scroll-margin-top: calc(var(--demo-header-h) + 16px); }
+  .demo-section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+  .demo-section-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+  .demo-overview .demo-section-head { margin-bottom: 4px; }
+  .demo-section-head h2 { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.3; }
+  .demo-section-head p { margin: 6px 0 0; color: var(--text-2); }
+  .page-title { margin: 0; font-size: clamp(28px, 4vw, 44px); font-weight: 600; line-height: 1.15; letter-spacing: -.04em; }
+  .demo-actions .ui-btn { min-height: 40px; white-space: nowrap; }
+  .demo-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .demo-metrics .ui-stat { min-width: 0; padding: 16px 20px; border: 0; border-radius: 0; background: none; box-shadow: none; }
+  .demo-metrics .ui-stat + .ui-stat { border-inline-start: 1px solid var(--border); }
+  .demo-metrics .label { justify-content: space-between; min-height: 21px; font-size: 13px; }
+  .demo-metrics .value { font-size: clamp(24px, 3vw, 38px); letter-spacing: -.045em; }
+  .demo-metrics .ui-spark { height: 21px; }
+  .demo-metric-value { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+
+  .grid-3, .grid-2, .grid-chart-a, .grid-chart-b { display: grid; gap: 16px; }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-2, .grid-chart-b { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-chart-a { grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr); }
+  .demo-charts .ui-card { min-width: 0; box-shadow: none; }
+  .demo-charts .ui-chart-head { flex-wrap: wrap; }
+  .demo-charts .ui-chart-tools { flex: 0 1 auto; }
+  .demo-charts .ui-chart-foot { flex-wrap: wrap; }
+  .demo-charts .ui-chart-tick { fill: var(--chart-ink); }
+  .demo-chart-primary > .ui-card { padding: clamp(12px, 1.6vw, 24px); }
+  .demo-chart-primary .ui-chart .ui-chart-title { font-size: 16px; }
+  .demo-chart-primary .ui-chart-body > svg { margin-inline-start: 0; }
+  .demo-chart-primary .ui-chart-body.square > svg { margin-inline: auto; }
+  .demo-chart-note { font-size: 13px; }
+  .demo-chart-scroll-note { margin: 0; font-size: 12px; color: var(--text-2); }
+  .demo-table-wrap { overflow-x: auto; overscroll-behavior-x: contain; }
+  .demo-table-wrap .ui-table { min-width: 340px; }
+  .demo-task-tabs { margin-bottom: 12px; }
+  .demo-notice-preview { margin-inline-start: auto; }
+  #demo-notices .ui-toast[hidden] { display: none; }
+
+  .demo-command {
+    position: fixed;
+    top: 12dvh;
+    bottom: auto;
+    max-width: calc(100vw - 24px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: none;
+    color: var(--text);
+  }
+  .demo-command::backdrop { background: rgb(0 0 0 / .55); }
+  .demo-command .search input { min-width: 0; }
+  .demo-command .item { text-decoration: none; }
   .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .field { display: grid; gap: 6px; }
   .field > label { font-size: 12px; color: var(--text-2); }
-  .page-title { margin: 0; font-size: 20px; font-weight: 600; }
-  .sec-label { margin: 0 0 -6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
-  /* content header bar */
-  .topbar2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-height: 52px; padding: 8px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 5; }
+  .sec-label { margin: 0 0 -6px; font-size: 13px; font-weight: 600; color: var(--text-2); }
+
+  @media (max-width: 1200px) {
+    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1050px) {
+    .grid-chart-a, .grid-chart-b { grid-template-columns: minmax(0, 1fr); }
+  }
   @media (max-width: 900px) {
-    .ui-shell { grid-template-columns: 1fr; } .ui-sidebar { display: none; }
-    /* 顶栏四组控件窄屏换行，不撑出横向滚动 */
-    .topbar2 { flex-wrap: wrap; height: auto; padding: 10px 16px; gap: 8px; position: static; }
-    .topbar2 .ui-search { flex: 1 1 100%; }
-    .topbar2 .ui-select { margin-left: 0 !important; flex: 1 1 100%; }
-    .ui-content > .body { padding: 16px; }
+    .demo-shell { --demo-gutter: 16px; --demo-header-h: 100px; grid-template-columns: minmax(0, 1fr); }
+    .demo-sidebar, .demo-toolbar .ui-crumb, .demo-toolbar .ui-search .ui-kbd { display: none; }
+    .demo-toolbar { min-height: 55px; }
+    .demo-toolbar .ui-search { width: auto; }
+    .demo-toolbar .ui-search .grow { display: none; }
+    .demo-toolbar :is(.ui-search, summary) { min-height: 40px; }
+    .demo-mobile-brand { display: inline; font-weight: 600; white-space: nowrap; }
+    .demo-mobile-nav { display: flex; gap: 4px; padding-inline: var(--demo-gutter); }
+    .demo-mobile-nav a { min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; padding-inline: 8px; font-size: 13px; }
+    .demo-shell .ui-content > .body { padding-block: 24px 40px; gap: 28px; }
+  }
+  @media (max-width: 640px) {
+    .grid-3, .grid-2 { grid-template-columns: minmax(0, 1fr); }
+    .demo-metrics .ui-stat { padding: 10px 8px; }
+    .demo-metrics .label { gap: 4px; font-size: 12px; }
+    .demo-metrics .ui-spark { height: 15px; }
+    .demo-metrics .ui-spark > i { width: 3px; }
+    .demo-metric-value { align-content: start; min-height: 28px; }
+    .demo-task-pagination { flex-wrap: wrap; }
+    .demo-task-pagination .info { flex: 1 1 100%; }
+    .demo-appearance-panel .ui-seg button { min-height: 36px; }
+  }
+  @media (max-width: 360px) {
+    .demo-metrics .ui-spark { gap: 1px; }
+    .demo-metrics .ui-spark > i { width: 2px; }
   }
 </style>
 </head>
 <body class="ui">
-<div class="ui-shell">
+<div class="ui-shell demo-shell">
 
   <!-- 侧边栏 -->
-  <aside class="ui-sidebar">
-    <div class="brand"><span class="mark">工</span>工具台</div>
+  <aside class="ui-sidebar demo-sidebar">
+    <div class="brand"><span class="mark" aria-hidden="true">工</span><span class="demo-brand-name">工具台<span class="demo-brand-caption">ui-unify</span></span></div>
 
-    <div class="ui-nav-label">工作区</div>
-    <a class="ui-nav-item active" href="#"><span class="icon">▸</span>任务<span class="count">128</span></a>
-    <a class="ui-nav-item" href="#"><span class="icon">◇</span>队列<span class="count">12</span></a>
-    <a class="ui-nav-item" href="#"><span class="icon">▤</span>素材库</a>
-    <a class="ui-nav-item" href="#"><span class="icon">⧉</span>导出记录</a>
-
-    <div class="ui-nav-label">系统</div>
-    <a class="ui-nav-item" href="#"><span class="icon">◐</span>账号</a>
-    <a class="ui-nav-item" href="#"><span class="icon">⚙</span>设置</a>
-    <a class="ui-nav-item" href="#"><span class="icon">◔</span>日志</a>
+    <nav aria-label="预览目录">
+      <div class="ui-nav-label">预览目录</div>
+      <a class="ui-nav-item active" href="#overview" aria-current="location"><span class="icon" aria-hidden="true">▦</span>任务总览</a>
+      <a class="ui-nav-item" href="#charts"><span class="icon" aria-hidden="true">⌁</span>图表</a>
+      <a class="ui-nav-item" href="#task-list"><span class="icon" aria-hidden="true">☷</span>任务列表</a>
+      <a class="ui-nav-item" href="#components"><span class="icon" aria-hidden="true">◇</span>组件</a>
+    </nav>
+    <nav aria-label="工作区示例">
+      <div class="ui-nav-label">工作区</div>
+      <a class="ui-nav-item" href="#task-list"><span class="icon" aria-hidden="true">▸</span>任务<span class="count">128</span></a>
+      <a class="ui-nav-item" href="#charts"><span class="icon" aria-hidden="true">◇</span>队列<span class="count">12</span></a>
+      <a class="ui-nav-item" href="#assets"><span class="icon" aria-hidden="true">▤</span>素材库</a>
+      <a class="ui-nav-item" href="#exports"><span class="icon" aria-hidden="true">⧉</span>导出记录</a>
+      <div class="ui-nav-label">系统</div>
+      <a class="ui-nav-item" href="#accounts"><span class="icon" aria-hidden="true">◐</span>账号</a>
+      <a class="ui-nav-item" href="#settings"><span class="icon" aria-hidden="true">⚙</span>设置</a>
+      <a class="ui-nav-item" href="#logs"><span class="icon" aria-hidden="true">◔</span>日志</a>
+    </nav>
   </aside>
 
   <!-- 内容 -->
   <div class="ui-content">
-    <header class="topbar2">
-      <div class="ui-search" onclick="openCmd()" style="cursor:pointer"><span>搜索任务…</span><span class="grow"></span><span class="ui-kbd">⌘K</span></div>
-      <select class="ui-select" style="margin-left:auto" onchange="setPalette(this.value)">
-
-        <optgroup label="默认 / 护眼低调">
-          <option value="">Default 暖纸 (Warm)</option>
-          <option value="solarized">Solarized 减反差</option>
-          <option value="everforest">Everforest 绿护眼</option>
-          <option value="nord">Nord 极地蓝</option>
-          <option value="catppuccin">Catppuccin 粉彩</option>
-          <option value="rose-pine">Rosé Pine 玫瑰灰</option>
-        </optgroup>
-        <optgroup label="深色向">
-          <option value="dracula">Dracula (紫粉调)</option>
-          <option value="tokyo-night">Tokyo Night (冷夜间)</option>
-          <option value="one-dark">One Dark (经典深色)</option>
-        </optgroup>
-        <optgroup label="彩色向">
-          <option value="monokai">Monokai (高对比彩色)</option>
-          <option value="gruvbox">Gruvbox (复古暖调)</option>
-          <option value="ayu">Ayu (柔和深色)</option>
-        </optgroup>
-      </select>
-      <div class="ui-seg" id="accent-seg">
-        <button data-accent="" onclick="setAccent(null)" class="active">绿</button>
-        <button data-accent="blue" onclick="setAccent('blue')">蓝</button>
-        <button data-accent="violet" onclick="setAccent('violet')">紫</button>
-        <button data-accent="teal" onclick="setAccent('teal')">青</button>
-        <button data-accent="amber" onclick="setAccent('amber')">琥珀</button>
-        <button data-accent="graphite" onclick="setAccent('graphite')">灰</button>
+    <header class="demo-header">
+      <div class="demo-toolbar">
+        <nav class="ui-crumb" aria-label="当前位置">
+          <a href="#overview">工作区</a><span class="sep" aria-hidden="true">/</span>
+          <a href="#task-list">任务</a><span class="sep" aria-hidden="true">/</span>
+          <span class="current">batch-07</span>
+        </nav>
+        <span class="demo-mobile-brand">工具台</span>
+        <div class="row">
+          <button class="ui-search" type="button" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K" onclick="openCmd()">
+            <span class="demo-toolbar-icon" aria-hidden="true">⌕</span><span>搜索任务</span><span class="grow"></span><kbd class="ui-kbd" id="search-kbd" aria-hidden="true">Ctrl K</kbd>
+          </button>
+          <details class="demo-appearance" id="appearance">
+            <summary class="ui-btn"><span class="demo-toolbar-icon" aria-hidden="true">◐</span>外观</summary>
+            <div class="demo-appearance-panel">
+              <div class="field">
+                <span id="theme-label">明暗模式</span>
+                <div class="ui-seg" id="theme-seg" role="group" aria-labelledby="theme-label">
+                  <button data-theme="light" aria-pressed="false" onclick="setTheme('light')">浅色</button>
+                  <button data-theme="dark" aria-pressed="false" onclick="setTheme('dark')">深色</button>
+                  <button data-theme="" aria-pressed="true" onclick="setTheme(null)" class="active">跟随系统</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="palette-select">底色色系</label>
+                <select class="ui-select" id="palette-select" onchange="setPalette(this.value)">
+                  <optgroup label="默认 / 护眼低调">
+                    <option value="">Default 暖纸 (Warm)</option>
+                    <option value="solarized">Solarized 减反差</option>
+                    <option value="everforest">Everforest 绿护眼</option>
+                    <option value="nord">Nord 极地蓝</option>
+                    <option value="catppuccin">Catppuccin 粉彩</option>
+                    <option value="rose-pine">Rosé Pine 玫瑰灰</option>
+                  </optgroup>
+                  <optgroup label="深色向">
+                    <option value="dracula">Dracula (紫粉调)</option>
+                    <option value="tokyo-night">Tokyo Night (冷夜间)</option>
+                    <option value="one-dark">One Dark (经典深色)</option>
+                  </optgroup>
+                  <optgroup label="彩色向">
+                    <option value="monokai">Monokai (高对比彩色)</option>
+                    <option value="gruvbox">Gruvbox (复古暖调)</option>
+                    <option value="ayu">Ayu (柔和深色)</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="field">
+                <span id="accent-label">强调色</span>
+                <div class="ui-seg" id="accent-seg" role="group" aria-labelledby="accent-label">
+                  <button data-accent="" aria-pressed="true" onclick="setAccent(null)" class="active">绿</button>
+                  <button data-accent="blue" aria-pressed="false" onclick="setAccent('blue')">蓝</button>
+                  <button data-accent="violet" aria-pressed="false" onclick="setAccent('violet')">紫</button>
+                  <button data-accent="teal" aria-pressed="false" onclick="setAccent('teal')">青</button>
+                  <button data-accent="amber" aria-pressed="false" onclick="setAccent('amber')">琥珀</button>
+                  <button data-accent="graphite" aria-pressed="false" onclick="setAccent('graphite')">灰</button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
-      <div class="ui-seg" id="theme-seg">
-        <button data-theme="light" onclick="setTheme('light')">浅色</button>
-        <button data-theme="dark" onclick="setTheme('dark')">深色</button>
-        <button data-theme="" onclick="setTheme(null)" class="active">跟随系统</button>
-      </div>
+      <nav class="demo-mobile-nav" aria-label="预览目录">
+        <a class="ui-nav-item active" href="#overview" aria-current="location">任务总览</a>
+        <a class="ui-nav-item" href="#charts">图表</a>
+        <a class="ui-nav-item" href="#task-list">任务列表</a>
+        <a class="ui-nav-item" href="#components">组件</a>
+      </nav>
     </header>
 
-    <div class="body">
-      <nav class="ui-crumb">
-        <a href="#">工作区</a><span class="sep">/</span>
-        <a href="#">任务</a><span class="sep">/</span>
-        <span class="current">batch-07</span>
-      </nav>
-      <div class="row" style="justify-content:space-between">
-        <h1 class="page-title">任务</h1>
-        <div class="row">
-          <button class="ui-btn">导出</button>
-          <button class="ui-btn primary">新建任务</button>
-        </div>
-      </div>
-
-      <!-- 标签页 -->
-      <div class="ui-tabs">
-        <button class="ui-tab active">全部</button>
-        <button class="ui-tab">进行中</button>
-        <button class="ui-tab">已完成</button>
-        <button class="ui-tab">失败</button>
-      </div>
-
-      <!-- 统计 -->
-      <div class="grid-3">
-        <div class="ui-stat">
-          <div class="label">今日任务<span class="ui-trend up" style="margin-left:auto">12%</span></div>
-          <div class="row" style="justify-content:space-between;align-items:flex-end">
-            <div class="value">128</div>
-            <span class="ui-spark" role="img" aria-label="近 7 日任务量：85、118、100、155、132、187、220，逐日走高"><i style="height:40%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:100%"></i></span>
+    <main class="body">
+      <section class="demo-section demo-overview" id="overview" aria-labelledby="overview-title">
+        <div class="demo-section-head">
+          <div>
+            <h1 class="page-title" id="overview-title">任务总览</h1>
+            <p>批次状态与处理趋势，使用示例数据展示。</p>
           </div>
-          <div class="foot">较昨日 +14 个批次</div>
+          <div class="row demo-actions">
+            <button class="ui-btn"><span aria-hidden="true">↓</span>导出</button>
+            <button class="ui-btn primary"><span aria-hidden="true">＋</span>新建任务</button>
+          </div>
         </div>
-        <div class="ui-stat">
-          <div class="label"><span class="ui-dot" style="color:var(--accent)"></span>进行中<span class="ui-trend flat" style="margin-left:auto">0%</span></div>
-          <div class="value">12</div>
-          <div class="foot">平均已运行 02:14</div>
+        <div class="demo-metrics">
+          <div class="ui-stat">
+            <div class="label">今日任务<span class="ui-spark" role="img" aria-label="近 7 日任务量：85、118、100、155、132、187、220，整体走高"><i style="height:40%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:100%"></i></span></div>
+            <div class="demo-metric-value"><div class="value">128</div><span class="ui-trend up" aria-label="上升 12%">12%</span></div>
+            <div class="foot">较昨日 +14 个批次</div>
+          </div>
+          <div class="ui-stat">
+            <div class="label"><span>进行中</span><span class="ui-dot" aria-hidden="true" style="color:var(--accent)"></span></div>
+            <div class="demo-metric-value"><div class="value">12</div><span class="ui-trend flat" aria-label="持平">0%</span></div>
+            <div class="foot">平均已运行 02:14</div>
+          </div>
+          <div class="ui-stat">
+            <div class="label"><span>失败</span><span class="ui-dot" aria-hidden="true" style="color:var(--danger)"></span></div>
+            <div class="demo-metric-value"><div class="value">3</div><span class="ui-trend down inverse" aria-label="下降 8%">8%</span></div>
+            <div class="foot">较昨日少 1 个</div>
+          </div>
         </div>
-        <div class="ui-stat">
-          <div class="label"><span class="ui-dot" style="color:var(--danger)"></span>失败<span class="ui-trend down inverse" style="margin-left:auto">8%</span></div>
-          <div class="value">3</div>
-          <div class="foot">较昨日少 1 个 · 下降是好事，所以是绿色</div>
-        </div>
-      </div>
+      </section>
 
-      <!-- 图表 / data viz -->
-      <p class="sec-label">图表</p>
-      <div class="row" style="margin:-4px 0 -8px">
-        <span class="ui-muted" style="font-size:12px">图表色板与色系/强调色正交：切上面的色系或强调色，图表配色不变。</span>
-        <label class="ui-check" style="margin-left:auto"><input type="checkbox" onchange="document.documentElement.dataset.chartTexture = this.checked ? 'on' : ''"><span>纹理通道（CVD / 打印）</span></label>
+      <section class="demo-section demo-charts" id="charts" aria-labelledby="charts-title">
+      <div class="demo-section-head">
+        <div>
+          <h2 id="charts-title">图表</h2>
+          <p class="demo-chart-note">图表配色独立于底色色系和强调色。</p>
+        </div>
+        <label class="ui-check"><input type="checkbox" onchange="document.documentElement.dataset.chartTexture = this.checked ? 'on' : ''"><span>纹理通道（色觉辅助 / 打印）</span></label>
       </div>
+      <!-- 图表 / data viz -->
       <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
         <defs>
           <pattern id="ui-tex-45" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -152,7 +341,7 @@
           </pattern>
         </defs>
       </svg>
-      <div class="grid-chart-a">
+      <div class="grid-chart-a demo-chart-primary">
         <div class="ui-card">
           <div class="ui-chart">
             <div class="ui-chart-head">
@@ -165,7 +354,8 @@
                 <span class="ui-chart-legend-item ui-s2" data-s="2"><i class="sw line"></i>等待队列<span class="val">12</span></span>
               </div>
             </div>
-            <div class="ui-chart-body" style="--vbw:680">
+            <p class="demo-chart-scroll-note" id="throughput-scroll-note" hidden>横向滚动可查看完整时段。</p>
+            <div class="ui-chart-body" id="throughput-plot" role="region" aria-label="吞吐量与等待队列走势" style="--vbw:680">
               <svg viewBox="0 0 680 196" role="group" aria-label="24 小时吞吐量与等待队列折线图">
                 <g class="ui-chart-grid"><line x1="38" y1="100" x2="618" y2="100"/><line x1="38" y1="30" x2="618" y2="30"/></g>
                 <path class="ui-chart-area ui-s1" data-s="1" d="M38,170 L38,126.6 L63.2,136.4 L88.4,145.5 L113.7,150.4 L138.9,153.2 L164.1,151.8 L189.3,148.3 L214.5,129.4 L239.7,102.8 L265,83.2 L290.2,73.4 L315.4,70.6 L340.6,78.3 L365.8,87.4 L391,81.8 L416.3,64.3 L441.5,53.8 L466.7,59.4 L491.9,72 L517.1,85.3 L542.3,97.2 L567.6,105.6 L592.8,113.3 L618,121 L618,170 Z"/>
@@ -462,14 +652,24 @@
           </div>
         </div>
       </div>
+      <!-- 图表 / data viz end -->
+      </section>
 
-      <!-- 数据表格 + 分页 -->
+      <section class="demo-section" id="task-list" aria-labelledby="task-list-title">
+      <div class="demo-section-head"><h2 id="task-list-title">任务列表</h2></div>
       <div class="ui-card">
+        <div class="ui-tabs demo-task-tabs" aria-label="任务状态示例">
+          <button class="ui-tab active">全部</button>
+          <button class="ui-tab">进行中</button>
+          <button class="ui-tab">已完成</button>
+          <button class="ui-tab">失败</button>
+        </div>
         <div class="row" style="margin-bottom:12px">
-          <input class="ui-input" placeholder="按名称筛选…" style="max-width:240px">
+          <input class="ui-input" aria-label="按名称筛选" placeholder="按名称筛选…" style="max-width:240px">
           <span style="margin-left:auto"></span>
           <button class="ui-btn">列 ▾</button>
         </div>
+        <div class="demo-table-wrap">
         <table class="ui-table">
           <thead><tr><th>ID</th><th>名称</th><th>状态</th><th>耗时</th></tr></thead>
           <tbody>
@@ -480,15 +680,20 @@
             <tr><td class="num">#1020</td><td>排队任务</td><td><span class="ui-badge"><span class="ui-dot"></span>排队</span></td><td class="num">--</td></tr>
           </tbody>
         </table>
-        <div class="ui-pagination" style="margin-top:12px">
+        </div>
+        <div class="ui-pagination demo-task-pagination" style="margin-top:12px">
           <span class="info">共 128 条 · 第 1 / 26 页</span>
-          <button class="ui-page-btn" disabled>‹</button>
+          <button class="ui-page-btn" aria-label="上一页" disabled>‹</button>
           <button class="ui-page-btn active">1</button>
           <button class="ui-page-btn">2</button>
           <button class="ui-page-btn">3</button>
-          <button class="ui-page-btn">›</button>
+          <button class="ui-page-btn" aria-label="下一页">›</button>
         </div>
       </div>
+      </section>
+
+      <section class="demo-section" id="components" aria-labelledby="components-title">
+      <div class="demo-section-head"><h2 id="components-title">组件</h2></div>
 
       <!-- 按钮 + 状态标签 -->
       <div class="grid-2">
@@ -514,14 +719,14 @@
       </div>
 
       <!-- 表单控件 -->
-      <div class="ui-card">
+      <div class="ui-card demo-anchor" id="settings">
         <p class="sec-label" style="margin-bottom:12px">表单控件</p>
         <div class="grid-2">
-          <div class="field"><label>任务名称</label><input class="ui-input" placeholder="输入任务名称…"></div>
-          <div class="field"><label>优先级</label><select class="ui-select"><option>低</option><option>中</option><option>高</option></select></div>
-          <div class="field" style="grid-column:1/-1"><label>备注</label><textarea class="ui-textarea" rows="2" placeholder="补充说明（可选）…"></textarea></div>
-          <div class="field"><label>禁用输入</label><input class="ui-input" value="不可编辑" disabled></div>
-          <div class="field"><label>搜索</label><input class="ui-input" placeholder="搜索…"></div>
+          <div class="field"><label for="sample-task-name">任务名称</label><input class="ui-input" id="sample-task-name" placeholder="输入任务名称…"></div>
+          <div class="field"><label for="sample-priority">优先级</label><select class="ui-select" id="sample-priority"><option>低</option><option>中</option><option>高</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label for="sample-notes">备注</label><textarea class="ui-textarea" id="sample-notes" rows="2" placeholder="补充说明（可选）…"></textarea></div>
+          <div class="field"><label for="sample-disabled">禁用输入</label><input class="ui-input" id="sample-disabled" value="不可编辑" disabled></div>
+          <div class="field"><label for="sample-search">搜索</label><input class="ui-input" id="sample-search" placeholder="搜索…"></div>
         </div>
       </div>
 
@@ -529,6 +734,10 @@
       <div class="ui-alert warn">
         <span class="ico">⚠</span>
         <div><div class="title">磁盘空间不足</div><div class="desc">导出目录剩余 2.1 GB，建议清理历史素材后再新建批量任务。</div></div>
+      </div>
+      <div class="ui-card row">
+        <h3 style="margin:0">通知</h3>
+        <button class="ui-btn demo-notice-preview" id="preview-notices" aria-controls="demo-notices" onclick="showNotices()">预览通知</button>
       </div>
 
       <!-- 进度 + tooltip -->
@@ -596,7 +805,7 @@
 
       <!-- 标签 / 头像 / 时间线 / 骨架屏 -->
       <div class="grid-2">
-        <div class="ui-card">
+        <div class="ui-card demo-anchor" id="accounts">
           <p class="sec-label" style="margin-bottom:14px">标签 & 头像</p>
           <div class="row" style="margin-bottom:16px">
             <span class="ui-tag">4K</span>
@@ -681,7 +890,7 @@
 
       <!-- 树形控件 + 日志/代码块 -->
       <div class="grid-2">
-        <div class="ui-card">
+        <div class="ui-card demo-anchor" id="assets">
           <p class="sec-label" style="margin-bottom:14px">树形控件</p>
           <div class="ui-tree">
             <div class="node"><span class="twist">▾</span><span class="icon">▸</span>素材库<span class="count">42</span></div>
@@ -695,7 +904,7 @@
             </div>
           </div>
         </div>
-        <div class="ui-card">
+        <div class="ui-card demo-anchor" id="logs">
           <p class="sec-label" style="margin-bottom:14px">日志 / 代码块</p>
           <pre class="ui-code"><span class="c-muted">$</span> tool run --batch 07 --format mp4
 <span class="c-muted">14:04:15</span> <span class="c-accent">INFO</span>  切分完成 24 段
@@ -706,7 +915,7 @@
       </div>
 
       <!-- 空状态 -->
-      <div class="ui-card">
+      <div class="ui-card demo-anchor" id="exports">
         <p class="sec-label" style="margin-bottom:0">空状态</p>
         <div class="ui-empty">
           <div class="glyph">◇</div>
@@ -715,31 +924,32 @@
           <div class="actions"><button class="ui-btn primary">新建导出</button></div>
         </div>
       </div>
-    </div>
+      </section>
+    </main>
   </div>
 </div>
 
 <!-- 命令面板（点顶栏搜索或 ⌘K 打开） -->
-<div class="ui-overlay" id="cmd" style="display:none" onclick="if(event.target===this)closeCmd()">
+<dialog class="demo-command" id="cmd" aria-label="任务命令面板">
   <div class="ui-command">
-    <div class="search"><span class="ui-muted">⌕</span><input placeholder="搜索任务、命令、页面…" autofocus><span class="ui-kbd">ESC</span></div>
+    <div class="search"><span class="ui-muted" aria-hidden="true">⌕</span><input aria-label="查找命令或预览分区" placeholder="搜索任务、命令、页面…" autofocus><kbd class="ui-kbd" aria-hidden="true">Esc</kbd></div>
     <div class="list">
       <div class="group-label">快捷操作</div>
       <div class="item active"><span class="icon">＋</span>新建任务<span class="hint"><span class="ui-kbd">N</span></span></div>
       <div class="item"><span class="icon">⇧</span>导出当前列表<span class="hint"><span class="ui-kbd">E</span></span></div>
       <div class="group-label">跳转</div>
-      <div class="item"><span class="icon">▸</span>任务</div>
-      <div class="item"><span class="icon">◇</span>队列</div>
-      <div class="item"><span class="icon">⚙</span>设置</div>
+      <a class="item" href="#task-list"><span class="icon" aria-hidden="true">▸</span>任务</a>
+      <a class="item" href="#charts"><span class="icon" aria-hidden="true">◇</span>队列</a>
+      <a class="item" href="#settings"><span class="icon" aria-hidden="true">⚙</span>设置</a>
     </div>
   </div>
-</div>
+</dialog>
 
 <!-- 详情抽屉 -->
 <aside class="ui-drawer" id="drawer" style="display:none">
   <div class="head">
     <span class="title">任务详情 #1024</span>
-    <button class="x" onclick="document.getElementById('drawer').style.display='none'">×</button>
+    <button class="x" aria-label="关闭详情抽屉" onclick="document.getElementById('drawer').style.display='none'">×</button>
   </div>
   <div class="body">
     <div class="field"><label class="ui-muted" style="font-size:12px">名称</label><div>视频切分 batch-07</div></div>
@@ -754,50 +964,102 @@
 </aside>
 
 <!-- toast 通知 -->
-<div class="ui-toast-stack">
-  <div class="ui-toast ok">
+<div class="ui-toast-stack" id="demo-notices">
+  <div class="ui-toast ok" hidden>
     <div class="t-body"><div class="t-title">导出完成</div><div class="t-desc">final.mp4 已保存到导出目录</div></div>
-    <button class="t-close">×</button>
+    <button class="t-close" aria-label="关闭导出完成通知">×</button>
   </div>
-  <div class="ui-toast danger">
+  <div class="ui-toast danger" hidden>
     <div class="t-body"><div class="t-title">任务失败</div><div class="t-desc">#1022 合并导出 · 编码器返回非零退出码</div></div>
-    <button class="t-close">×</button>
+    <button class="t-close" aria-label="关闭任务失败通知">×</button>
   </div>
 </div>
 
 <script>
-function openCmd() { document.getElementById('cmd').style.display = 'flex'; }
-function closeCmd() { document.getElementById('cmd').style.display = 'none'; }
-document.addEventListener('keydown', function(e) {
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmd(); }
-  if (e.key === 'Escape') closeCmd();
+const command = document.getElementById('cmd');
+const appearance = document.getElementById('appearance');
+const searchHint = document.getElementById('search-kbd');
+if (/Mac|iPhone|iPad/.test(navigator.platform)) searchHint.textContent = '⌘K';
+
+function openCmd() {
+  appearance.open = false;
+  if (!command.open) command.showModal();
+}
+command.addEventListener('click', (event) => {
+  if (event.target === command || event.target.closest('a[href^="#"]')) command.close();
 });
-document.querySelectorAll('.ui-toast .t-close').forEach(function(b){
-  b.onclick = function(){ b.closest('.ui-toast').remove(); };
+document.addEventListener('keydown', (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault();
+    openCmd();
+  }
+  if (event.key === 'Escape' && appearance.open) {
+    appearance.open = false;
+    appearance.querySelector('summary').focus();
+  }
 });
+document.addEventListener('click', (event) => {
+  if (appearance.open && !appearance.contains(event.target)) appearance.open = false;
+});
+
+const sectionLinks = document.querySelectorAll('nav[aria-label="预览目录"] a');
+function markSection() {
+  const target = document.getElementById(location.hash.slice(1));
+  const section = target?.closest('.demo-section')?.id || 'overview';
+  for (const link of sectionLinks) {
+    const current = link.hash === `#${section}`;
+    link.classList.toggle('active', current);
+    if (current) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+}
+window.addEventListener('hashchange', markSection);
+markSection();
+
+const throughputPlot = document.getElementById('throughput-plot');
+const scrollNote = document.getElementById('throughput-scroll-note');
+new ResizeObserver(() => {
+  const scrollable = throughputPlot.scrollWidth > throughputPlot.clientWidth + 1;
+  scrollNote.hidden = !scrollable;
+  if (scrollable) {
+    throughputPlot.tabIndex = 0;
+    throughputPlot.setAttribute('aria-describedby', scrollNote.id);
+  } else {
+    throughputPlot.removeAttribute('tabindex');
+    throughputPlot.removeAttribute('aria-describedby');
+  }
+}).observe(throughputPlot);
+
+const noticeStack = document.getElementById('demo-notices');
+function showNotices() {
+  for (const notice of noticeStack.children) notice.hidden = false;
+  noticeStack.querySelector('.t-close').focus();
+}
+noticeStack.addEventListener('click', (event) => {
+  const close = event.target.closest('.t-close');
+  if (!close) return;
+  close.closest('.ui-toast').hidden = true;
+  const next = noticeStack.querySelector('.ui-toast:not([hidden]) .t-close');
+  (next || document.getElementById('preview-notices')).focus();
+});
+
 (function(){
   var dz = document.getElementById('dz'); if (!dz) return;
   ['dragenter','dragover'].forEach(function(e){ dz.addEventListener(e, function(ev){ ev.preventDefault(); dz.classList.add('dragover'); }); });
   ['dragleave','drop'].forEach(function(e){ dz.addEventListener(e, function(ev){ ev.preventDefault(); dz.classList.remove('dragover'); }); });
 })();
-function setTheme(t) {
-  if (t) document.documentElement.dataset.theme = t;
-  else delete document.documentElement.dataset.theme;
-  document.querySelectorAll('#theme-seg button').forEach(function(b){
-    b.classList.toggle('active', (b.dataset.theme || '') === (t || ''));
-  });
+function setAppearance(axis, value) {
+  if (value) document.documentElement.dataset[axis] = value;
+  else delete document.documentElement.dataset[axis];
+  for (const button of document.querySelectorAll(`#${axis}-seg button`)) {
+    const selected = button.dataset[axis] === (value || '');
+    button.classList.toggle('active', selected);
+    button.setAttribute('aria-pressed', selected);
+  }
 }
-function setAccent(a) {
-  if (a) document.documentElement.dataset.accent = a;
-  else delete document.documentElement.dataset.accent;
-  document.querySelectorAll('#accent-seg button').forEach(function(b){
-    b.classList.toggle('active', (b.dataset.accent || '') === (a || ''));
-  });
-}
-function setPalette(p) {
-  if (p) document.documentElement.dataset.palette = p;
-  else delete document.documentElement.dataset.palette;
-}
+function setTheme(theme) { setAppearance('theme', theme); }
+function setAccent(accent) { setAppearance('accent', accent); }
+function setPalette(palette) { setAppearance('palette', palette); }
 </script>
 </body>
 </html>

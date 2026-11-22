@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""重建 demo 页的「图表」分区：算好 SVG 几何后直接回写两份 demo。
+"""更新 demo.html 的图表分区，并从该页面生成单文件版。
 
 用法（仓库根目录）：python3 deploy/gen-demo-charts.py
 
@@ -8,6 +8,8 @@
 注意 viewBox 的长宽比要贴近所在卡片的比例（一栏约 300×168、两栏约 460×184），
 否则 SVG 等比缩放后会在卡片里「信箱化」留出大片空白。
 """
+
+from pathlib import Path
 
 def f(v): return ('%.1f' % v).rstrip('0').rstrip('.')
 
@@ -109,7 +111,8 @@ w(f'''        <div class="ui-card">
                 <span class="ui-chart-legend-item ui-s2" data-s="2"><i class="sw line"></i>等待队列<span class="val">{queue[-1]}</span></span>
               </div>
             </div>
-            <div class="ui-chart-body" style="--vbw:{W}">
+            <p class="demo-chart-scroll-note" id="throughput-scroll-note" hidden>横向滚动可查看完整时段。</p>
+            <div class="ui-chart-body" id="throughput-plot" role="region" aria-label="吞吐量与等待队列走势" style="--vbw:{W}">
               <svg viewBox="0 0 {W} {H}" role="group" aria-label="24 小时吞吐量与等待队列折线图">
                 <g class="ui-chart-grid">{grid}</g>
                 <path class="ui-chart-area ui-s1" data-s="1" d="{area1}"/>
@@ -614,11 +617,6 @@ w(f'''        <div class="ui-card">
 
 
 section = f'''      <!-- 图表 / data viz -->
-      <p class="sec-label">图表</p>
-      <div class="row" style="margin:-4px 0 -8px">
-        <span class="ui-muted" style="font-size:12px">图表色板与色系/强调色正交：切上面的色系或强调色，图表配色不变。</span>
-        <label class="ui-check" style="margin-left:auto"><input type="checkbox" onchange="document.documentElement.dataset.chartTexture = this.checked ? 'on' : ''"><span>纹理通道（CVD / 打印）</span></label>
-      </div>
       <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
         <defs>
           <pattern id="ui-tex-45" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -629,7 +627,7 @@ section = f'''      <!-- 图表 / data viz -->
           </pattern>
         </defs>
       </svg>
-      <div class="grid-chart-a">
+      <div class="grid-chart-a demo-chart-primary">
 {out[0]}
 {out[1]}
       </div>
@@ -684,29 +682,26 @@ section = f'''      <!-- 图表 / data viz -->
           </div>
         </div>
       </div>
+      <!-- 图表 / data viz end -->
 '''
 
-import os
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-def splice(path, end_anchor):
-    s = open(path).read()
-    i = s.index('      <!-- 图表 / data viz -->')
-    j = s.index(end_anchor)
-    open(path, 'w').write(s[:i] + section + '\n' + s[j:])
+assets = Path(__file__).resolve().parents[1] / 'assets'
+demo = assets / 'demo.html'
+source = demo.read_text(encoding='utf-8')
+start_marker = '      <!-- 图表 / data viz -->\n'
+end_marker = '      <!-- 图表 / data viz end -->\n'
+start = source.index(start_marker)
+end = source.index(end_marker, start) + len(end_marker)
+source = source[:start] + section + source[end:]
 
-splice(os.path.join(ROOT, 'assets/demo.html'), '      <!-- 数据表格 + 分页 -->')
-sa = os.path.join(ROOT, 'assets/demo.standalone.html')
-splice(sa, '      <div class="ui-card">\n        <div class="row" style="margin-bottom:12px">')
+standalone = source
+for name in ('tokens.css', 'base.css'):
+    link = f'<link rel="stylesheet" href="{name}">'
+    if standalone.count(link) != 1:
+        raise ValueError(f'demo.html 必须包含一个 {name} 样式链接')
+    css = (assets / name).read_text(encoding='utf-8').rstrip()
+    standalone = standalone.replace(link, f'<style>\n/* {name} */\n{css}\n</style>', 1)
 
-# 单文件版同步内联最新 tokens.css / base.css
-s = open(sa).read()
-tok = open(os.path.join(ROOT, 'assets/tokens.css')).read().rstrip()
-base = open(os.path.join(ROOT, 'assets/base.css')).read().rstrip()
-m1 = s[s.index('/* ===== tokens.css'):s.index('（light-dark 单份定义，原样内联）===== */') + len('（light-dark 单份定义，原样内联）===== */')]
-ver = tok.split('tokens v', 1)[1].split(' ', 1)[0]
-m2 = '/* ===== base.css（原样内联）===== */'
-m3 = '/* ===== demo 页面自身排版（不属于设计体系）===== */'
-s = (s[:s.index(m1)] + f'/* ===== tokens.css v{ver}（light-dark 单份定义，原样内联）===== */\n' + tok
-     + '\n\n' + m2 + '\n' + base + '\n\n' + s[s.index(m3):])
-open(sa, 'w').write(s)
-print('已重建 assets/demo.html 与 assets/demo.standalone.html 的图表分区')
+demo.write_text(source, encoding='utf-8')
+(assets / 'demo.standalone.html').write_text(standalone, encoding='utf-8')
+print('已重建 demo.html 图表分区并生成 demo.standalone.html')
