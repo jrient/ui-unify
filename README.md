@@ -47,8 +47,8 @@ SKILL.md                        skill 入口（Claude Code 自动发现）
 assets/
   tokens.css                    design token（双主题 CSS 变量），复制进目标项目
   base.css                      基础组件 class（ui-btn / ui-card / ui-table / ui-badge …）
-  demo.html                     完整应用外壳示例（侧栏 + 顶栏 ⌘K + 图表分区 + 表格分页 + 命令面板 + toast）
-  demo.standalone.html          单文件版 demo，浏览器直接打开预览
+  demo.html                     完整应用外壳示例（通用工具台 + 4 个项目场景示例：剧本翻译 / 媒体增强 / 容器门户 / 短剧看板）
+  demo.standalone.html          单文件版 demo（含全部视图与交互，浏览器直接打开预览）
 references/
   style-guide.md                完整视觉规范（色板 / 排版 / 形态 / 反例）
   migration.md                  分技术栈迁移手册 + 升级已接入项目 + 验收清单

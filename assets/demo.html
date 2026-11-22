@@ -191,6 +191,140 @@
     .demo-metrics .ui-spark { gap: 1px; }
     .demo-metrics .ui-spark > i { width: 2px; }
   }
+
+  /* ---------- 项目场景示例视图共享样式（复用 tokens.css / base.css） ---------- */
+  .demo-shell [hidden], .demo-command [hidden] { display: none; }
+  .demo-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; min-width: 0; }
+  .demo-view .ui-card { grid-template-columns: minmax(0, 1fr); min-width: 0; }
+  .demo-view .ui-card > * { min-width: 0; }
+  .demo-view .demo-table-wrap .ui-table { min-width: 560px; }
+  .demo-view .ui-table th, .demo-view .ui-tag { white-space: nowrap; }
+  .demo-view .ui-tabs { overflow-x: auto; scrollbar-width: none; }
+  .demo-view .ui-tabs::-webkit-scrollbar { display: none; }
+  .demo-view .ui-tab { flex: none; white-space: nowrap; }
+  .demo-view-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px;
+    font-size: 12px; color: var(--text-2);
+    background: var(--surface-2); border: 1px solid var(--border);
+  }
+  .demo-source-code { font-family: var(--font-mono); font-size: 12px; color: var(--accent-text); }
+  .demo-mobile-nav {
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap; align-items: center;
+  }
+  .demo-mobile-nav::-webkit-scrollbar { display: none; }
+  .demo-mobile-nav a { flex: none; white-space: nowrap; }
+  .demo-mobile-sep {
+    flex: none; width: 1px; height: 18px; margin-inline: 4px;
+    background: var(--border);
+  }
+
+  /* 1) 剧本翻译工作台 */
+  .tr-stage-bar {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding-top: 12px; border-top: 1px solid var(--border-subtle);
+  }
+  .tr-step { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+  .tr-step .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center; font: 600 11px/1 var(--font-mono);
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2);
+  }
+  .tr-step.done .dot { background: var(--ok); border-color: var(--ok); color: var(--accent-contrast); }
+  .tr-step.done { color: var(--text); }
+  .tr-step.active .dot { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+  .tr-step.active { color: var(--text); font-weight: 600; }
+  .tr-conn { width: 18px; height: 1px; background: var(--border-strong); flex: none; }
+  .tr-chunk-list { display: grid; gap: 12px; }
+  .tr-chunk {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    background: var(--bg); overflow: hidden;
+  }
+  .tr-chunk-head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 10px 14px; background: var(--surface);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .tr-chunk-head .title { font-weight: 600; font-size: 13px; }
+  .tr-chunk-body { padding: 12px 14px; display: grid; gap: 8px; }
+  .tr-line-pair {
+    display: grid; gap: 4px; padding: 8px 10px;
+    border-radius: var(--radius); background: var(--surface);
+    border: 1px solid var(--border-subtle);
+  }
+  .tr-line-zh { font-size: 13px; color: var(--text); }
+  .tr-line-en {
+    font-size: 13px; color: var(--text-2); padding-left: 10px;
+    border-left: 2px solid var(--accent);
+  }
+  .tr-review-note {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: var(--radius);
+    background: var(--surface-2); font-size: 12px; color: var(--text-2);
+  }
+  .tr-diff-del { color: var(--danger); text-decoration: line-through; }
+  .tr-diff-add { color: var(--ok); font-weight: 600; }
+
+  /* 2) MPS 视频增强工作台 */
+  .mps-meta-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+    font-size: 12px; color: var(--text-2);
+  }
+  .mps-meta-bar b { color: var(--text); font-weight: 600; }
+  .mps-prov-cell { display: inline-flex; align-items: center; gap: 6px; }
+  .mps-prov-sel { height: 28px; font-size: 12px; padding: 0 8px; }
+  .mps-inh { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); }
+  .mps-err { color: var(--danger); max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* 3) Docker 服务与容器监控 */
+  .dk-group { display: grid; gap: 12px; }
+  .dk-group-head { display: flex; align-items: center; gap: 8px; }
+  .dk-group-head h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .dk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .dk-card {
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .15s, background-color .15s;
+  }
+  .dk-card:hover { border-color: var(--border-strong); }
+  .dk-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .dk-glyph {
+    width: 32px; height: 32px; border-radius: var(--radius);
+    display: grid; place-items: center; font: 600 13px/1 var(--font-mono);
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  }
+  .dk-card-desc { margin: 0; font-size: 12.5px; color: var(--text-2); line-height: 1.45; flex: 1; }
+  .dk-card-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding-top: 8px; border-top: 1px solid var(--border-subtle);
+    font-size: 12px; color: var(--text-2);
+  }
+
+  /* 4) 短剧数据与投放看板 */
+  .di-sort-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    border: 0; background: transparent; padding: 0;
+    color: inherit; font: inherit; cursor: pointer;
+  }
+  .di-sort-btn:hover { color: var(--text); }
+  .di-sort-btn[data-active="true"] { color: var(--accent-text); font-weight: 600; }
+  .di-rank {
+    display: inline-grid; place-items: center;
+    width: 22px; height: 22px; border-radius: var(--radius-sm);
+    font: 600 12px/1 var(--font-mono); color: var(--text-2);
+    background: var(--surface-2);
+  }
+  .di-rank.top { background: var(--accent-ring); color: var(--accent-text); }
+  .di-drawer-backdrop {
+    position: fixed; inset: 0; z-index: 54;
+    background: rgb(0 0 0 / .45);
+  }
+  .di-drawer-backdrop[hidden], .ui-drawer[hidden] { display: none; }
+
+  @media (max-width: 640px) {
+    .tr-conn { display: none; }
+    .dk-grid { grid-template-columns: minmax(0, 1fr); }
+  }
 </style>
 </head>
 <body class="ui">
@@ -202,21 +336,28 @@
 
     <nav aria-label="预览目录">
       <div class="ui-nav-label">预览目录</div>
-      <a class="ui-nav-item active" href="#overview" aria-current="location"><span class="icon" aria-hidden="true">▦</span>任务总览</a>
-      <a class="ui-nav-item" href="#charts"><span class="icon" aria-hidden="true">⌁</span>图表</a>
-      <a class="ui-nav-item" href="#task-list"><span class="icon" aria-hidden="true">☷</span>任务列表</a>
-      <a class="ui-nav-item" href="#components"><span class="icon" aria-hidden="true">◇</span>组件</a>
+      <a class="ui-nav-item active" href="#overview" data-view="workbench" aria-current="location"><span class="icon" aria-hidden="true">▦</span>任务总览</a>
+      <a class="ui-nav-item" href="#charts" data-view="workbench"><span class="icon" aria-hidden="true">⌁</span>图表</a>
+      <a class="ui-nav-item" href="#task-list" data-view="workbench"><span class="icon" aria-hidden="true">☷</span>任务列表</a>
+      <a class="ui-nav-item" href="#components" data-view="workbench"><span class="icon" aria-hidden="true">◇</span>组件</a>
+    </nav>
+    <nav aria-label="项目场景示例">
+      <div class="ui-nav-label">项目场景示例</div>
+      <a class="ui-nav-item" href="#view-translate" data-view="translate"><span class="icon" aria-hidden="true">译</span>剧本翻译<span class="count">6步</span></a>
+      <a class="ui-nav-item" href="#view-media" data-view="media"><span class="icon" aria-hidden="true">▶</span>媒体增强<span class="count">6项</span></a>
+      <a class="ui-nav-item" href="#view-docker" data-view="docker"><span class="icon" aria-hidden="true">▤</span>容器门户<span class="count">8服</span></a>
+      <a class="ui-nav-item" href="#view-insights" data-view="insights"><span class="icon" aria-hidden="true">↗</span>短剧看板<span class="count">4榜</span></a>
     </nav>
     <nav aria-label="工作区示例">
       <div class="ui-nav-label">工作区</div>
-      <a class="ui-nav-item" href="#task-list"><span class="icon" aria-hidden="true">▸</span>任务<span class="count">128</span></a>
-      <a class="ui-nav-item" href="#charts"><span class="icon" aria-hidden="true">◇</span>队列<span class="count">12</span></a>
-      <a class="ui-nav-item" href="#assets"><span class="icon" aria-hidden="true">▤</span>素材库</a>
-      <a class="ui-nav-item" href="#exports"><span class="icon" aria-hidden="true">⧉</span>导出记录</a>
+      <a class="ui-nav-item" href="#task-list" data-view="workbench"><span class="icon" aria-hidden="true">▸</span>任务<span class="count">128</span></a>
+      <a class="ui-nav-item" href="#charts" data-view="workbench"><span class="icon" aria-hidden="true">◇</span>队列<span class="count">12</span></a>
+      <a class="ui-nav-item" href="#assets" data-view="workbench"><span class="icon" aria-hidden="true">▤</span>素材库</a>
+      <a class="ui-nav-item" href="#exports" data-view="workbench"><span class="icon" aria-hidden="true">⧉</span>导出记录</a>
       <div class="ui-nav-label">系统</div>
-      <a class="ui-nav-item" href="#accounts"><span class="icon" aria-hidden="true">◐</span>账号</a>
-      <a class="ui-nav-item" href="#settings"><span class="icon" aria-hidden="true">⚙</span>设置</a>
-      <a class="ui-nav-item" href="#logs"><span class="icon" aria-hidden="true">◔</span>日志</a>
+      <a class="ui-nav-item" href="#accounts" data-view="workbench"><span class="icon" aria-hidden="true">◐</span>账号</a>
+      <a class="ui-nav-item" href="#settings" data-view="workbench"><span class="icon" aria-hidden="true">⚙</span>设置</a>
+      <a class="ui-nav-item" href="#logs" data-view="workbench"><span class="icon" aria-hidden="true">◔</span>日志</a>
     </nav>
   </aside>
 
@@ -224,9 +365,9 @@
   <div class="ui-content">
     <header class="demo-header">
       <div class="demo-toolbar">
-        <nav class="ui-crumb" aria-label="当前位置">
-          <a href="#overview">工作区</a><span class="sep" aria-hidden="true">/</span>
-          <a href="#task-list">任务</a><span class="sep" aria-hidden="true">/</span>
+        <nav class="ui-crumb" id="demo-crumb" aria-label="当前位置">
+          <a href="#overview" data-view="workbench">工作区</a><span class="sep" aria-hidden="true">/</span>
+          <a href="#task-list" data-view="workbench">任务</a><span class="sep" aria-hidden="true">/</span>
           <span class="current">batch-07</span>
         </nav>
         <span class="demo-mobile-brand">工具台</span>
@@ -284,14 +425,20 @@
         </div>
       </div>
       <nav class="demo-mobile-nav" aria-label="预览目录">
-        <a class="ui-nav-item active" href="#overview" aria-current="location">任务总览</a>
-        <a class="ui-nav-item" href="#charts">图表</a>
-        <a class="ui-nav-item" href="#task-list">任务列表</a>
-        <a class="ui-nav-item" href="#components">组件</a>
+        <a class="ui-nav-item active" href="#overview" data-view="workbench" aria-current="location">任务总览</a>
+        <a class="ui-nav-item" href="#charts" data-view="workbench">图表</a>
+        <a class="ui-nav-item" href="#task-list" data-view="workbench">任务列表</a>
+        <a class="ui-nav-item" href="#components" data-view="workbench">组件</a>
+        <span class="demo-mobile-sep" aria-hidden="true"></span>
+        <a class="ui-nav-item" href="#view-translate" data-view="translate">剧本翻译</a>
+        <a class="ui-nav-item" href="#view-media" data-view="media">媒体增强</a>
+        <a class="ui-nav-item" href="#view-docker" data-view="docker">容器门户</a>
+        <a class="ui-nav-item" href="#view-insights" data-view="insights">短剧看板</a>
       </nav>
     </header>
 
     <main class="body">
+      <div class="demo-view" id="view-workbench" data-view-panel="workbench">
       <section class="demo-section demo-overview" id="overview" aria-labelledby="overview-title">
         <div class="demo-section-head">
           <div>
@@ -925,6 +1072,366 @@
         </div>
       </div>
       </section>
+      </div><!-- /#view-workbench -->
+
+      <!-- ================================================================
+           项目场景示例 1：剧本翻译工作台（参考 script-dialogue-translate）
+           ================================================================ -->
+      <div class="demo-view" id="view-translate" data-view-panel="translate" hidden>
+        <section class="demo-section" aria-labelledby="tr-view-title">
+          <div class="demo-section-head">
+            <div>
+              <div class="row" style="gap:8px;margin-bottom:6px">
+                <span class="demo-view-badge">参考源码 <span class="demo-source-code">script-dialogue-translate</span></span>
+                <span class="demo-view-badge">演示数据 · 本地交互</span>
+              </div>
+              <h1 class="page-title" id="tr-view-title">剧本翻译工作台</h1>
+              <p>实体抽取与译名确认 → 分块翻译 → 红/绿对照审核与失败块补审 → 双语脚本导出。</p>
+            </div>
+            <div class="row demo-actions">
+              <button type="button" class="ui-btn" onclick="pushToast('info','下载 QA 报告（演示）','已生成 qa-mist-harbor-demo.json 示例报告')">下载 QA 报告</button>
+              <button type="button" class="ui-btn" onclick="pushToast('ok','导出 DOCX（演示）','已按当前译名生成中英双语脚本')">导出 DOCX</button>
+              <button type="button" class="ui-btn primary" onclick="pushToast('ok','导出到飞书（演示）','已创建演示云文档并完成权限移交模拟')">导出到飞书</button>
+            </div>
+          </div>
+
+          <div class="ui-card" style="display:grid;gap:12px">
+            <div class="row" style="justify-content:space-between">
+              <div class="row">
+                <strong style="font-size:16px">《雾港回声》第 1–12 集（示例脚本）</strong>
+                <span class="ui-badge">目标：英文 (en)</span>
+                <span id="tr-task-status"></span>
+              </div>
+              <div class="row">
+                <span class="ui-muted ui-mono" style="font-size:12px">task-tr-208 · 4 块 · 约 6,400 字</span>
+              </div>
+            </div>
+            <div class="tr-stage-bar" id="tr-stage-bar" aria-label="翻译流水线阶段"></div>
+          </div>
+
+          <!-- 实体 / 译名映射表 -->
+          <div class="ui-card" style="display:grid;gap:12px">
+            <div class="row" style="justify-content:space-between">
+              <div>
+                <h2 style="margin:0;font-size:16px;font-weight:600">译名映射表</h2>
+                <p class="ui-muted" style="margin:4px 0 0;font-size:12.5px">确认专有名词译名后再继续分块翻译；修改译名将同步更新下方英文对照行。</p>
+              </div>
+              <div class="row">
+                <button type="button" class="ui-btn" id="tr-toggle-edit" onclick="trToggleEdit()">编辑译名</button>
+                <button type="button" class="ui-btn primary" id="tr-confirm-map" onclick="trConfirmMappings()" hidden>确认映射并同步</button>
+              </div>
+            </div>
+            <div class="demo-table-wrap">
+              <table class="ui-table">
+                <thead>
+                  <tr><th>类型</th><th>中文原文</th><th>目标译名</th><th>来源 / 备注</th></tr>
+                </thead>
+                <tbody id="tr-map-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 分块翻译与审核修复 -->
+          <div class="ui-card" style="display:grid;gap:14px">
+            <div class="row" style="justify-content:space-between">
+              <div>
+                <h2 style="margin:0;font-size:16px;font-weight:600">分块翻译与审核</h2>
+                <p class="ui-muted" id="tr-chunk-summary" style="margin:4px 0 0;font-size:12.5px"></p>
+              </div>
+              <div class="row">
+                <div class="ui-seg" id="tr-mode-seg" role="group" aria-label="对照视图模式">
+                  <button type="button" data-mode="compare" class="active" aria-pressed="true" onclick="trSetMode('compare')">中英对照</button>
+                  <button type="button" data-mode="bilingual" aria-pressed="false" onclick="trSetMode('bilingual')">双语原稿</button>
+                </div>
+                <button type="button" class="ui-btn" onclick="trRetryReview()">补审未完成块</button>
+                <button type="button" class="ui-btn primary" onclick="trRetryFailed()">重跑失败块</button>
+              </div>
+            </div>
+            <div class="tr-chunk-list" id="tr-chunk-list"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================================================================
+           项目场景示例 2：MPS 视频增强工作台（参考 tencent-media-process）
+           ================================================================ -->
+      <div class="demo-view" id="view-media" data-view-panel="media" hidden>
+        <section class="demo-section" aria-labelledby="mps-view-title">
+          <div class="demo-section-head">
+            <div>
+              <div class="row" style="gap:8px;margin-bottom:6px">
+                <span class="demo-view-badge">参考源码 <span class="demo-source-code">tencent-media-process</span></span>
+                <span class="demo-view-badge">演示数据 · 本地交互</span>
+              </div>
+              <h1 class="page-title" id="mps-view-title">MPS 视频增强工作台</h1>
+              <p>多渠道视频大模型超分与画质增强批处理：支持并发派发控制、单条渠道覆写与 NAS 暂存回写。</p>
+            </div>
+            <div class="row demo-actions">
+              <button type="button" class="ui-btn primary" id="mps-btn-start" onclick="mpsAction('start')">▶ 开始</button>
+              <button type="button" class="ui-btn" id="mps-btn-pause" onclick="mpsAction('pause')">⏸ 暂停</button>
+              <button type="button" class="ui-btn" id="mps-btn-retry" onclick="mpsAction('retry')">↻ 重跑失败</button>
+              <button type="button" class="ui-btn" id="mps-btn-rescan" onclick="mpsAction('rescan')">⟳ 重扫</button>
+            </div>
+          </div>
+
+          <div class="ui-card" style="display:grid;gap:14px">
+            <div class="row" style="justify-content:space-between">
+              <div class="row">
+                <strong style="font-size:16px">mist-harbor-ep01-enhance</strong>
+                <span id="mps-status-badge"></span>
+                <code class="ui-inline">proj-mps-demo01</code>
+              </div>
+              <span class="ui-mono ui-muted" id="mps-pct-label" style="font-size:13px">50%</span>
+            </div>
+            <div class="mps-meta-bar" id="mps-meta-bar"></div>
+            <div class="ui-progress" role="progressbar" aria-label="批处理完成进度" aria-valuemin="0" aria-valuemax="100" id="mps-progress">
+              <div class="bar" id="mps-progress-bar" style="width:50%"></div>
+            </div>
+            <div class="ui-alert info" id="mps-pause-note" hidden>
+              <span class="ico" aria-hidden="true">⏸</span>
+              <div>
+                <div class="title">已暂停派发新任务</div>
+                <div class="desc" id="mps-pause-desc">仍有在途任务将继续跑完（已提交云端 MPS 的任务无法中途撤销）。</div>
+              </div>
+            </div>
+            <details class="ui-accordion">
+              <summary>模板与高级参数<span class="count">1080P · 模板 327003</span></summary>
+              <div class="body">
+                <dl class="ui-desc">
+                  <dt>分辨率模板</dt><dd class="ui-mono">720P (327001) / 1080P (327003) / 2K (327005)</dd>
+                  <dt>默认输出短边</dt><dd class="ui-mono">StdExtInfo.short = 1080</dd>
+                  <dt>高级增强参数</dt><dd class="ui-mono">wd_fps=60 · color_enhance=normal · keep_metadata=true</dd>
+                  <dt>输出存储</dt><dd>演示暂存盘 → NAS 自动回写（断连时进入暂存待写队列）</dd>
+                </dl>
+              </div>
+            </details>
+          </div>
+
+          <div class="ui-card" style="display:grid;gap:12px">
+            <div class="row" style="justify-content:space-between">
+              <h2 style="margin:0;font-size:16px;font-weight:600">批处理文件队列</h2>
+              <span class="ui-muted" style="font-size:12px">待处理/失败项可切换单条渠道；切换至「火山·专业」将弹出计费确认</span>
+            </div>
+            <div class="demo-table-wrap">
+              <table class="ui-table">
+                <thead>
+                  <tr><th>文件名</th><th>状态</th><th>渠道</th><th class="num">大小</th><th class="num">耗时</th><th>错误 / 备注</th><th>TaskId</th><th>操作</th></tr>
+                </thead>
+                <tbody id="mps-items-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================================================================
+           项目场景示例 3：Docker 服务与容器监控（参考 docker-portal）
+           ================================================================ -->
+      <div class="demo-view" id="view-docker" data-view-panel="docker" hidden>
+        <section class="demo-section" aria-labelledby="dk-view-title">
+          <div class="demo-section-head">
+            <div>
+              <div class="row" style="gap:8px;margin-bottom:6px">
+                <span class="demo-view-badge">参考源码 <span class="demo-source-code">docker-portal</span></span>
+                <span class="demo-view-badge">演示数据 · 本地交互</span>
+              </div>
+              <h1 class="page-title" id="dk-view-title">Docker 服务与容器监控</h1>
+              <p>自动发现本机运行容器与端口映射，按分组呈现健康状态并支持即时查看容器日志。</p>
+            </div>
+            <div class="row demo-actions">
+              <button type="button" class="ui-btn" onclick="dkProbeNow()">⟳ 立即探活</button>
+            </div>
+          </div>
+
+          <div class="demo-metrics" id="dk-metrics">
+            <div class="ui-stat">
+              <div class="label">发现容器</div>
+              <div class="demo-metric-value"><div class="value" id="dk-stat-total">8</div><span class="ui-muted" style="font-size:12px">4 个分组</span></div>
+              <div class="foot" id="dk-probe-time">最近探活：21:05:30</div>
+            </div>
+            <div class="ui-stat">
+              <div class="label"><span>健康运行</span><span class="ui-dot" aria-hidden="true" style="color:var(--ok)"></span></div>
+              <div class="demo-metric-value"><div class="value" id="dk-stat-ok">6</div><span class="ui-trend up">正常</span></div>
+              <div class="foot">探活周期 30s · 自动提取 README 描述</div>
+            </div>
+            <div class="ui-stat">
+              <div class="label"><span>异常 / 降级</span><span class="ui-dot" aria-hidden="true" style="color:var(--danger)"></span></div>
+              <div class="demo-metric-value"><div class="value" id="dk-stat-bad">2</div><span class="ui-trend flat">需关注</span></div>
+              <div class="foot">点卡片可展开日志并模拟重启恢复</div>
+            </div>
+          </div>
+
+          <div class="ui-card" style="display:grid;gap:16px">
+            <div class="row" style="justify-content:space-between">
+              <div class="ui-seg" id="dk-filter-seg" role="group" aria-label="按健康状态筛选">
+                <button type="button" data-filter="all" class="active" aria-pressed="true" onclick="dkSetFilter('all')">全部</button>
+                <button type="button" data-filter="healthy" aria-pressed="false" onclick="dkSetFilter('healthy')">正常</button>
+                <button type="button" data-filter="unhealthy" aria-pressed="false" onclick="dkSetFilter('unhealthy')">异常</button>
+              </div>
+              <input class="ui-input" id="dk-search" aria-label="搜索容器或分组" placeholder="搜索服务名、容器名、分组…" oninput="dkRender()" style="min-width:220px;flex:0 1 280px">
+            </div>
+            <div id="dk-groups" style="display:grid;gap:20px"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================================================================
+           项目场景示例 4：短剧数据与投放看板（参考 drama-insights）
+           ================================================================ -->
+      <div class="demo-view" id="view-insights" data-view-panel="insights" hidden>
+        <section class="demo-section" aria-labelledby="di-view-title">
+          <div class="demo-section-head">
+            <div>
+              <div class="row" style="gap:8px;margin-bottom:6px">
+                <span class="demo-view-badge">参考源码 <span class="demo-source-code">drama-insights</span></span>
+                <span class="demo-view-badge">演示数据 · 本地交互</span>
+              </div>
+              <h1 class="page-title" id="di-view-title">短剧数据与投放看板</h1>
+              <p>汇总多渠道播放量、小时增量、24h 飙升榜与创作者口径统计，支持点击表头即时排序。</p>
+            </div>
+            <div class="row demo-actions">
+              <button type="button" class="ui-btn" onclick="pushToast('ok','播报摘要已复制（演示）','已复制 21:00 整点飙升榜 Top 5 文本摘要')">复制整点播报</button>
+            </div>
+          </div>
+
+          <div class="demo-metrics">
+            <div class="ui-stat">
+              <div class="label">在榜示例剧目</div>
+              <div class="demo-metric-value"><div class="value">6</div><span class="ui-trend up">+2</span></div>
+              <div class="foot">已覆盖抖音 / 视频号 / TT 演示渠道</div>
+            </div>
+            <div class="ui-stat">
+              <div class="label">24h 总增量</div>
+              <div class="demo-metric-value"><div class="value">4,820万</div><span class="ui-trend up">18.4%</span></div>
+              <div class="foot">上小时新增 312 万播放</div>
+            </div>
+            <div class="ui-stat">
+              <div class="label">示例投放 ROI</div>
+              <div class="demo-metric-value"><div class="value">1.42</div><span class="ui-trend flat">0.0%</span></div>
+              <div class="foot">整点采集 · 虚构示例指标</div>
+            </div>
+          </div>
+
+          <div class="ui-card" style="display:grid;gap:14px">
+            <div class="ui-tabs" id="di-tabs" role="tablist" aria-label="短剧榜单分类">
+              <button type="button" class="ui-tab active" role="tab" aria-selected="true" data-tab="board" onclick="diSetTab('board')">剧目榜</button>
+              <button type="button" class="ui-tab" role="tab" aria-selected="false" data-tab="soaring" onclick="diSetTab('soaring')">飙升榜</button>
+              <button type="button" class="ui-tab" role="tab" aria-selected="false" data-tab="creators" onclick="diSetTab('creators')">创作者榜</button>
+              <button type="button" class="ui-tab" role="tab" aria-selected="false" data-tab="offline" onclick="diSetTab('offline')">已下架</button>
+            </div>
+
+            <!-- Tab 1: 剧目榜 -->
+            <div id="di-panel-board">
+              <div class="row" style="justify-content:space-between;margin-bottom:10px">
+                <span class="ui-muted" style="font-size:12px">点击数值列标题可切换升序 / 降序</span>
+                <div class="ui-chart-legend">
+                  <span class="ui-chart-legend-item ui-s1"><i class="sw dot"></i>抖音</span>
+                  <span class="ui-chart-legend-item ui-s2"><i class="sw dot"></i>视频号</span>
+                  <span class="ui-chart-legend-item ui-s3"><i class="sw dot"></i>TT</span>
+                </div>
+              </div>
+              <div class="demo-table-wrap">
+                <table class="ui-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>剧名</th>
+                      <th>导演</th>
+                      <th style="min-width:110px">渠道构成</th>
+                      <th class="num" aria-sort="descending"><button type="button" class="di-sort-btn" data-key="play" data-active="true" onclick="diSort('play')">播放量 <span>▼</span></button></th>
+                      <th class="num" aria-sort="none"><button type="button" class="di-sort-btn" data-key="g1h" onclick="diSort('g1h')">上小时 <span></span></button></th>
+                      <th class="num" aria-sort="none"><button type="button" class="di-sort-btn" data-key="g24h" onclick="diSort('g24h')">24h 增量 <span></span></button></th>
+                      <th class="num" aria-sort="none"><button type="button" class="di-sort-btn" data-key="roi" onclick="diSort('roi')">ROI <span></span></button></th>
+                    </tr>
+                  </thead>
+                  <tbody id="di-board-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 2: 飙升榜 -->
+            <div id="di-panel-soaring" hidden>
+              <div class="grid-2">
+                <div>
+                  <h3 style="margin:0 0 10px;font-size:14px">小时增量榜 · Top 5</h3>
+                  <div class="demo-table-wrap">
+                    <table class="ui-table">
+                      <thead><tr><th>#</th><th>剧名</th><th class="num">1h 增量</th><th class="num">增速</th></tr></thead>
+                      <tbody id="di-boost-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <h3 style="margin:0 0 10px;font-size:14px">24h 飙升榜 · Top 5</h3>
+                  <div class="demo-table-wrap">
+                    <table class="ui-table">
+                      <thead><tr><th>#</th><th>剧名</th><th>导演</th><th class="num">24h 增量</th></tr></thead>
+                      <tbody id="di-soaring-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 3: 创作者榜 -->
+            <div id="di-panel-creators" hidden>
+              <div class="row" style="margin-bottom:14px">
+                <label class="row" style="gap:6px;font-size:13px">
+                  <span class="ui-muted">口径</span>
+                  <select class="ui-select" id="di-caliber" onchange="diRenderCreators()">
+                    <option value="online">上线月份</option>
+                    <option value="growth">播放增量</option>
+                  </select>
+                </label>
+                <label class="row" style="gap:6px;font-size:13px">
+                  <span class="ui-muted">月份</span>
+                  <select class="ui-select" id="di-month" onchange="diRenderCreators()">
+                    <option value="2026-11">2026-11</option>
+                    <option value="2026-10">2026-10</option>
+                  </select>
+                </label>
+              </div>
+              <div class="grid-2">
+                <div>
+                  <h3 style="margin:0 0 10px;font-size:14px">编剧榜</h3>
+                  <div class="demo-table-wrap">
+                    <table class="ui-table">
+                      <thead><tr><th>#</th><th>编剧</th><th class="num">作品数</th><th class="num" id="di-wr-metric">总播放量</th><th class="num">24h</th></tr></thead>
+                      <tbody id="di-writer-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <h3 style="margin:0 0 10px;font-size:14px">导演榜</h3>
+                  <div class="demo-table-wrap">
+                    <table class="ui-table">
+                      <thead><tr><th>#</th><th>导演</th><th class="num">作品数</th><th class="num" id="di-dir-metric">总播放量</th><th class="num">24h</th></tr></thead>
+                      <tbody id="di-director-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 4: 已下架 -->
+            <div id="di-panel-offline" hidden>
+              <div class="ui-alert info" style="margin-bottom:12px">
+                <span class="ico" aria-hidden="true">ℹ</span>
+                <div><div class="title">已下架留存快照（演示）</div><div class="desc">曾监控、现已停止返回的示例剧目，播放量为最后一次整点采集留存值。</div></div>
+              </div>
+              <div class="demo-table-wrap">
+                <table class="ui-table">
+                  <thead><tr><th>#</th><th>剧名</th><th>导演</th><th>最后采集</th><th class="num">留存播放量</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="di-rank">1</span></td><td>《旧站台来信》</td><td>顾远</td><td class="ui-mono ui-muted">2026-11-18 09:00</td><td class="num">1,240 万</td></tr>
+                    <tr><td><span class="di-rank">2</span></td><td>《雨季清单》</td><td>许清</td><td class="ui-mono ui-muted">2026-11-14 21:00</td><td class="num">685 万</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 </div>
@@ -932,18 +1439,65 @@
 <!-- 命令面板（点顶栏搜索或 ⌘K 打开） -->
 <dialog class="demo-command" id="cmd" aria-label="任务命令面板">
   <div class="ui-command">
-    <div class="search"><span class="ui-muted" aria-hidden="true">⌕</span><input aria-label="查找命令或预览分区" placeholder="搜索任务、命令、页面…" autofocus><kbd class="ui-kbd" aria-hidden="true">Esc</kbd></div>
-    <div class="list">
+    <div class="search"><span class="ui-muted" aria-hidden="true">⌕</span><input id="cmd-input" aria-label="查找命令或预览分区" placeholder="搜索任务、命令、项目场景…" autofocus><kbd class="ui-kbd" aria-hidden="true">Esc</kbd></div>
+    <div class="list" id="cmd-list">
+      <div class="group-label">项目场景示例</div>
+      <a class="item" href="#view-translate" data-view="translate"><span class="icon" aria-hidden="true">译</span>剧本翻译工作台（script-dialogue-translate）<span class="hint"><span class="ui-kbd">1</span></span></a>
+      <a class="item" href="#view-media" data-view="media"><span class="icon" aria-hidden="true">▶</span>MPS 视频增强工作台（tencent-media-process）<span class="hint"><span class="ui-kbd">2</span></span></a>
+      <a class="item" href="#view-docker" data-view="docker"><span class="icon" aria-hidden="true">▤</span>Docker 服务与容器监控（docker-portal）<span class="hint"><span class="ui-kbd">3</span></span></a>
+      <a class="item" href="#view-insights" data-view="insights"><span class="icon" aria-hidden="true">↗</span>短剧数据与投放看板（drama-insights）<span class="hint"><span class="ui-kbd">4</span></span></a>
       <div class="group-label">快捷操作</div>
-      <div class="item active"><span class="icon">＋</span>新建任务<span class="hint"><span class="ui-kbd">N</span></span></div>
-      <div class="item"><span class="icon">⇧</span>导出当前列表<span class="hint"><span class="ui-kbd">E</span></span></div>
-      <div class="group-label">跳转</div>
-      <a class="item" href="#task-list"><span class="icon" aria-hidden="true">▸</span>任务</a>
-      <a class="item" href="#charts"><span class="icon" aria-hidden="true">◇</span>队列</a>
-      <a class="item" href="#settings"><span class="icon" aria-hidden="true">⚙</span>设置</a>
+      <div class="item active" role="button" tabindex="0" onclick="command.close();pushToast('info','新建任务（演示）','此操作为前端演示，未连接真实后端')"><span class="icon">＋</span>新建任务<span class="hint"><span class="ui-kbd">N</span></span></div>
+      <div class="item" role="button" tabindex="0" onclick="command.close();pushToast('ok','导出列表（演示）','已生成当前视图示例 CSV')"><span class="icon">⇧</span>导出当前列表<span class="hint"><span class="ui-kbd">E</span></span></div>
+      <div class="group-label">跳转（通用工具台）</div>
+      <a class="item" href="#overview" data-view="workbench"><span class="icon" aria-hidden="true">▦</span>任务总览</a>
+      <a class="item" href="#charts" data-view="workbench"><span class="icon" aria-hidden="true">⌁</span>图表</a>
+      <a class="item" href="#task-list" data-view="workbench"><span class="icon" aria-hidden="true">▸</span>任务列表</a>
+      <a class="item" href="#settings" data-view="workbench"><span class="icon" aria-hidden="true">⚙</span>设置</a>
     </div>
   </div>
 </dialog>
+
+<!-- MPS 专业版渠道计费确认弹窗 -->
+<dialog class="ui-dialog" id="mps-pro-dialog" aria-labelledby="mps-pro-title">
+  <div class="head">
+    <span class="title" id="mps-pro-title">确认切换至火山·专业版</span>
+    <button type="button" class="x" aria-label="关闭确认弹窗" onclick="mpsCancelPro()">×</button>
+  </div>
+  <div class="body">
+    火山·专业版增强费用约为标准版的 10–20 倍且单条耗时更长。确认将 <strong id="mps-pro-filename"></strong> 切换至该渠道吗？（演示交互，不会产生真实计费）
+  </div>
+  <div class="foot">
+    <button type="button" class="ui-btn" onclick="mpsCancelPro()">取消</button>
+    <button type="button" class="ui-btn primary" onclick="mpsConfirmPro()">确认切换</button>
+  </div>
+</dialog>
+
+<!-- Docker 容器日志抽屉 -->
+<div class="di-drawer-backdrop" id="dk-drawer-backdrop" hidden onclick="dkCloseDrawer()"></div>
+<aside class="ui-drawer" id="dk-drawer" hidden aria-label="容器日志详情">
+  <div class="head">
+    <span class="title" id="dk-drawer-title">容器日志</span>
+    <button type="button" class="x" aria-label="关闭容器日志抽屉" onclick="dkCloseDrawer()">×</button>
+  </div>
+  <div class="body">
+    <dl class="ui-desc" id="dk-drawer-meta"></dl>
+    <div class="row" style="justify-content:space-between">
+      <span style="font-size:12px;font-weight:600;color:var(--text-2)">最近日志（演示）</span>
+      <div class="ui-seg" id="dk-log-seg" role="group" aria-label="日志级别筛选">
+        <button type="button" data-lvl="ALL" class="active" onclick="dkSetLogLevel('ALL')">全部</button>
+        <button type="button" data-lvl="INFO" onclick="dkSetLogLevel('INFO')">INFO</button>
+        <button type="button" data-lvl="WARN" onclick="dkSetLogLevel('WARN')">WARN</button>
+        <button type="button" data-lvl="ERROR" onclick="dkSetLogLevel('ERROR')">ERROR</button>
+      </div>
+    </div>
+    <pre class="ui-code wrap" id="dk-drawer-logs"></pre>
+  </div>
+  <div class="foot">
+    <button type="button" class="ui-btn" onclick="dkCloseDrawer()">关闭</button>
+    <button type="button" class="ui-btn primary" id="dk-restart-btn" onclick="dkRestartSelected()">重启容器（演示）</button>
+  </div>
+</aside>
 
 <!-- 详情抽屉 -->
 <aside class="ui-drawer" id="drawer" style="display:none">
@@ -977,14 +1531,24 @@
 
 <script>
 const command = document.getElementById('cmd');
+const cmdInput = document.getElementById('cmd-input');
 const appearance = document.getElementById('appearance');
 const searchHint = document.getElementById('search-kbd');
 if (/Mac|iPhone|iPad/.test(navigator.platform)) searchHint.textContent = '⌘K';
 
 function openCmd() {
   appearance.open = false;
+  if (cmdInput) { cmdInput.value = ''; filterCmd(''); }
   if (!command.open) command.showModal();
+  if (cmdInput) cmdInput.focus();
 }
+function filterCmd(q) {
+  const query = q.trim().toLowerCase();
+  for (const el of document.querySelectorAll('#cmd-list .item')) {
+    el.hidden = Boolean(query) && !el.textContent.toLowerCase().includes(query);
+  }
+}
+if (cmdInput) cmdInput.addEventListener('input', (e) => filterCmd(e.target.value));
 command.addEventListener('click', (event) => {
   if (event.target === command || event.target.closest('a[href^="#"]')) command.close();
 });
@@ -993,28 +1557,64 @@ document.addEventListener('keydown', (event) => {
     event.preventDefault();
     openCmd();
   }
-  if (event.key === 'Escape' && appearance.open) {
-    appearance.open = false;
-    appearance.querySelector('summary').focus();
+  if (event.key === 'Escape') {
+    if (appearance.open) {
+      appearance.open = false;
+      appearance.querySelector('summary').focus();
+    }
+    const dkDrawer = document.getElementById('dk-drawer');
+    if (dkDrawer && !dkDrawer.hidden) dkCloseDrawer();
+    const drawer = document.getElementById('drawer');
+    if (drawer && drawer.style.display !== 'none') drawer.style.display = 'none';
   }
 });
 document.addEventListener('click', (event) => {
   if (appearance.open && !appearance.contains(event.target)) appearance.open = false;
 });
 
-const sectionLinks = document.querySelectorAll('nav[aria-label="预览目录"] a');
-function markSection() {
-  const target = document.getElementById(location.hash.slice(1));
-  const section = target?.closest('.demo-section')?.id || 'overview';
-  for (const link of sectionLinks) {
-    const current = link.hash === `#${section}`;
+/* ---------- 多视图路由（保留工具台默认视图 + 4 个项目场景视图） ---------- */
+const VIEW_META = {
+  workbench: ['工作区', '任务', 'batch-07'],
+  translate: ['项目场景示例', 'script-dialogue-translate', 'task-tr-208'],
+  media:     ['项目场景示例', 'tencent-media-process', 'proj-mps-demo01'],
+  docker:    ['项目场景示例', 'docker-portal', 'services'],
+  insights:  ['项目场景示例', 'drama-insights', 'leaderboard'],
+};
+const viewPanels = document.querySelectorAll('[data-view-panel]');
+const navLinks = document.querySelectorAll('.demo-sidebar nav a, .demo-mobile-nav a');
+const demoCrumb = document.getElementById('demo-crumb');
+
+function resolveHash(hash) {
+  const id = (hash || '').replace(/^#/, '');
+  if (id.startsWith('view-')) {
+    const view = id.slice(5);
+    if (VIEW_META[view]) return { view, anchor: null };
+  }
+  return { view: 'workbench', anchor: id || 'overview' };
+}
+
+function syncRoute() {
+  const { view, anchor } = resolveHash(location.hash);
+  for (const panel of viewPanels) {
+    panel.hidden = panel.dataset.viewPanel !== view;
+  }
+  const target = anchor ? document.getElementById(anchor) : null;
+  const activeSection = view === 'workbench' ? (target?.closest('.demo-section')?.id || 'overview') : `view-${view}`;
+  for (const link of navLinks) {
+    const current = view === 'workbench'
+      ? (link.dataset.view === 'workbench' && link.hash === `#${activeSection}`)
+      : (link.dataset.view === view);
     link.classList.toggle('active', current);
-    if (current) link.setAttribute('aria-current', 'location');
+    if (current) link.setAttribute('aria-current', view === 'workbench' ? 'location' : 'page');
     else link.removeAttribute('aria-current');
   }
+  const [c1, c2, c3] = VIEW_META[view];
+  demoCrumb.innerHTML = `<a href="#overview" data-view="workbench">${c1}</a><span class="sep" aria-hidden="true">/</span><span>${c2}</span><span class="sep" aria-hidden="true">/</span><span class="current">${c3}</span>`;
+  if (view !== 'workbench') window.scrollTo({ top: 0, behavior: 'auto' });
+  else if (target) target.scrollIntoView({ behavior: 'auto' });
 }
-window.addEventListener('hashchange', markSection);
-markSection();
+window.addEventListener('hashchange', syncRoute);
+syncRoute();
 
 const throughputPlot = document.getElementById('throughput-plot');
 const scrollNote = document.getElementById('throughput-scroll-note');
@@ -1032,15 +1632,29 @@ new ResizeObserver(() => {
 
 const noticeStack = document.getElementById('demo-notices');
 function showNotices() {
-  for (const notice of noticeStack.children) notice.hidden = false;
-  noticeStack.querySelector('.t-close').focus();
+  for (const notice of noticeStack.querySelectorAll('.ui-toast[data-static], .ui-toast:not([data-dyn])')) notice.hidden = false;
+  const closeBtn = noticeStack.querySelector('.ui-toast:not([hidden]) .t-close');
+  if (closeBtn) closeBtn.focus();
+}
+function pushToast(level, title, desc) {
+  const el = document.createElement('div');
+  el.className = `ui-toast ${level}`;
+  el.dataset.dyn = '1';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `<div class="t-body"><div class="t-title"></div><div class="t-desc"></div></div><button type="button" class="t-close" aria-label="关闭通知">×</button>`;
+  el.querySelector('.t-title').textContent = title;
+  el.querySelector('.t-desc').textContent = desc;
+  noticeStack.appendChild(el);
+  setTimeout(() => { if (el.isConnected) el.remove(); }, 4200);
 }
 noticeStack.addEventListener('click', (event) => {
   const close = event.target.closest('.t-close');
   if (!close) return;
-  close.closest('.ui-toast').hidden = true;
+  const toast = close.closest('.ui-toast');
+  if (toast.dataset.dyn) toast.remove();
+  else toast.hidden = true;
   const next = noticeStack.querySelector('.ui-toast:not([hidden]) .t-close');
-  (next || document.getElementById('preview-notices')).focus();
+  if (next) next.focus();
 });
 
 (function(){
@@ -1060,6 +1674,604 @@ function setAppearance(axis, value) {
 function setTheme(theme) { setAppearance('theme', theme); }
 function setAccent(accent) { setAppearance('accent', accent); }
 function setPalette(palette) { setAppearance('palette', palette); }
+
+/* ---------- 工具函数 ---------- */
+function escHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/* ================================================================
+   视图 1：剧本翻译工作台（script-dialogue-translate）
+   ================================================================ */
+const TR_STAGES = ['排队', '抽取实体', '译名建议', '待确认译名', '分块翻译与审核', '完成'];
+const trState = {
+  stageIdx: 4,
+  editing: false,
+  mode: 'compare',
+  mappings: [
+    { type: '人名', orig: '林栖', target: 'Lin Qi', source: '用户指定', note: '女主 · 港口档案员' },
+    { type: '人名', orig: '沈砚', target: 'Shen Yan', source: '模型生成', note: '男主 · 调查记者' },
+    { type: '地名', orig: '雾港码头', target: 'Mist Harbor Pier', source: '模型生成', note: '核心外景地' },
+    { type: '术语', orig: '潮汐档案', target: 'Tide Archive', source: '按原文校正', note: '贯穿线索文件' },
+    { type: '组织', orig: '星海影业', target: 'Starlight Studio', source: '原文已有', note: '虚构出品方' },
+  ],
+  chunks: [
+    {
+      idx: 1, status: 'reviewed', issues: '已修正 1 处称谓',
+      review: { before: 'Lin Qi looks at Harbor Dock.', after: 'Lin Qi looks at Mist Harbor Pier.' },
+      lines: [
+        ['△ 雾港码头清晨起雾，林栖抱着牛皮纸袋快步走过。', '△ Morning fog settles over {雾港码头}. {林栖} hurries past with a kraft folder.'],
+        ['林栖（压低声音）：潮汐档案的副件还在你那里？', '{林栖} (lowering her voice): Do you still have the copy of the {潮汐档案}?'],
+      ]
+    },
+    {
+      idx: 2, status: 'reviewed', issues: '0 项问题',
+      review: null,
+      lines: [
+        ['沈砚停下脚步，把U盘放进她的风衣口袋。', '{沈砚} stops and slips the flash drive into her trench coat pocket.'],
+        ['沈砚：别回头，星海影业的人刚进大厅。', '{沈砚}: Don’t look back. People from {星海影业} just entered the lobby.'],
+      ]
+    },
+    {
+      idx: 3, status: 'translated', issues: '待补审（尚未经过红/绿审核）',
+      review: null,
+      lines: [
+        ['林栖：今晚十点，我们在雾港码头老灯塔下见。', '{林栖}: Ten o’clock tonight, under the old lighthouse at {雾港码头}.'],
+        ['画外音（沈砚）：如果我没来，直接把潮汐档案公开。', 'V.O. ({沈砚}): If I don’t show up, release the {潮汐档案} immediately.'],
+      ]
+    },
+    {
+      idx: 4, status: 'failed', issues: '模型请求超时（exit 504），可单块重跑',
+      review: null,
+      lines: []
+    },
+  ],
+};
+
+function trResolve(text) {
+  let out = text;
+  for (const m of trState.mappings) out = out.replaceAll(`{${m.orig}}`, m.target);
+  return out;
+}
+function trRender() {
+  const doneAll = trState.chunks.every((c) => c.status === 'reviewed');
+  const hasFail = trState.chunks.some((c) => c.status === 'failed');
+  const stageIdx = trState.editing ? 3 : (doneAll ? 5 : 4);
+  document.getElementById('tr-task-status').innerHTML = trState.editing
+    ? '<span class="ui-badge warn"><span class="ui-dot"></span>待确认译名</span>'
+    : doneAll
+      ? '<span class="ui-badge ok"><span class="ui-dot"></span>已完成</span>'
+      : hasFail
+        ? '<span class="ui-badge warn"><span class="ui-dot"></span>部分完成</span>'
+        : '<span class="ui-badge running"><span class="ui-dot"></span>审核中</span>';
+
+  document.getElementById('tr-stage-bar').innerHTML = TR_STAGES.map((label, i) => {
+    const cls = i < stageIdx ? 'done' : i === stageIdx ? 'active' : '';
+    const dot = i < stageIdx ? '✓' : (i + 1);
+    return `<span class="tr-step ${cls}"><span class="dot">${dot}</span><span>${label}</span></span>` + (i < TR_STAGES.length - 1 ? '<span class="tr-conn" aria-hidden="true"></span>' : '');
+  }).join('');
+
+  document.getElementById('tr-toggle-edit').textContent = trState.editing ? '取消编辑' : '编辑译名';
+  document.getElementById('tr-confirm-map').hidden = !trState.editing;
+
+  document.getElementById('tr-map-body').innerHTML = trState.mappings.map((m, i) => `
+    <tr>
+      <td><span class="ui-tag">${escHtml(m.type)}</span></td>
+      <td>${escHtml(m.orig)}</td>
+      <td>${trState.editing
+        ? `<input class="ui-input tr-map-input" data-idx="${i}" aria-label="${escHtml(m.orig)} 译名" value="${escHtml(m.target)}">`
+        : `<span class="ui-mono">${escHtml(m.target)}</span>`}</td>
+      <td class="ui-muted">${escHtml(m.source)} · ${escHtml(m.note)}</td>
+    </tr>
+  `).join('');
+
+  const reviewed = trState.chunks.filter((c) => c.status === 'reviewed').length;
+  const translated = trState.chunks.filter((c) => c.status === 'translated').length;
+  const failed = trState.chunks.filter((c) => c.status === 'failed').length;
+  document.getElementById('tr-chunk-summary').textContent = `共 ${trState.chunks.length} 块 · 已审核 ${reviewed} · 待补审 ${translated} · 失败 ${failed}`;
+
+  const badgeMap = {
+    reviewed: '<span class="ui-badge ok"><span class="ui-dot"></span>已审核</span>',
+    translated: '<span class="ui-badge"><span class="ui-dot"></span>已翻译</span>',
+    failed: '<span class="ui-badge danger"><span class="ui-dot"></span>失败</span>',
+  };
+  document.getElementById('tr-chunk-list').innerHTML = trState.chunks.map((c) => {
+    let body = '';
+    if (c.status === 'failed') {
+      body = `<div class="ui-alert danger"><span class="ico" aria-hidden="true">!</span><div><div class="title">分块 #${c.idx} 翻译失败</div><div class="desc">${escHtml(c.issues)}</div></div></div>`;
+    } else if (trState.mode === 'compare') {
+      body = c.lines.map(([zh, en]) => `
+        <div class="tr-line-pair">
+          <div class="tr-line-zh">${escHtml(zh)}</div>
+          <div class="tr-line-en">${escHtml(trResolve(en))}</div>
+        </div>
+      `).join('');
+    } else {
+      const raw = c.lines.map(([zh, en]) => `${zh}\n[EN] ${trResolve(en)}`).join('\n\n');
+      body = `<pre class="ui-code wrap">${escHtml(raw)}</pre>`;
+    }
+    const reviewHtml = c.review
+      ? `<div class="tr-review-note"><span>审核修复：</span><span class="tr-diff-del">${escHtml(c.review.before)}</span><span aria-hidden="true">→</span><span class="tr-diff-add">${escHtml(c.review.after)}</span></div>`
+      : '';
+    return `
+      <div class="tr-chunk">
+        <div class="tr-chunk-head">
+          <span class="title">第 ${c.idx} 块</span>
+          ${badgeMap[c.status]}
+          <span class="ui-muted" style="font-size:12px">${escHtml(c.issues)}</span>
+          <span style="margin-left:auto"></span>
+          ${c.status === 'failed' ? `<button type="button" class="ui-btn" onclick="trRetryOne(${c.idx})">↻ 单块重跑</button>` : ''}
+        </div>
+        <div class="tr-chunk-body">${reviewHtml}${body}</div>
+      </div>
+    `;
+  }).join('');
+}
+function trToggleEdit() { trState.editing = !trState.editing; trRender(); }
+function trConfirmMappings() {
+  document.querySelectorAll('.tr-map-input').forEach((inp) => {
+    const v = inp.value.trim();
+    if (v) trState.mappings[Number(inp.dataset.idx)].target = v;
+  });
+  trState.editing = false;
+  trRender();
+  pushToast('ok', '译名映射已更新', '已同步刷新下方双语对照行（本地演示）');
+}
+function trSetMode(mode) {
+  trState.mode = mode;
+  for (const b of document.querySelectorAll('#tr-mode-seg button')) {
+    const active = b.dataset.mode === mode;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active);
+  }
+  trRender();
+}
+function trRetryOne(idx) {
+  const c = trState.chunks.find((x) => x.idx === idx);
+  if (!c) return;
+  c.status = 'reviewed';
+  c.issues = '重跑并审核通过（演示）';
+  c.lines = [
+    ['△ 码头灯塔灯光扫过水面，林栖深吸一口气按下发送键。', '△ The pier lighthouse sweeps across the water. {林栖} takes a breath and hits send.'],
+    ['林栖：潮汐档案已经发出，该轮到他们回应了。', '{林栖}: The {潮汐档案} is out. Now it’s their turn to answer.'],
+  ];
+  trRender();
+  pushToast('ok', `分块 #${idx} 重跑成功`, '已补齐译文并通过审核（演示）');
+}
+function trRetryFailed() {
+  const failed = trState.chunks.filter((c) => c.status === 'failed');
+  if (!failed.length) { pushToast('info', '没有失败块', '当前所有分块均已生成译文'); return; }
+  failed.forEach((c) => trRetryOne(c.idx));
+}
+function trRetryReview() {
+  const pending = trState.chunks.filter((c) => c.status === 'translated');
+  if (!pending.length) { pushToast('info', '无可补审块', '已翻译分块均已完成审核'); return; }
+  pending.forEach((c) => { c.status = 'reviewed'; c.issues = '补审通过 · 0 项问题'; });
+  trRender();
+  pushToast('ok', `已补审 ${pending.length} 个分块`, '仅复核已有双语译文，未重新翻译');
+}
+
+/* ================================================================
+   视图 2：MPS 视频增强工作台（tencent-media-process）
+   ================================================================ */
+const mpsState = {
+  status: 'running',
+  defaultProvider: 'tencent_intl',
+  pendingProItemId: null,
+  items: [
+    { id: 1, filename: 'ep01_01_harbor_open.mp4', status: 'finish', storage: 'synced', provider: null, size: '142.4 MB', took: '1分48秒', err: '', taskId: 'mps-demo-9041' },
+    { id: 2, filename: 'ep01_02_archive_room.mp4', status: 'finish', storage: 'synced', provider: 'volc', size: '118.0 MB', took: '2分05秒', err: '', taskId: 'volc-demo-3112' },
+    { id: 3, filename: 'ep01_03_pier_rain.mp4', status: 'finish', storage: 'ready', provider: null, size: '164.8 MB', took: '2分19秒', err: 'NAS 挂载瞬断，产物暂存服务器', taskId: 'mps-demo-9043' },
+    { id: 4, filename: 'ep01_04_night_chase.mp4', status: 'processing', storage: '', provider: null, size: '189.2 MB', took: '0分52秒…', err: '', taskId: 'mps-demo-9044' },
+    { id: 5, filename: 'ep01_05_lighthouse.mp4', status: 'fail', storage: '', provider: null, size: '131.6 MB', took: '0分17秒', err: 'MPS 模板校验超时，建议重试或切换渠道', taskId: 'mps-demo-9045' },
+    { id: 6, filename: 'ep01_06_ending.mp4', status: 'pending', storage: '', provider: null, size: '104.5 MB', took: '—', err: '', taskId: '' },
+  ],
+};
+const MPS_PROV_LABEL = { tencent: '腾讯', tencent_intl: '腾讯国际', volc: '火山·标准', volc_pro: '火山·专业' };
+
+function mpsRender() {
+  const done = mpsState.items.filter((x) => x.status === 'finish').length;
+  const cached = mpsState.items.filter((x) => x.status === 'finish' && x.storage === 'ready').length;
+  const run = mpsState.items.filter((x) => x.status === 'processing').length;
+  const fail = mpsState.items.filter((x) => x.status === 'fail').length;
+  const pend = mpsState.items.filter((x) => x.status === 'pending').length;
+  const pct = Math.round((done / mpsState.items.length) * 100);
+
+  const badgeHtml = mpsState.status === 'running'
+    ? '<span class="ui-badge running"><span class="ui-dot"></span>运行中</span>'
+    : mpsState.status === 'paused'
+      ? '<span class="ui-badge warn"><span class="ui-dot"></span>已暂停</span>'
+      : '<span class="ui-badge ok"><span class="ui-dot"></span>已完成</span>';
+  document.getElementById('mps-status-badge').innerHTML = badgeHtml;
+  document.getElementById('mps-pct-label').textContent = `${pct}% (${done}/${mpsState.items.length})`;
+  document.getElementById('mps-progress').setAttribute('aria-valuenow', pct);
+  document.getElementById('mps-progress-bar').style.width = `${pct}%`;
+
+  document.getElementById('mps-meta-bar').innerHTML = `
+    <span>输入 <code class="ui-inline">/nas/demo-clips/mist-harbor-ep01</code></span>
+    <span>模板 <b>1080P</b></span>
+    <span>默认渠道 <b>${MPS_PROV_LABEL[mpsState.defaultProvider]}</b></span>
+    <span>并发 <b>3</b></span>
+    <span>完成 <b>${done}</b> · 暂存待写 <b>${cached}</b> · 运行中 <b>${run}</b> · 失败 <b>${fail}</b> · 等待 <b>${pend}</b></span>
+  `;
+
+  document.getElementById('mps-btn-start').disabled = mpsState.status === 'running';
+  document.getElementById('mps-btn-pause').disabled = mpsState.status !== 'running';
+
+  const pauseNote = document.getElementById('mps-pause-note');
+  pauseNote.hidden = !(mpsState.status === 'paused' && run > 0);
+  if (!pauseNote.hidden) {
+    document.getElementById('mps-pause-desc').textContent = `仍有 ${run} 个在途任务将继续跑完（已提交云端 MPS 的任务无法中途撤销）。`;
+  }
+
+  document.getElementById('mps-items-body').innerHTML = mpsState.items.map((it) => {
+    const eff = it.provider || mpsState.defaultProvider;
+    const editable = ['pending', 'fail', 'paused'].includes(it.status);
+    let stBadge = '<span class="ui-badge"><span class="ui-dot"></span>等待</span>';
+    if (it.status === 'finish' && it.storage === 'ready') stBadge = '<span class="ui-badge warn"><span class="ui-dot"></span>已完成·暂存服务器</span>';
+    else if (it.status === 'finish') stBadge = '<span class="ui-badge ok"><span class="ui-dot"></span>已完成</span>';
+    else if (it.status === 'processing') stBadge = '<span class="ui-badge running"><span class="ui-dot"></span>增强中</span>';
+    else if (it.status === 'fail') stBadge = '<span class="ui-badge danger"><span class="ui-dot"></span>失败</span>';
+
+    const provCell = editable
+      ? `<span class="mps-prov-cell"><select class="ui-select mps-prov-sel" aria-label="${escHtml(it.filename)} 渠道" onchange="mpsChangeProv(${it.id}, this.value)">
+          <option value="tencent_intl"${eff === 'tencent_intl' ? ' selected' : ''}>腾讯国际</option>
+          <option value="volc"${eff === 'volc' ? ' selected' : ''}>火山·标准</option>
+          <option value="volc_pro"${eff === 'volc_pro' ? ' selected' : ''}>火山·专业</option>
+        </select>${it.provider ? '' : '<span class="mps-inh">继承</span>'}</span>`
+      : `<span class="ui-mono" style="font-size:12px">${MPS_PROV_LABEL[eff]}</span>`;
+
+    const acts = [];
+    if (it.storage === 'ready') acts.push(`<button type="button" class="ui-btn" onclick="mpsRetryNas(${it.id})">重试存 NAS</button>`);
+    if (it.status === 'fail') acts.push(`<button type="button" class="ui-btn" onclick="mpsRetryItem(${it.id})">↻ 重跑</button>`);
+    if (it.status === 'finish' && it.storage === 'synced') acts.push(`<button type="button" class="ui-btn" onclick="pushToast('info','下载产物（演示）','${escHtml(it.filename)} 为虚构示例文件')">⬇ 下载</button>`);
+
+    return `<tr>
+      <td class="ui-mono" style="font-size:12.5px">${escHtml(it.filename)}</td>
+      <td>${stBadge}</td>
+      <td>${provCell}</td>
+      <td class="num">${escHtml(it.size)}</td>
+      <td class="num">${escHtml(it.took)}</td>
+      <td class="mps-err" title="${escHtml(it.err)}">${escHtml(it.err || '—')}</td>
+      <td class="ui-mono ui-muted" style="font-size:12px">${escHtml(it.taskId || '—')}</td>
+      <td><div class="row" style="gap:6px">${acts.join('') || '<span class="ui-muted">—</span>'}</div></td>
+    </tr>`;
+  }).join('');
+}
+function mpsAction(act) {
+  if (act === 'pause') {
+    mpsState.status = 'paused';
+    pushToast('warn', '已暂停派发', '等待中的任务不再提交，在途任务继续跑完');
+  } else if (act === 'start') {
+    mpsState.status = 'running';
+    const pend = mpsState.items.find((x) => x.status === 'pending');
+    if (pend) { pend.status = 'processing'; pend.took = '0分04秒…'; pend.taskId = 'mps-demo-9046'; }
+    pushToast('ok', '已开始派发', '并发槽已拉起下一条待处理视频（演示）');
+  } else if (act === 'retry') {
+    const failed = mpsState.items.filter((x) => x.status === 'fail');
+    if (!failed.length) { pushToast('info', '无失败子项', '当前没有需要重跑的失败文件'); return; }
+    failed.forEach((x) => { x.status = 'processing'; x.err = ''; x.took = '0分03秒…'; });
+    mpsState.status = 'running';
+    pushToast('ok', `已重跑 ${failed.length} 个失败项`, '已重新提交至当前选定渠道');
+  } else if (act === 'rescan') {
+    pushToast('info', '目录重扫完成（演示）', '共扫描 6 个文件，无新增未入库视频');
+  }
+  mpsRender();
+}
+function mpsRetryNas(id) {
+  const it = mpsState.items.find((x) => x.id === id);
+  if (!it) return;
+  it.storage = 'synced';
+  it.err = '';
+  mpsRender();
+  pushToast('ok', 'NAS 回写成功（演示）', `${it.filename} 已从服务器暂存同步到 NAS`);
+}
+function mpsRetryItem(id) {
+  const it = mpsState.items.find((x) => x.id === id);
+  if (!it) return;
+  it.status = 'finish';
+  it.storage = 'synced';
+  it.err = '';
+  it.took = '1分54秒';
+  mpsRender();
+  pushToast('ok', '单条重跑完成（演示）', `${it.filename} 已按 ${MPS_PROV_LABEL[it.provider || mpsState.defaultProvider]} 完成增强`);
+}
+function mpsChangeProv(id, prov) {
+  const it = mpsState.items.find((x) => x.id === id);
+  if (!it) return;
+  if (prov === 'volc_pro') {
+    mpsState.pendingProItemId = id;
+    document.getElementById('mps-pro-filename').textContent = it.filename;
+    document.getElementById('mps-pro-dialog').showModal();
+    return;
+  }
+  it.provider = prov === mpsState.defaultProvider ? null : prov;
+  mpsRender();
+  pushToast('info', '渠道已切换', `${it.filename} → ${MPS_PROV_LABEL[prov]}`);
+}
+function mpsConfirmPro() {
+  const it = mpsState.items.find((x) => x.id === mpsState.pendingProItemId);
+  if (it) it.provider = 'volc_pro';
+  mpsState.pendingProItemId = null;
+  document.getElementById('mps-pro-dialog').close();
+  mpsRender();
+  pushToast('warn', '已切换至火山·专业版', '后续重跑将使用高阶模型渠道（演示）');
+}
+function mpsCancelPro() {
+  mpsState.pendingProItemId = null;
+  document.getElementById('mps-pro-dialog').close();
+  mpsRender();
+}
+
+/* ================================================================
+   视图 3：Docker 服务与容器监控（docker-portal）
+   ================================================================ */
+const dkState = {
+  filter: 'all',
+  selectedId: null,
+  logLevel: 'ALL',
+  services: [
+    { id: 's1', group: '内容生产', glyph: '译', name: '剧本翻译工作台', container: 'script-translate-demo', image: 'demo/script-translate:2.4', ports: '18012:8000', status: 'healthy', latency: '14ms', desc: '上传剧本自动实体抽取、分块翻译与红/绿对照审核。', logs: [
+      ['INFO', '21:04:10 gunicorn[1] worker=1 threads=4 ready on :8000'],
+      ['INFO', '21:04:38 GET /health 200 4ms'],
+      ['WARN', '21:05:02 chunk #4 upstream timeout, marked retryable'],
+    ]},
+    { id: 's2', group: '内容生产', glyph: 'V2', name: 'Video2Script 转写', container: 'video2script-demo', image: 'demo/video2script:1.9', ports: '18002:8000', status: 'healthy', latency: '21ms', desc: '扫描示例素材目录，调用多模态模型批量生成短剧剧本。', logs: [
+      ['INFO', '21:03:55 SMB mount check OK (/app/nas/demo-series)'],
+      ['INFO', '21:05:12 GET /api/portal 200 18ms'],
+    ]},
+    { id: 's3', group: '媒体处理', glyph: 'MP', name: 'MPS 视频增强', container: 'mps-enhance-demo', image: 'demo/mps-enhance:1.6', ports: '18005:8000', status: 'healthy', latency: '19ms', desc: '多渠道分辨率超分批处理，支持并发控速与 NAS 回写。', logs: [
+      ['INFO', '21:04:41 poll task mps-demo-9044 status=PROCESSING'],
+      ['WARN', '21:05:01 nas-spool retry queued for ep01_03_pier_rain.mp4'],
+    ]},
+    { id: 's4', group: '媒体处理', glyph: 'FF', name: 'FFmpeg 切片 Worker', container: 'ffmpeg-worker-demo', image: 'demo/ffmpeg-worker:3.1', ports: '18009:9001', status: 'unhealthy', latency: 'timeout', desc: '后台视频抽帧、切分与音轨归一化任务执行节点。', logs: [
+      ['INFO', '21:02:11 worker pool started (concurrency=2)'],
+      ['WARN', '21:04:50 /tmp/spool usage 94%, throttling intake'],
+      ['ERROR', '21:05:18 healthcheck GET /healthz failed: context deadline exceeded'],
+    ]},
+    { id: 's5', group: '数据看板', glyph: '剧', name: '短剧数据看板', container: 'drama-insights-demo', image: 'demo/drama-insights:4.2', ports: '18820:8080', status: 'healthy', latency: '11ms', desc: '短剧播放、投放与变现看板，含整点采集与飙升播报。', logs: [
+      ['INFO', '21:00:04 hourly snapshot collected (6 demo series)'],
+      ['INFO', '21:05:20 GET /api/board 200 9ms'],
+    ]},
+    { id: 's6', group: '数据看板', glyph: '报', name: '整点播报调度器', container: 'report-cron-demo', image: 'demo/report-cron:1.2', ports: '—', status: 'healthy', latency: '8ms', desc: '按计划串行触发整点快照采集与日报汇总推送。', logs: [
+      ['INFO', '21:00:00 cron trigger weekly_ranking.py (demo mode)'],
+      ['INFO', '21:00:08 job finished exit=0'],
+    ]},
+    { id: 's7', group: '基础设施', glyph: 'RD', name: 'Redis 缓存队列', container: 'redis-cache-demo', image: 'redis:7-alpine', ports: '16379:6379', status: 'healthy', latency: '2ms', desc: '任务状态缓存、速率限制与轻量级异步事件队列。', logs: [
+      ['INFO', '21:01:00 Background saving terminated with success'],
+      ['INFO', '21:05:25 PING -> PONG (2ms)'],
+    ]},
+    { id: 's8', group: '基础设施', glyph: 'NS', name: 'NAS 暂存同步守护', container: 'nas-spool-sync', image: 'demo/nas-sync:1.1', ports: '18099:8099', status: 'unhealthy', latency: '503', desc: '监控本地暂存目录并在存储恢复后自动回写归档产物。', logs: [
+      ['INFO', '21:03:00 watching /var/spool/demo-out'],
+      ['WARN', '21:04:58 mount point /mnt/nas-demo not responding'],
+      ['ERROR', '21:05:19 sync cycle failed: EHOSTUNREACH (simulated)'],
+    ]},
+  ],
+};
+
+function dkRender() {
+  const q = (document.getElementById('dk-search')?.value || '').trim().toLowerCase();
+  const okCount = dkState.services.filter((s) => s.status === 'healthy').length;
+  const badCount = dkState.services.length - okCount;
+  document.getElementById('dk-stat-total').textContent = dkState.services.length;
+  document.getElementById('dk-stat-ok').textContent = okCount;
+  document.getElementById('dk-stat-bad').textContent = badCount;
+
+  let list = dkState.services;
+  if (dkState.filter === 'healthy') list = list.filter((s) => s.status === 'healthy');
+  else if (dkState.filter === 'unhealthy') list = list.filter((s) => s.status !== 'healthy');
+  if (q) {
+    list = list.filter((s) => (s.name + s.container + s.group + s.desc).toLowerCase().includes(q));
+  }
+
+  const host = document.getElementById('dk-groups');
+  if (!list.length) {
+    host.innerHTML = '<div class="ui-empty"><div class="glyph">◇</div><div class="title">没有匹配的容器服务</div><div class="desc">调整健康状态筛选或清空搜索关键词后重试。</div></div>';
+    return;
+  }
+  const groups = {};
+  list.forEach((s) => { (groups[s.group] = groups[s.group] || []).push(s); });
+  host.innerHTML = Object.entries(groups).map(([grp, items]) => `
+    <div class="dk-group">
+      <div class="dk-group-head"><h3>${escHtml(grp)}</h3><span class="ui-tag">${items.length}</span></div>
+      <div class="dk-grid">
+        ${items.map((s) => {
+          const ok = s.status === 'healthy';
+          return `<div class="ui-card dk-card">
+            <div class="dk-card-top">
+              <span class="dk-glyph" aria-hidden="true">${escHtml(s.glyph)}</span>
+              <span class="ui-badge ${ok ? 'ok' : 'danger'}"><span class="ui-dot"></span>${ok ? '正常' : '异常'}</span>
+            </div>
+            <div>
+              <h3 style="margin:0 0 4px">${escHtml(s.name)}</h3>
+              <p class="dk-card-desc">${escHtml(s.desc)}</p>
+            </div>
+            <div class="dk-card-foot">
+              <span class="ui-mono">${escHtml(s.ports)}</span>
+              <button type="button" class="ui-btn" style="height:28px;padding:0 10px;font-size:12px" onclick="dkOpenDrawer('${s.id}')">查看日志</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function dkSetFilter(f) {
+  dkState.filter = f;
+  for (const b of document.querySelectorAll('#dk-filter-seg button')) {
+    const active = b.dataset.filter === f;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active);
+  }
+  dkRender();
+}
+function dkProbeNow() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  document.getElementById('dk-probe-time').textContent = `最近探活：${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  pushToast('ok', '容器健康探活完成（演示）', '已刷新全部 8 个示例容器状态');
+}
+function dkOpenDrawer(id) {
+  dkState.selectedId = id;
+  dkState.logLevel = 'ALL';
+  dkRenderDrawer();
+  document.getElementById('dk-drawer-backdrop').hidden = false;
+  document.getElementById('dk-drawer').hidden = false;
+  document.querySelector('#dk-drawer .x').focus();
+}
+function dkCloseDrawer() {
+  document.getElementById('dk-drawer-backdrop').hidden = true;
+  document.getElementById('dk-drawer').hidden = true;
+}
+function dkSetLogLevel(lvl) {
+  dkState.logLevel = lvl;
+  for (const b of document.querySelectorAll('#dk-log-seg button')) {
+    b.classList.toggle('active', b.dataset.lvl === lvl);
+  }
+  dkRenderDrawer();
+}
+function dkRenderDrawer() {
+  const s = dkState.services.find((x) => x.id === dkState.selectedId);
+  if (!s) return;
+  document.getElementById('dk-drawer-title').textContent = `${s.name} · 容器日志`;
+  document.getElementById('dk-drawer-meta').innerHTML = `
+    <dt>容器名</dt><dd class="ui-mono">${escHtml(s.container)}</dd>
+    <dt>镜像</dt><dd class="ui-mono">${escHtml(s.image)}</dd>
+    <dt>端口映射</dt><dd class="ui-mono">${escHtml(s.ports)}（demo-node.local）</dd>
+    <dt>探活状态</dt><dd><span class="ui-badge ${s.status === 'healthy' ? 'ok' : 'danger'}"><span class="ui-dot"></span>${s.status === 'healthy' ? `正常 · ${s.latency}` : `异常 · ${s.latency}`}</span></dd>
+  `;
+  const clsMap = { INFO: 'c-accent', WARN: 'c-warn', ERROR: 'c-danger' };
+  const filtered = dkState.logLevel === 'ALL' ? s.logs : s.logs.filter(([lv]) => lv === dkState.logLevel);
+  document.getElementById('dk-drawer-logs').innerHTML = filtered.length
+    ? filtered.map(([lv, msg]) => `<span class="${clsMap[lv] || ''}">${lv.padEnd(5)}</span> ${escHtml(msg)}`).join('\n')
+    : '<span class="c-muted">当前级别下无示例日志</span>';
+}
+function dkRestartSelected() {
+  const s = dkState.services.find((x) => x.id === dkState.selectedId);
+  if (!s) return;
+  s.status = 'healthy';
+  s.latency = '12ms';
+  s.logs.push(['INFO', '21:06:00 container restarted (demo), healthcheck OK']);
+  dkRender();
+  dkRenderDrawer();
+  pushToast('ok', `已重启 ${s.container}（演示）`, '健康检查已恢复正常');
+}
+
+/* ================================================================
+   视图 4：短剧数据与投放看板（drama-insights）
+   ================================================================ */
+const diState = {
+  tab: 'board',
+  sortKey: 'play',
+  sortDir: 'desc',
+  dramas: [
+    { name: '《雾港回声》', director: '周宁', play: 3420, g1h: 94, g24h: 1480, roi: 1.62, mix: [58, 27, 15], boostPct: '+24%' },
+    { name: '《星轨拾光》', director: '陈默', play: 2890, g1h: 78, g24h: 1120, roi: 1.48, mix: [46, 34, 20], boostPct: '+19%' },
+    { name: '《白昼暗号》', director: '许清', play: 2310, g1h: 62, g24h: 960, roi: 1.54, mix: [52, 22, 26], boostPct: '+17%' },
+    { name: '《南风过境》', director: '顾远', play: 1760, g1h: 41, g24h: 640, roi: 1.31, mix: [64, 24, 12], boostPct: '+11%' },
+    { name: '《纸鸢与海》', director: '周宁', play: 1420, g1h: 25, g24h: 390, roi: 1.29, mix: [40, 38, 22], boostPct: '+8%' },
+    { name: '《零点书店》', director: '林夏', play: 980, g1h: 12, g24h: 230, roi: 1.26, mix: [35, 30, 35], boostPct: '+5%' },
+  ],
+  creators: {
+    '2026-11': {
+      writers: [
+        { name: '苏禾', works: 3, online: 5120, growth: 1840, g24h: 610 },
+        { name: '陆川', works: 2, online: 3680, growth: 1420, g24h: 480 },
+        { name: '叶青', works: 2, online: 2490, growth: 980, g24h: 320 },
+      ],
+      directors: [
+        { name: '周宁', works: 2, online: 4840, growth: 1870, g24h: 650 },
+        { name: '陈默', works: 2, online: 3210, growth: 1260, g24h: 440 },
+        { name: '许清', works: 1, online: 2310, growth: 960, g24h: 340 },
+      ],
+    },
+    '2026-10': {
+      writers: [
+        { name: '陆川', works: 3, online: 4460, growth: 1510, g24h: 420 },
+        { name: '苏禾', works: 2, online: 3890, growth: 1290, g24h: 360 },
+        { name: '唐宁', works: 2, online: 2140, growth: 790, g24h: 210 },
+      ],
+      directors: [
+        { name: '陈默', works: 3, online: 4120, growth: 1480, g24h: 410 },
+        { name: '顾远', works: 2, online: 2980, growth: 1020, g24h: 290 },
+        { name: '林夏', works: 2, online: 1960, growth: 740, g24h: 195 },
+      ],
+    },
+  },
+};
+
+function fmtWan(n) { return `${n.toLocaleString('zh-CN')} 万`; }
+function diRenderBoard() {
+  const rows = [...diState.dramas].sort((a, b) => {
+    const diff = a[diState.sortKey] - b[diState.sortKey];
+    return diState.sortDir === 'desc' ? -diff : diff;
+  });
+  document.getElementById('di-board-body').innerHTML = rows.map((d, i) => `
+    <tr>
+      <td><span class="di-rank ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
+      <td><strong>${escHtml(d.name)}</strong></td>
+      <td>${escHtml(d.director)}</td>
+      <td><span class="ui-meter" role="img" aria-label="渠道占比：抖音 ${d.mix[0]}%，视频号 ${d.mix[1]}%，TT ${d.mix[2]}%"><i class="ui-s1" style="flex-grow:${d.mix[0]}"></i><i class="ui-s2" style="flex-grow:${d.mix[1]}"></i><i class="ui-s3" style="flex-grow:${d.mix[2]}"></i></span></td>
+      <td class="num">${fmtWan(d.play)}</td>
+      <td class="num">+${fmtWan(d.g1h)}</td>
+      <td class="num">+${fmtWan(d.g24h)}</td>
+      <td class="num">${d.roi.toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+  for (const btn of document.querySelectorAll('.di-sort-btn')) {
+    const active = btn.dataset.key === diState.sortKey;
+    btn.dataset.active = active ? 'true' : 'false';
+    btn.querySelector('span').textContent = active ? (diState.sortDir === 'desc' ? '▼' : '▲') : '';
+    btn.closest('th').setAttribute('aria-sort', active ? (diState.sortDir === 'desc' ? 'descending' : 'ascending') : 'none');
+  }
+}
+function diSort(key) {
+  if (diState.sortKey === key) diState.sortDir = diState.sortDir === 'desc' ? 'asc' : 'desc';
+  else { diState.sortKey = key; diState.sortDir = 'desc'; }
+  diRenderBoard();
+}
+function diRenderSoaring() {
+  const by1h = [...diState.dramas].sort((a, b) => b.g1h - a.g1h).slice(0, 5);
+  const by24h = [...diState.dramas].sort((a, b) => b.g24h - a.g24h).slice(0, 5);
+  document.getElementById('di-boost-body').innerHTML = by1h.map((d, i) => `
+    <tr><td><span class="di-rank ${i < 3 ? 'top' : ''}">${i + 1}</span></td><td>${escHtml(d.name)}</td><td class="num">+${fmtWan(d.g1h)}</td><td class="num"><span class="ui-trend up">${d.boostPct}</span></td></tr>
+  `).join('');
+  document.getElementById('di-soaring-body').innerHTML = by24h.map((d, i) => `
+    <tr><td><span class="di-rank ${i < 3 ? 'top' : ''}">${i + 1}</span></td><td>${escHtml(d.name)}</td><td>${escHtml(d.director)}</td><td class="num">+${fmtWan(d.g24h)}</td></tr>
+  `).join('');
+}
+function diRenderCreators() {
+  const cal = document.getElementById('di-caliber').value;
+  const mon = document.getElementById('di-month').value;
+  const label = cal === 'online' ? '总播放量' : '周期增量';
+  document.getElementById('di-wr-metric').textContent = label;
+  document.getElementById('di-dir-metric').textContent = label;
+  const data = diState.creators[mon];
+  const renderRows = (arr) => arr.map((r, i) => `
+    <tr><td><span class="di-rank ${i === 0 ? 'top' : ''}">${i + 1}</span></td><td>${escHtml(r.name)}</td><td class="num">${r.works}</td><td class="num">${fmtWan(r[cal])}</td><td class="num">+${fmtWan(r.g24h)}</td></tr>
+  `).join('');
+  document.getElementById('di-writer-body').innerHTML = renderRows(data.writers);
+  document.getElementById('di-director-body').innerHTML = renderRows(data.directors);
+}
+function diSetTab(tab) {
+  diState.tab = tab;
+  for (const b of document.querySelectorAll('#di-tabs .ui-tab')) {
+    const active = b.dataset.tab === tab;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active);
+  }
+  for (const name of ['board', 'soaring', 'creators', 'offline']) {
+    document.getElementById(`di-panel-${name}`).hidden = name !== tab;
+  }
+}
+
+trRender();
+mpsRender();
+dkRender();
+diRenderBoard();
+diRenderSoaring();
+diRenderCreators();
 </script>
 </body>
 </html>
